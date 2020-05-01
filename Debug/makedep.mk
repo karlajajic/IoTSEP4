@@ -10,7 +10,7 @@ device.c
 
 drivers\docs\example\loraWANHandler.c
 
-main-Ib.c
+main-Karla.c
 
 FreeRTOS\FreeRTOSTraceDriver\FreeRTOSTraceDriver.c
 

@@ -65,7 +65,7 @@ C_SRCS +=  \
 ../currentCondition.c \
 ../device.c \
 ../drivers/docs/example/loraWANHandler.c \
-../main-Ib.c \
+../main-Karla.c \
 ../FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.c \
 ../FreeRTOS/src/croutine.c \
 ../FreeRTOS/src/event_groups.c \
@@ -91,7 +91,7 @@ co2Reader.o \
 currentCondition.o \
 device.o \
 drivers/docs/example/loraWANHandler.o \
-main-Ib.o \
+main-Karla.o \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o \
 FreeRTOS/src/croutine.o \
 FreeRTOS/src/event_groups.o \
@@ -110,7 +110,7 @@ co2Reader.o \
 currentCondition.o \
 device.o \
 drivers/docs/example/loraWANHandler.o \
-main-Ib.o \
+main-Karla.o \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o \
 FreeRTOS/src/croutine.o \
 FreeRTOS/src/event_groups.o \
@@ -129,7 +129,7 @@ co2Reader.d \
 currentCondition.d \
 device.d \
 drivers/docs/example/loraWANHandler.d \
-main-Ib.d \
+main-Karla.d \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.d \
 FreeRTOS/src/croutine.d \
 FreeRTOS/src/event_groups.d \
@@ -148,7 +148,7 @@ co2Reader.d \
 currentCondition.d \
 device.d \
 drivers/docs/example/loraWANHandler.d \
-main-Ib.d \
+main-Karla.d \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.d \
 FreeRTOS/src/croutine.d \
 FreeRTOS/src/event_groups.d \
@@ -204,7 +204,7 @@ drivers/docs/example/loraWANHandler.o: ../drivers/docs/example/loraWANHandler.c
 	@echo Finished building: $<
 	
 
-./main-Ib.o: .././main-Ib.c
+./main-Karla.o: .././main-Karla.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000L  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../FreeRTOS/src" -I"../drivers"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega2560" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
