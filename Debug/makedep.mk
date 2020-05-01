@@ -2,7 +2,15 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+co2Reader.c
+
+currentCondition.c
+
+device.c
+
 drivers\docs\example\loraWANHandler.c
+
+main-Ib.c
 
 FreeRTOS\FreeRTOSTraceDriver\FreeRTOSTraceDriver.c
 
