@@ -1,21 +1,17 @@
-/*
- * device.h
- *
- * Created: 1.5.2020. 13:53:22
- *  Author: PC HP
- */ 
+#pragma once
+#include "currentCondition.h"
+#include "DeviceConfig.h"
 
- #pragma once
- #include "currentCondition.h"
- #include <stdint.h>
+typedef struct device* device_t;
 
- typedef struct device* device_t;
+device_t device_create(void);
+void device_destroy(device_t self);
+void device_executeTask(device_t self);
+void device_startMeasuring(device_t self);
 
- device_t device_create(void);
- void device_destroy(device_t self);
- currentCondition_t device_getCurrentCondition( uint16_t co2Data, uint16_t temperatureData, uint16_t humidityData, uint16_t soundData);
+currentCondition_t device_getCurrentCondition(device_t self);
 
- uint16_t device_getCO2Data(device_t self);
+void device_setCO2ToCurrent(device_t self, uint16_t value);
 
 
- //handleCommand??????
+uint16_t device_getCO2Data(device_t self);
