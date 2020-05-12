@@ -12,41 +12,23 @@ typedef struct currentCondition {
 	uint16_t soundData;
 }currentCondition;
 
-currentCondition_t currentCondition_create(int deviceId) {
-	currentCondition_t _new_con = calloc(sizeof(currentCondition), 1);
+currentCondition_t currentCondition_create(int deviceId, uint16_t co2Data, uint16_t temperatureData, uint16_t humidityData, uint16_t soundData) {
+	currentCondition_t _new_con = calloc(sizeof(currentCondition),1);
 	if (_new_con == NULL)
-	return NULL;
+		return NULL;
 
 	_new_con->deviceId = deviceId;
+	_new_con->co2Data = co2Data;
+	_new_con->temperatureData = temperatureData;
+	_new_con->humidityData = humidityData;
+	_new_con->soundData = soundData;
 
 	return _new_con;
 }
 
-
-void currentCondition_setCO2(currentCondition_t self, uint16_t value) {
-	if(self!=NULL)
-	self->co2Data = value;
-}
-
-void currentCondition_setHumidity(currentCondition_t self, uint16_t value) {
-	if (self != NULL)
-	self->humidityData= value;
-}
-
-void currentCondition_setTemperature(currentCondition_t self, uint16_t value) {
-	if (self != NULL)
-	self->temperatureData = value;
-}
-
-void currentCondition_setSound(currentCondition_t self, uint16_t value) {
-	if (self != NULL)
-	self->soundData = value;
-}
-
-//	 DO WE ACTUALLY EVER DO THIS?
 void currentCondition_destroy(currentCondition_t self) {
 	if (self == NULL)
-	return;
+		return;
 	free(self->deviceId);
 	free(self->co2Data);
 	free(self->temperatureData);
