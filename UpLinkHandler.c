@@ -14,7 +14,6 @@ should be present */
 
 #include <ATMEGA_FreeRTOS.h>
 
-#include <message_buffer.h>
 #include <lora_driver.h>
 #include <iled.h>
 
@@ -28,7 +27,7 @@ should be present */
 
 static lora_payload_t _uplink_payload;
 
-void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer);
+void lora_UpLinkHandler_task(UBaseType_t lora_handler_task_priority,MessageBufferHandle_t xMessageBuffer);
 
 /*Check for the parameters*/
 
@@ -49,7 +48,7 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 	*/
 	void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
 	{	
-		size_t xReceivedBytes;
+		size_t xBytesToSend;
 		char rxData[50];
 		
 		// Hardware reset of LoRaWAN transceiver
@@ -64,7 +63,7 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 		_lora_setup();
 
 		
-		xReceivedBytes = xMessageBufferReceive(xMessageBuffer, void rxData,
+		xBytesToSend= xMessageBufferReceive(xMessageBuffer, void rxData,
 		sizeof(rxData),0);
 		_uplink_payload=rxData;
 		
@@ -77,7 +76,7 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 	
 	
 	
-	/*Check out where should it be setup exactly*/
+	
 	static void _lora_setup(void)
 	{
 		e_LoRa_return_code_t rc;

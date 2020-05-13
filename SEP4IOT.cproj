@@ -189,6 +189,9 @@
     <Compile Include="device.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="DeviceConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="drivers\display_7seg.h">
       <SubType>compile</SubType>
     </Compile>
@@ -196,6 +199,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main-Karla.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="UpLinkHandler.c">
       <SubType>compile</SubType>
     </Compile>
     <None Include="drivers\docs\example\main.c">
