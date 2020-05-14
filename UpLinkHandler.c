@@ -11,6 +11,7 @@ should be present */
 
 #include <stddef.h>
 #include <stdio.h>
+#include "UpLinkHandler.h"
 
 #include <ATMEGA_FreeRTOS.h>
 
@@ -27,7 +28,6 @@ static char _out_buf[100];
 
 static lora_payload_t _uplink_payload;
 
-void lora_UpLinkHandler_task(UBaseType_t lora_handler_task_priority,MessageBufferHandle_t xMessageBuffer);
 
 /*Check for the parameters*/
 
@@ -35,12 +35,92 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 {
 	
 	xTaskCreate(
-	lora_UpLinkHandler_task(xMessageBuffer)
+	lora_UpLinkHandler_task
 	,  (const portCHAR *)"LRUpHand"  // A name just for humans
 	,  configMINIMAL_STACK_SIZE+200  // This stack size can be checked & adjusted by reading the Stack Highwater
-	,  NULL
+	,  xMessageBuffer
 	,  lora_handler_task_priority  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
 	,  NULL );
+}
+
+static void _lora_setup(void)
+{
+	e_LoRa_return_code_t rc;
+	led_slow_blink(led_ST2); // OPTIONAL: Led the green led blink slowly while we are setting up LoRa
+
+
+	//The below code is required to be executed only once due to the fact that these MAC settings
+	// can be stored inside of the tranciever
+	//START ON ONE TIME USE CODE
+
+	// Factory reset the transceiver
+	printf("FactoryReset >%s<\n", lora_driver_map_return_code_to_text(lora_driver_rn2483_factory_reset()));
+	
+	// Configure to EU868 LoRaWAN standards
+	printf("Configure to EU868 >%s<\n", lora_driver_map_return_code_to_text(lora_driver_configure_to_eu868()));
+
+	// Get the transceivers HW EUI
+	rc = lora_driver_get_rn2483_hweui(_out_buf);
+	printf("Get HWEUI >%s<: %s\n",lora_driver_map_return_code_to_text(rc), _out_buf);
+
+	// Set the HWEUI as DevEUI in the LoRaWAN software stack in the transceiver
+	printf("Set DevEUI: %s >%s<\n", _out_buf, lora_driver_map_return_code_to_text(lora_driver_set_device_identifier(_out_buf)));
+
+	// Set Over The Air Activation parameters to be ready to join the LoRaWAN
+	printf("Set OTAA Identity appEUI:%s appKEY:%s devEUI:%s >%s<\n", LORA_appEUI, LORA_appKEY, _out_buf, lora_driver_map_return_code_to_text(lora_driver_set_otaa_identity(LORA_appEUI,LORA_appKEY,_out_buf)));
+
+	// Save all the MAC settings in the transceiver
+	printf("Save mac >%s<\n",lora_driver_map_return_code_to_text(lora_driver_save_mac()));
+
+	//END OF ONE TIME USE CODE
+	
+	
+	// Enable Adaptive Data Rate
+	printf("Set Adaptive Data Rate: ON >%s<\n", lora_driver_map_return_code_to_text(lora_driver_set_adaptive_data_rate(LoRa_ON)));
+
+	// Set receiver window1 delay to 500 ms - this is needed if down-link messages will be used
+	printf("Set Receiver Delay: %d ms >%s<\n", 500, lora_driver_map_return_code_to_text(lora_driver_set_receive_delay(500)));
+
+	// Join the LoRaWAN
+	uint8_t maxJoinTriesLeft = 10;
+	
+	do {
+		rc = lora_driver_join(LoRa_OTAA);
+		printf("Join Network TriesLeft:%d >%s<\n", maxJoinTriesLeft, lora_driver_map_return_code_to_text(rc));
+
+		if ( rc != LoRa_ACCEPTED)
+		{
+			// Make the red led pulse to tell something went wrong
+			led_long_puls(led_ST1); // OPTIONAL
+			// Wait 5 sec and lets try again
+			vTaskDelay(pdMS_TO_TICKS(5000UL));
+		}
+		else
+		{
+			break;
+		}
+	} while (--maxJoinTriesLeft);
+
+	if (rc == LoRa_ACCEPTED)
+	{
+		// Connected to LoRaWAN :-)
+		// Make the green led steady
+		led_led_on(led_ST2); // OPTIONAL
+	}
+	else
+	{
+		// Something went wrong
+		// Turn off the green led
+		led_led_off(led_ST2); // OPTIONAL
+		// Make the red led blink fast to tell something went wrong
+		led_fast_blink(led_ST1); // OPTIONAL
+
+		// Lets stay here
+		while (1)
+		{
+			taskYIELD();
+		}
+	}
 }
 	
 	/*Receives message from message buffer shared between it and the application responsible for gathering the data
@@ -63,9 +143,9 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 		_lora_setup();
 
 		
-		xBytesToSend= xMessageBufferReceive(xMessageBuffer, void rxData,
+		xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) rxData,
 		sizeof(rxData),0);
-		_uplink_payload=rxData;
+		_uplink_payload = (_uplink_payload*) &rxData;
 		
 		/**< Status led ST4 (BLUE)*/
 		//Makes the led light up in a short period.
@@ -77,83 +157,5 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 	
 	
 	
-	static void _lora_setup(void)
-	{
-		e_LoRa_return_code_t rc;
-		led_slow_blink(led_ST2); // OPTIONAL: Led the green led blink slowly while we are setting up LoRa
-
-
-		//The below code is required to be executed only once due to the fact that these MAC settings 
-		// can be stored inside of the tranciever 
-				//START ON ONE TIME USE CODE
-
-		// Factory reset the transceiver
-		printf("FactoryReset >%s<\n", lora_driver_map_return_code_to_text(lora_driver_rn2483_factory_reset()));
-		
-		// Configure to EU868 LoRaWAN standards
-		printf("Configure to EU868 >%s<\n", lora_driver_map_return_code_to_text(lora_driver_configure_to_eu868()));
-
-		// Get the transceivers HW EUI
-		rc = lora_driver_get_rn2483_hweui(_out_buf);
-		printf("Get HWEUI >%s<: %s\n",lora_driver_map_return_code_to_text(rc), _out_buf);
-
-		// Set the HWEUI as DevEUI in the LoRaWAN software stack in the transceiver
-		printf("Set DevEUI: %s >%s<\n", _out_buf, lora_driver_map_return_code_to_text(lora_driver_set_device_identifier(_out_buf)));
-
-		// Set Over The Air Activation parameters to be ready to join the LoRaWAN
-		printf("Set OTAA Identity appEUI:%s appKEY:%s devEUI:%s >%s<\n", LORA_appEUI, LORA_appKEY, _out_buf, lora_driver_map_return_code_to_text(lora_driver_set_otaa_identity(LORA_appEUI,LORA_appKEY,_out_buf)));
-
-		// Save all the MAC settings in the transceiver
-		printf("Save mac >%s<\n",lora_driver_map_return_code_to_text(lora_driver_save_mac()));
-
-				//END OF ONE TIME USE CODE
-		
-		
-		// Enable Adaptive Data Rate
-		printf("Set Adaptive Data Rate: ON >%s<\n", lora_driver_map_return_code_to_text(lora_driver_set_adaptive_data_rate(LoRa_ON)));
-
-		// Set receiver window1 delay to 500 ms - this is needed if down-link messages will be used
-		printf("Set Receiver Delay: %d ms >%s<\n", 500, lora_driver_map_return_code_to_text(lora_driver_set_receive_delay(500)));
-
-		// Join the LoRaWAN
-		uint8_t maxJoinTriesLeft = 10;
-		
-		do {
-			rc = lora_driver_join(LoRa_OTAA);
-			printf("Join Network TriesLeft:%d >%s<\n", maxJoinTriesLeft, lora_driver_map_return_code_to_text(rc));
-
-			if ( rc != LoRa_ACCEPTED)
-			{
-				// Make the red led pulse to tell something went wrong
-				led_long_puls(led_ST1); // OPTIONAL
-				// Wait 5 sec and lets try again
-				vTaskDelay(pdMS_TO_TICKS(5000UL));
-			}
-			else
-			{
-				break;
-			}
-		} while (--maxJoinTriesLeft);
-
-		if (rc == LoRa_ACCEPTED)
-		{
-			// Connected to LoRaWAN :-)
-			// Make the green led steady
-			led_led_on(led_ST2); // OPTIONAL
-		}
-		else
-		{
-			// Something went wrong
-			// Turn off the green led
-			led_led_off(led_ST2); // OPTIONAL
-			// Make the red led blink fast to tell something went wrong
-			led_fast_blink(led_ST1); // OPTIONAL
-
-			// Lets stay here
-			while (1)
-			{
-				taskYIELD();
-			}
-		}
-	}
+	
 	

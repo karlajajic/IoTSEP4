@@ -12,6 +12,4 @@ void device_startMeasuring(device_t self);
 currentCondition_t device_getCurrentCondition(device_t self);
 
 void device_setCO2ToCurrent(device_t self, uint16_t value);
-
-
 uint16_t device_getCO2Data(device_t self);

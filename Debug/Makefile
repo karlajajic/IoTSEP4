@@ -62,10 +62,13 @@ SUBDIRS :=  \
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../co2Reader.c \
+../Configuration.c \
 ../currentCondition.c \
 ../device.c \
+../DownLinkHandler.c \
 ../drivers/docs/example/loraWANHandler.c \
-../main-Karla.c \
+../humidityAndTemperature.c \
+../UpLinkHandler.c \
 ../FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.c \
 ../FreeRTOS/src/croutine.c \
 ../FreeRTOS/src/event_groups.c \
@@ -88,10 +91,13 @@ ASM_SRCS +=
 
 OBJS +=  \
 co2Reader.o \
+Configuration.o \
 currentCondition.o \
 device.o \
+DownLinkHandler.o \
 drivers/docs/example/loraWANHandler.o \
-main-Karla.o \
+humidityAndTemperature.o \
+UpLinkHandler.o \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o \
 FreeRTOS/src/croutine.o \
 FreeRTOS/src/event_groups.o \
@@ -107,10 +113,13 @@ main.o
 
 OBJS_AS_ARGS +=  \
 co2Reader.o \
+Configuration.o \
 currentCondition.o \
 device.o \
+DownLinkHandler.o \
 drivers/docs/example/loraWANHandler.o \
-main-Karla.o \
+humidityAndTemperature.o \
+UpLinkHandler.o \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o \
 FreeRTOS/src/croutine.o \
 FreeRTOS/src/event_groups.o \
@@ -126,10 +135,13 @@ main.o
 
 C_DEPS +=  \
 co2Reader.d \
+Configuration.d \
 currentCondition.d \
 device.d \
+DownLinkHandler.d \
 drivers/docs/example/loraWANHandler.d \
-main-Karla.d \
+humidityAndTemperature.d \
+UpLinkHandler.d \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.d \
 FreeRTOS/src/croutine.d \
 FreeRTOS/src/event_groups.d \
@@ -145,10 +157,13 @@ main.d
 
 C_DEPS_AS_ARGS +=  \
 co2Reader.d \
+Configuration.d \
 currentCondition.d \
 device.d \
+DownLinkHandler.d \
 drivers/docs/example/loraWANHandler.d \
-main-Karla.d \
+humidityAndTemperature.d \
+UpLinkHandler.d \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.d \
 FreeRTOS/src/croutine.d \
 FreeRTOS/src/event_groups.d \
@@ -183,6 +198,13 @@ LINKER_SCRIPT_DEP+=
 	@echo Finished building: $<
 	
 
+./Configuration.o: .././Configuration.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000L  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../FreeRTOS/src" -I"../drivers"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega2560" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 ./currentCondition.o: .././currentCondition.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
@@ -197,6 +219,13 @@ LINKER_SCRIPT_DEP+=
 	@echo Finished building: $<
 	
 
+./DownLinkHandler.o: .././DownLinkHandler.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000L  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../FreeRTOS/src" -I"../drivers"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega2560" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 drivers/docs/example/loraWANHandler.o: ../drivers/docs/example/loraWANHandler.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
@@ -204,7 +233,14 @@ drivers/docs/example/loraWANHandler.o: ../drivers/docs/example/loraWANHandler.c
 	@echo Finished building: $<
 	
 
-./main-Karla.o: .././main-Karla.c
+./humidityAndTemperature.o: .././humidityAndTemperature.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000L  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../FreeRTOS/src" -I"../drivers"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega2560" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./UpLinkHandler.o: .././UpLinkHandler.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000L  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../FreeRTOS/src" -I"../drivers"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega2560" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

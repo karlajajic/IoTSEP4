@@ -180,6 +180,9 @@
     <Compile Include="Configuration.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Configuration.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="currentCondition.c">
       <SubType>compile</SubType>
     </Compile>
@@ -204,10 +207,19 @@
     <Compile Include="drivers\docs\example\loraWANHandler.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="main-Karla.c">
+    <Compile Include="humidityAndTemperature.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="humidityAndTemperature.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="main-Karla.c">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="UpLinkHandler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="UpLinkHandler.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="drivers\docs\example\main.c">

@@ -4,7 +4,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "FreeRTOS.h"
+
+//#include "FreeRTOS.h"
+#include "ATMEGA_FreeRTOS.h"
 #include "task.h"
 #include "event_groups.h"
 #include "semphr.h"

@@ -7,8 +7,8 @@ typedef struct currentCondition currentCondtion;
 typedef struct currentCondition {
 	int deviceId;
 	uint16_t co2Data;
-	uint16_t temperatureData;
-	uint16_t humidityData;
+	float temperatureData;
+	float humidityData;
 	uint16_t soundData;
 }currentCondition;
 
@@ -28,12 +28,12 @@ void currentCondition_setCO2(currentCondition_t self, uint16_t value) {
 	self->co2Data = value;
 }
 
-void currentCondition_setHumidity(currentCondition_t self, uint16_t value) {
+void currentCondition_setHumidity(currentCondition_t self, float value) {
 	if (self != NULL)
 	self->humidityData= value;
 }
 
-void currentCondition_setTemperature(currentCondition_t self, uint16_t value) {
+void currentCondition_setTemperature(currentCondition_t self, float value) {
 	if (self != NULL)
 	self->temperatureData = value;
 }
@@ -45,12 +45,12 @@ void currentCondition_setSound(currentCondition_t self, uint16_t value) {
 
 //	 DO WE ACTUALLY EVER DO THIS?
 void currentCondition_destroy(currentCondition_t self) {
-	if (self == NULL)
-	return;
-	free(self->deviceId);
-	free(self->co2Data);
-	free(self->temperatureData);
-	free(self->humidityData);
-	free(self->soundData);
-	free(self);
+	//if (self == NULL)
+	//return;
+	//free(self->deviceId);
+	//free(self->co2Data);
+	//free(self->temperatureData);
+	//free(self->humidityData);
+	//free(self->soundData);
+	//free(self);
 }

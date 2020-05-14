@@ -18,6 +18,8 @@
 #include <FreeRTOSTraceDriver.h>
 #include <stdio_driver.h>
 #include <serial.h>
+#include "UpLinkHandler.h"
+#include <message_buffer.h>
 
 // Needed for LoRaWAN
 #include <lora_driver.h>
@@ -28,6 +30,8 @@ void task2( void *pvParameters );
 
 // define semaphore handle
 SemaphoreHandle_t xTestSemaphore;
+MessageBufferHandle_t xMessageBuffer;
+lora_payload_t payload;
 
 // Prototype for LoRaWAN handler
 void lora_handler_create(UBaseType_t lora_handler_task_priority);
@@ -118,7 +122,7 @@ void initialiseSystem()
 	// Make it possible to use stdio on COM port 0 (USB) on Arduino board - Setting 57600,8,N,1
 	stdioCreate(ser_USART0);
 	// Let's create some tasks
-	create_tasks_and_semaphores();
+	
 
 	// vvvvvvvvvvvvvvvvv BELOW IS LoRaWAN initialisation vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	// Initialise the HAL layer and use 5 for LED driver priority
@@ -126,7 +130,17 @@ void initialiseSystem()
 	// Initialise the LoRaWAN driver without down-link buffer
 	lora_driver_create(LORA_USART, NULL);
 	// Create LoRaWAN task and start it up with priority 3
-	lora_handler_create(3);
+	
+	uint16_t hum = 1234;
+	uint16_t temp = 5678;
+	
+	xMessageBuffer = xMessageBufferCreate(100);
+	payload.bytes[0] = hum >> 8;
+	payload.bytes[1] = hum & 0xFF;
+	payload.bytes[2] = temp >> 8;
+	payload.bytes[3] = hum & 0xFF;
+	
+ 	lora_UpLinkHandler_create(LORA_USART, xMessageBuffer);
 }
 
 /*-----------------------------------------------------------*/

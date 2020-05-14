@@ -22,7 +22,7 @@ static lora_payload_t _downlink_payload;
 int16_t temperature_setting; // Temperature
 static char _out_buf[100];
 
-void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
+void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer);
 
 void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
@@ -35,39 +35,6 @@ void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, Message
 	,  NULL );
 	
 }
-
-
-	void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
-	{
-		size_t xBytesToSend;
-		char rxData[50];
-		
-		// Hardware reset of LoRaWAN transceiver
-		lora_driver_reset_rn2483(1);
-		vTaskDelay(2);
-		lora_driver_reset_rn2483(0);
-		// Give it a chance to wakeup
-		vTaskDelay(150);
-
-		lora_driver_flush_buffers(); // get rid of first version string from module after reset!
-
-		_lora_setup();
-		
-		xMessageBufferReceive(xMessageBufferReceive, &_downlink_payload,sizeof(lora_payload_t),portMAX_DELAY)
-		
-		//decode the received paylaod assuming we have only temperature_setting
-		//Check that the lenght we've received is two as expected
-		if (_downlink_payload.len==2)
-		{
-			temperature_setting= (_downlink_payload.bytes[0]<<8) + _downlink_payload.bytes[1];	
-		}
-		
-
-	}
-
-
-
-
 
 static void _lora_setup(void)
 {
@@ -98,7 +65,7 @@ static void _lora_setup(void)
 	printf("Save mac >%s<\n",lora_driver_map_return_code_to_text(lora_driver_save_mac()));
 
 
-		//END OF ONE TIME USE CODE
+	//END OF ONE TIME USE CODE
 
 
 	// Enable Adaptive Data Rate
@@ -146,7 +113,40 @@ static void _lora_setup(void)
 		while (1)
 		{
 			taskYIELD();
-			 
+			
 		}
 	}
 }
+
+	void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
+	{
+		size_t xBytesToSend;
+		char rxData[50];
+		
+		// Hardware reset of LoRaWAN transceiver
+		lora_driver_reset_rn2483(1);
+		vTaskDelay(2);
+		lora_driver_reset_rn2483(0);
+		// Give it a chance to wakeup
+		vTaskDelay(150);
+
+		lora_driver_flush_buffers(); // get rid of first version string from module after reset!
+
+		_lora_setup();
+		size_t xBytesReceived;
+		xBytesReceived = xMessageBufferReceive(xMessageBuffer,(void*) &_downlink_payload,sizeof(lora_payload_t),portMAX_DELAY);
+		
+		//decode the received paylaod assuming we have only temperature_setting
+		//Check that the lenght we've received is two as expected
+		if (_downlink_payload.len==2)
+		{
+			temperature_setting= (_downlink_payload.bytes[0]<<8) + _downlink_payload.bytes[1];	
+		}
+		
+
+	}
+
+
+
+
+

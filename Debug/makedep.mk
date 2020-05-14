@@ -4,13 +4,19 @@
 
 co2Reader.c
 
+Configuration.c
+
 currentCondition.c
 
 device.c
 
+DownLinkHandler.c
+
 drivers\docs\example\loraWANHandler.c
 
-main-Karla.c
+humidityAndTemperature.c
+
+UpLinkHandler.c
 
 FreeRTOS\FreeRTOSTraceDriver\FreeRTOSTraceDriver.c
 

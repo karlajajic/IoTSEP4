@@ -1,4 +1,5 @@
 #include "co2Reader.h"
+#include "humidityAndTemperature.h"
 #include "device.h"
 
 extern int deviceId;
@@ -7,6 +8,7 @@ typedef struct device device;
 
 typedef struct device { //add all drivers
 	co2reader_t co2reader;
+	humAndTempReader_t humAndTempReader;
 
 	currentCondition_t currentCondition;
 	TaskHandle_t handleTask;
@@ -18,6 +20,7 @@ device_t device_create(void) {
 	return NULL;
 
 	_new_device->co2reader = co2Reader_create();
+	_new_device->humAndTempReader = humAndTempReader_create();
 	_new_device->currentCondition = currentCondition_create(deviceId);
 
 	xTaskCreate(
@@ -86,5 +89,25 @@ void device_setCO2ToCurrent(device_t self, uint16_t value) {
 uint16_t device_getCO2Data(device_t self) {
 	if (self->co2reader != NULL)
 	return co2Reader_getCO2(self->co2reader);
+	else return -1;
+}
+
+void device_setHumidityToCurrent(device_t self, float value){
+	currentCondition_setHumidity(self->currentCondition, value);
+}
+
+void device_setTemperatureToCurrent(device_t self, float value){
+	currentCondition_setTemperature(self->currentCondition, value);
+}
+
+float device_getHumidityData(device_t self) {
+	if (self->humAndTempReader != NULL)
+	return humAndTempReader_getHumidity(self->humAndTempReader);
+	else return -1;
+}
+
+float device_getTemperatureData(device_t self) {
+	if (self->humAndTempReader != NULL)
+	return humAndTempReader_getTemperature(self->humAndTempReader);
 	else return -1;
 }
