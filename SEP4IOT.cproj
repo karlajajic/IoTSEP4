@@ -177,6 +177,9 @@
     <Compile Include="co2Reader.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Configuration.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="currentCondition.c">
       <SubType>compile</SubType>
     </Compile>
@@ -190,6 +193,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="DeviceConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="DownLinkHandler.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="drivers\display_7seg.h">

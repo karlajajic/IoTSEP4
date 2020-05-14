@@ -20,6 +20,7 @@
 
 static lora_payload_t _downlink_payload;
 int16_t temperature_setting; // Temperature
+static char _out_buf[100];
 
 void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 
@@ -73,6 +74,10 @@ static void _lora_setup(void)
 	e_LoRa_return_code_t rc;
 	led_slow_blink(led_ST2); // OPTIONAL: Led the green led blink slowly while we are setting up LoRa
 
+	//The below code is required to be executed only once due to the fact that these MAC settings
+	// can be stored inside of the tranciever
+	//START ON ONE TIME USE CODE
+	
 	// Factory reset the transceiver
 	printf("FactoryReset >%s<\n", lora_driver_map_return_code_to_text(lora_driver_rn2483_factory_reset()));
 	
@@ -91,6 +96,10 @@ static void _lora_setup(void)
 
 	// Save all the MAC settings in the transceiver
 	printf("Save mac >%s<\n",lora_driver_map_return_code_to_text(lora_driver_save_mac()));
+
+
+		//END OF ONE TIME USE CODE
+
 
 	// Enable Adaptive Data Rate
 	printf("Set Adaptive Data Rate: ON >%s<\n", lora_driver_map_return_code_to_text(lora_driver_set_adaptive_data_rate(LoRa_ON)));

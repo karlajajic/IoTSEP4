@@ -21,7 +21,7 @@ should be present */
 #define LORA_appKEY "bf9a206660a448b3892f0bd64935e4d5"
 #include <message_buffer.h>
 #include <lora_driver.h>
-
+static char _out_buf[100];
 /*Leds*/
 #include <iled.h>
 
@@ -82,6 +82,11 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 		e_LoRa_return_code_t rc;
 		led_slow_blink(led_ST2); // OPTIONAL: Led the green led blink slowly while we are setting up LoRa
 
+
+		//The below code is required to be executed only once due to the fact that these MAC settings 
+		// can be stored inside of the tranciever 
+				//START ON ONE TIME USE CODE
+
 		// Factory reset the transceiver
 		printf("FactoryReset >%s<\n", lora_driver_map_return_code_to_text(lora_driver_rn2483_factory_reset()));
 		
@@ -101,6 +106,9 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 		// Save all the MAC settings in the transceiver
 		printf("Save mac >%s<\n",lora_driver_map_return_code_to_text(lora_driver_save_mac()));
 
+				//END OF ONE TIME USE CODE
+		
+		
 		// Enable Adaptive Data Rate
 		printf("Set Adaptive Data Rate: ON >%s<\n", lora_driver_map_return_code_to_text(lora_driver_set_adaptive_data_rate(LoRa_ON)));
 
