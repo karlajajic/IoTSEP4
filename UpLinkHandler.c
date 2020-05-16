@@ -143,9 +143,10 @@ static void _lora_setup(void)
 		_lora_setup();
 
 		
-		xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) rxData,
+		xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) &_uplink_payload,
 		sizeof(rxData),0);
-		_uplink_payload = (_uplink_payload*) &rxData;
+		
+		//_uplink_payload = (_uplink_payload) &rxData;
 		
 		/**< Status led ST4 (BLUE)*/
 		//Makes the led light up in a short period.

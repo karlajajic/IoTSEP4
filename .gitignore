@@ -5,3 +5,5 @@ SEP4IOT.cproj
 SEP4IOT.cproj
 FreeRTOS
 drivers
+Debug/FreeRTOS/src/heap_4.o
+Debug/FreeRTOS/src/heap_4.o

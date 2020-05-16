@@ -14,7 +14,7 @@
 /*Leds*/
 #include <iled.h>
 #include <message_buffer.h>
-
+#include "DownLinkHandler.h"
 #define LORA_appEUI "  fbf6ad621cf57cd7"
 #define LORA_appKEY "bf9a206660a448b3892f0bd64935e4d5"
 
@@ -27,10 +27,10 @@ void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, Message
 void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
 	xTaskCreate(
-	lora_DownLinkHandler_task(xMessageBuffer)
+	lora_DownLinkHandler_task
 	,  (const portCHAR *)"LRUpHand"  // A name just for humans
 	,  configMINIMAL_STACK_SIZE+200  // This stack size can be checked & adjusted by reading the Stack Highwater
-	,  NULL
+	,  xMessageBuffer
 	,  lora_handler_task_priority  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
 	,  NULL );
 	
@@ -118,7 +118,7 @@ static void _lora_setup(void)
 	}
 }
 
-	void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
+	void lora_DownLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
 	{
 		size_t xBytesToSend;
 		char rxData[50];
