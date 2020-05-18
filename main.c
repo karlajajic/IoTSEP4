@@ -21,14 +21,49 @@
 #include "UpLinkHandler.h"
 #include <message_buffer.h>
 
+#include "task.h"
+#include "event_groups.h"
+#include "semphr.h"
+#include "message_buffer.h"
+
+#include "device.h"
+#include "currentCondition.h"
+#include "co2Reader.h"
+
 // Needed for LoRaWAN
 #include <lora_driver.h>
 
-#define TASK_LORA_DRIVER_PRIORITY			( tskIDLE_PRIORITY + 1 )
+//define priority individualy for each task
+#define TASK_HUMIDITY_SENSOR_PRIORITY	( tskIDLE_PRIORITY + 1 )
+#define TASK_CO2_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define TASK_LORA_DRIVER_PRIORITY		( tskIDLE_PRIORITY + 1 )
+
+//define task stack for each task
+#define HUMIDITY_TASK_STACK				(configMINIMAL_STACK_SIZE)
+#define CO2_TASK_STACK					(configMINIMAL_STACK_SIZE)
+#define DEVICE_TASK_STACK				(configMINIMAL_STACK_SIZE)
+#define LORA_DRIVER_TASK_STACK			(configMINIMAL_STACK_SIZE)
+
+//defining bits that will be the 'flags' for event group
+#define BIT_MEASURE_HUMIDITY			(1 << 0)
+#define BIT_MEASURE_CO2					(1 << 1)
+#define ALL_BIT_MEASURE					(BIT_MEASURE_HUMIDITY | BIT_MEASURE_CO2)
+
+#define BIT_DONE_MEASURE_HUMIDITY		(1 << 4)
+#define BIT_DONE_MEASURE_CO2			(1 << 5)
+#define ALL_BIT_DONE_MEASURE			(BIT_DONE_MEASURE_HUMIDITY | BIT_DONE_MEASURE_CO2)
+
 
 // define two Tasks
 void task1( void *pvParameters );
 void task2( void *pvParameters );
+
+//used for appController to prompt sensors to start with readings
+EventGroupHandle_t startMeasureEventGroup;
+//used for appController to check if sensors are done with readings
+EventGroupHandle_t readyEventGroup;
+
 
 // define semaphore handle
 SemaphoreHandle_t xTestSemaphore;
@@ -53,8 +88,17 @@ void create_tasks_and_semaphores(void)
 		}
 	}
 	
+	startMeasureEventGroup = xEventGroupCreate();
+	readyEventGroup = xEventGroupCreate();
+
 	xMessageBuffer = xMessageBufferCreate(100);
 	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
+
+	co2reader_t co2reader = co2Reader_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
+	readyEventGroup, BIT_DONE_MEASURE_CO2);
+
+	device_t device = device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
+	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader);
 	
 	doStuff();
 	

@@ -1,4 +1,16 @@
 #include"co2Reader.h"
+#include <stdint.h>
+#include <stdlib.h>
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "event_groups.h"
+
+static EventGroupHandle_t _startMeasureEventGroup;
+static EventBits_t _startMeasureBit;
+
+static EventGroupHandle_t _readyEventGroup;
+static EventBits_t _readyBit;
 
 typedef struct co2reader co2reader;
 
@@ -8,19 +20,27 @@ typedef struct co2reader {
 }co2reader;
 
 
-co2reader_t co2Reader_create(void) {
+co2reader_t co2Reader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
+EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
+
 	co2reader_t _new_reader = calloc(sizeof(co2reader), 1);
 	if (_new_reader == NULL)
 	return NULL;
 
 	_new_reader->value = 0;
 
+	_startMeasureEventGroup = startMeasureEventGroup;
+	_startMeasureBit = startMeasureBit;
+
+	_readyEventGroup = readyEventGroup;
+	_readyBit = readyBit;
+
 	xTaskCreate(
 	co2Reader_executeTask,
 	"CO2Reader",
-	CO2_TASK_STACK,
+	stack,
 	_new_reader,
-	TASK_CO2_SENSOR_PRIORITY,
+	priority,
 	&_new_reader->handleTask
 	);
 
@@ -28,17 +48,19 @@ co2reader_t co2Reader_create(void) {
 
 	return _new_reader;
 }
+
+//	RETURN TO DESTROY METHODS
 void co2Reader_destroy(co2reader_t self) {
-	if (self == NULL)
-	return;
+	//if (self == NULL)
+	//	return;
 
-	//delete will clear the allocated memory to the task + we need to remove everything else
-	vTaskDelete(self->handleTask);
+	////delete will clear the allocated memory to the task + we need to remove everything else
+	//vTaskDelete(self->handleTask);
 
-	//free the values from struct (without pointer, later the pointer
-	free(self->handleTask);
-	free(self->value);
-	free(self);
+	////free the values from struct (without pointer, later the pointer
+	//free(self->handleTask);
+	//free(self->value);
+	//free(self);
 }
 
 //actual task, methods devided so that it is possible to test
@@ -49,13 +71,13 @@ void co2Reader_executeTask(co2reader_t self) {
 }
 
 void co2Reader_measure(co2reader_t self) {//dummy
-	EventBits_t uxBits = xEventGroupWaitBits(startMeasureEventGroup, //eventGroup
-	BIT_MEASURE_CO2, //bits it is interested in
+	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, //eventGroup
+	_startMeasureBit, //bits it is interested in
 	pdTRUE, //clears the bits
 	pdTRUE, //waits for both bits to be set
 	portMAX_DELAY); //wait
 
-	if ((uxBits & (BIT_MEASURE_CO2)) == (BIT_MEASURE_CO2)) {
+	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 		uint8_t no = self->value;
 		no++;
 		self->value = no;
@@ -64,7 +86,7 @@ void co2Reader_measure(co2reader_t self) {//dummy
 		vTaskDelay(2500); //pretend it takes some time
 
 		//set done bit so that device knows meassurement is done
-		xEventGroupSetBits(doneMeasuringEventGroup, BIT_DONE_MEASURE_CO2);
+		xEventGroupSetBits(_readyEventGroup, _readyBit);
 	}
 }
 
