@@ -12,19 +12,20 @@ typedef struct device device;
 
 typedef struct device { //add all drivers
 	co2reader_t co2reader;
-
+	humAndTempReader_t humAndTempReader;
 	currentCondition_t currentCondition;
 	TaskHandle_t handleTask;
 }device;
 
 device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
-	EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader){
+	EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader){
 
 	device_t _new_device = calloc(sizeof(device), 1);
 	if (_new_device == NULL)
 		return NULL;
 
 	_new_device->co2reader = co2Reader;
+	_new_device->humAndTempReader = humAndTempReader;
 	_new_device->currentCondition = currentCondition_create(deviceId);
 
 	_startMeasureEventGroup = startMeasureEventGroup;
@@ -68,8 +69,10 @@ void device_startMeasuring(device_t self) {
 		portMAX_DELAY); //waits forever if needed
 
 	if ((uxBits & (_readyBit)) == (_readyBit)) {
-		printf("device got done bit");
-
+		printf("device got done bit\n");
+		printf("CO2 is: %u\n", co2Reader_getCO2(self->co2reader));
+		printf("Temperature is: %f\n", humAndTempReader_getTemperature(self->humAndTempReader));
+		printf("Humidity is: %f\n", humAndTempReader_getHumidity(self->humAndTempReader));
 		device_setCO2ToCurrent(self, device_getCO2Data(self));
 		//add the rest
 	}
@@ -91,7 +94,7 @@ currentCondition_t device_getCurrentCondition(device_t self) {
 }
 
 void device_setCO2ToCurrent(device_t self, uint16_t value) {
-	currentCOndition_setCO2(self->currentCondition, value);
+	currentCondition_setCO2(self->currentCondition, value);
 }
 
 uint16_t device_getCO2Data(device_t self) {

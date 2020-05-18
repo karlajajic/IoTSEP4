@@ -29,6 +29,7 @@
 #include "device.h"
 #include "currentCondition.h"
 #include "co2Reader.h"
+#include "humidityAndTemperature.h"
 
 // Needed for LoRaWAN
 #include <lora_driver.h>
@@ -70,6 +71,8 @@ SemaphoreHandle_t xTestSemaphore;
 MessageBufferHandle_t xMessageBuffer;
 lora_payload_t payload;
 
+int deviceId=100;
+
 // Prototype for LoRaWAN handler
 void lora_handler_create(UBaseType_t lora_handler_task_priority);
 
@@ -94,11 +97,14 @@ void create_tasks_and_semaphores(void)
 	xMessageBuffer = xMessageBufferCreate(100);
 	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
 
+	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(TASK_HUMIDITY_SENSOR_PRIORITY, HUMIDITY_TASK_STACK, 
+	startMeasureEventGroup, BIT_MEASURE_HUMIDITY, readyEventGroup, BIT_DONE_MEASURE_HUMIDITY);
+	
 	co2reader_t co2reader = co2Reader_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
 	readyEventGroup, BIT_DONE_MEASURE_CO2);
 
 	device_t device = device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
-	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader);
+	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature);
 	
 	doStuff();
 	

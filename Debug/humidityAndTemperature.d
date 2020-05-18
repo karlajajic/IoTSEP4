@@ -1,6 +1,5 @@
 humidityAndTemperature.d humidityAndTemperature.o: \
  .././humidityAndTemperature.c .././humidityAndTemperature.h \
- .././DeviceConfig.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
@@ -22,13 +21,9 @@ humidityAndTemperature.d humidityAndTemperature.o: \
  ../FreeRTOS/src/mpu_wrappers.h ../FreeRTOS/src/FreeRTOSVariant.h \
  ../FreeRTOS/src/ATMEGA_FreeRTOS.h ../FreeRTOS/src/task.h \
  ../FreeRTOS/src/list.h ../FreeRTOS/src/task.h \
- ../FreeRTOS/src/event_groups.h ../FreeRTOS/src/timers.h \
- ../FreeRTOS/src/semphr.h ../FreeRTOS/src/queue.h \
- ../FreeRTOS/src/message_buffer.h ../FreeRTOS/src/stream_buffer.h
+ ../FreeRTOS/src/event_groups.h ../FreeRTOS/src/timers.h
 
 .././humidityAndTemperature.h:
-
-.././DeviceConfig.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint.h:
 
@@ -85,11 +80,3 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 ../FreeRTOS/src/event_groups.h:
 
 ../FreeRTOS/src/timers.h:
-
-../FreeRTOS/src/semphr.h:
-
-../FreeRTOS/src/queue.h:
-
-../FreeRTOS/src/message_buffer.h:
-
-../FreeRTOS/src/stream_buffer.h:
