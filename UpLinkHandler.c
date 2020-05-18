@@ -18,7 +18,7 @@ should be present */
 #include <lora_driver.h>
 #include <iled.h>
 
-#define LORA_appEUI "  fbf6ad621cf57cd7"
+#define LORA_appEUI "fbf6ad621cf57cd7"
 #define LORA_appKEY "bf9a206660a448b3892f0bd64935e4d5"
 #include <message_buffer.h>
 #include <lora_driver.h>
@@ -27,15 +27,17 @@ static char _out_buf[100];
 #include <iled.h>
 
 static lora_payload_t _uplink_payload;
+static MessageBufferHandle_t _buffer;
 
 
 /*Check for the parameters*/
 
 void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
+	_buffer = xMessageBuffer;
 	
 	xTaskCreate(
-	lora_UpLinkHandler_task
+	lora_UpLinkHandler_startTask
 	,  (const portCHAR *)"LRUpHand"  // A name just for humans
 	,  configMINIMAL_STACK_SIZE+200  // This stack size can be checked & adjusted by reading the Stack Highwater
 	,  xMessageBuffer
@@ -153,6 +155,14 @@ static void _lora_setup(void)
 		led_short_puls(led_ST4);
 		
 		printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));
+	}
+	
+	void lora_UpLinkHandler_startTask(MessageBufferHandle_t xMessageBuffer){
+		for(;;)
+		{
+			lora_UpLinkHandler_task(xMessageBuffer);
+			vTaskDelay(300000);
+		}
 	}
 	
 	
