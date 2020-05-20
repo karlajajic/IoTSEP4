@@ -104,7 +104,7 @@ void create_tasks_and_semaphores(void)
 	readyEventGroup, BIT_DONE_MEASURE_CO2);
 
 	device_t device = device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
-	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature);
+	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature,xMessageBuffer);
 	
 	doStuff();
 	
@@ -191,15 +191,7 @@ void initialiseSystem()
 
 void doStuff()
 {
-	uint16_t hum = 1234;
-	uint16_t temp = 5678;
-
-	payload.len = 4;
-	payload.port_no = LORA_USART;
-	payload.bytes[0] = hum >> 8;
-	payload.bytes[1] = hum & 0xFF;
-	payload.bytes[2] = temp >> 8;
-	payload.bytes[3] = hum & 0xFF;
+	
 	size_t bytesToSend;
 	bytesToSend=xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
 }

@@ -21,7 +21,7 @@ should be present */
 #define LORA_appEUI "fbf6ad621cf57cd7"
 #define LORA_appKEY "bf9a206660a448b3892f0bd64935e4d5"
 #include <message_buffer.h>
-#include <lora_driver.h>
+
 static char _out_buf[100];
 /*Leds*/
 #include <iled.h>

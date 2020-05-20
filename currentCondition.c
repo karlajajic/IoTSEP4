@@ -1,14 +1,16 @@
 #include <stdlib.h>
 #include<stdint.h>
 #include "currentCondition.h"
-
+#include <ATMEGA_FreeRTOS.h>
+#include <lora_driver.h>
+#include <hal_defs.h>
 typedef struct currentCondition currentCondtion;
 
 typedef struct currentCondition {
 	int deviceId;
 	uint16_t co2Data;
-	float temperatureData;
-	float humidityData;
+	int16_t temperatureData;
+	uint16_t humidityData;
 	uint16_t soundData;
 }currentCondition;
 
@@ -28,12 +30,12 @@ void currentCondition_setCO2(currentCondition_t self, uint16_t value) {
 	self->co2Data = value;
 }
 
-void currentCondition_setHumidity(currentCondition_t self, float value) {
+void currentCondition_setHumidity(currentCondition_t self, uint16_t value) {
 	if (self != NULL)
 	self->humidityData= value;
 }
 
-void currentCondition_setTemperature(currentCondition_t self, float value) {
+void currentCondition_setTemperature(currentCondition_t self, int16_t value) {
 	if (self != NULL)
 	self->temperatureData = value;
 }
@@ -54,4 +56,21 @@ void currentCondition_destroy(currentCondition_t self) {
 	//free(self->soundData);
 	//free(self);
 	vPortFree(self->humidityData);//maybe use this
+}
+lora_payload_t getcurrentConditionPayload(currentCondition_t self)
+{
+	lora_payload_t payload=NULL;
+	
+	payload.len=4;
+	
+	payload.port_no=LORA_USART;
+	
+	payload.bytes[0] self->temperatureData >> 8;
+	payload.bytes[1] self->temperatureData & 0xFF;
+	
+	payload.bytes[2] self->humidityData >> 8;
+	payload.bytes[3] self->humidityData & 0XFF;
+	
+	return payload;
+	
 }

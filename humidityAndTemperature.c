@@ -9,8 +9,8 @@ static EventBits_t _readyBit;
 typedef struct humidityAndTemperature humidityAndTemperature;
 
 typedef struct humidityAndTemperature {
-	float humidity;
-	float temperature;
+	uint16_t humidity;
+	int16_t temperature;
 	TaskHandle_t handleTask;
 }humidityAndTemperature;
 
@@ -21,8 +21,8 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	if (_new_reader == NULL)
 	return NULL;
 
-	_new_reader->humidity = 0.0;
-	_new_reader->temperature = 0.0;
+	_new_reader->humidity = 0;
+	_new_reader->temperature = 0;
 
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
@@ -76,8 +76,8 @@ void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 		hih8120Meassure();
 		if(hih8120IsReady())
 		{
-			self->humidity = hih8120GetHumidity();
-			self->temperature = hih8120GetTemperature();
+			self->humidity = hih8120GetHumidityPercent_x10();
+			self->temperature = hih8120GetTemperature_x10();
 			printf("humidity and temperature done bit set\n");
 		}
 		vTaskDelay(2500); //pretend it takes some time
@@ -87,10 +87,10 @@ void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 	}
 }
 
-float humAndTempReader_getHumidity(humAndTempReader_t self){
+uint16_t humAndTempReader_getHumidity(humAndTempReader_t self){
 	return self->humidity;
 }
 
-float humAndTempReader_getTemperature(humAndTempReader_t self){
+int16_t humAndTempReader_getTemperature(humAndTempReader_t self){
 	return self->temperature;
 }

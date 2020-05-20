@@ -8,6 +8,8 @@ static EventBits_t _startMeasureBit;
 static EventGroupHandle_t _readyEventGroup;
 static EventBits_t _readyBit;
 
+static MessageBufferHandle_t _uplinkmessageBuffer;
+
 typedef struct device device;
 
 typedef struct device { //add all drivers
@@ -18,7 +20,7 @@ typedef struct device { //add all drivers
 }device;
 
 device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
-	EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader){
+	EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader, MessageBufferHandle_t uplinkMessageBuffer){
 
 	device_t _new_device = calloc(sizeof(device), 1);
 	if (_new_device == NULL)
@@ -33,6 +35,8 @@ device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle
 
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
+	
+	_uplinkmessageBuffer=uplinkMessageBuffer;
 
 	xTaskCreate(
 		device_executeTask,
@@ -74,7 +78,15 @@ void device_startMeasuring(device_t self) {
 		printf("Temperature is: %f\n", humAndTempReader_getTemperature(self->humAndTempReader));
 		printf("Humidity is: %f\n", humAndTempReader_getHumidity(self->humAndTempReader));
 		device_setCO2ToCurrent(self, device_getCO2Data(self));
-		//add the rest
+		
+		
+		/*Perhaps loraPayload is not a good idea to be here*/
+		lora_payload_t payload=getcurrentConditionPayload(self->currentCondition);
+		if (payload!=NULL)
+		{
+			xMessageBufferSend(_uplinkmessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
+		}
+		
 	}
 }
 
@@ -93,6 +105,22 @@ currentCondition_t device_getCurrentCondition(device_t self) {
 	return self->currentCondition;
 }
 
+void device_setHumidityToCurrent(device_t self, uint16_t value)
+{
+	currentCondition_setHumidity(self->currentCondition,value);
+}
+
+
+uint16_t device_getHumidityData(device_t self)
+{
+	if (self->humAndTempReader!=NULL)
+	{
+		return humAndTempReader_getHumidity(self->humAndTempReader);
+	}
+	else
+	return -1;
+}
+
 void device_setCO2ToCurrent(device_t self, uint16_t value) {
 	currentCondition_setCO2(self->currentCondition, value);
 }
@@ -101,4 +129,22 @@ uint16_t device_getCO2Data(device_t self) {
 	if (self->co2reader != NULL)
 		return co2Reader_getCO2(self->co2reader);
 	else return -1;
+}
+
+void device_setTemperatureToCurrent(device_t self, int16_t value)
+{
+	currentCondition_setTemperature(self->currentCondition,value);
+	
+}
+
+
+int16_t device_getTemperatureData(device_t self)
+{
+	if (self->humAndTempReader!=NULL)
+	{
+		return humAndTempReader_getTemperature(self->humAndTempReader);
+	}
+	else
+	return -1.
+	
 }
