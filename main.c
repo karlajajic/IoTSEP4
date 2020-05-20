@@ -180,7 +180,6 @@ void initialiseSystem()
 	stdioCreate(ser_USART0);
 	// Let's create some tasks
 	
-	printf("Yabababababaduuuuuuuuuuuuuuuu");
 
 	// vvvvvvvvvvvvvvvvv BELOW IS LoRaWAN initialisation vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	// Initialise the HAL layer and use 5 for LED driver priority
@@ -195,11 +194,14 @@ void doStuff()
 	uint16_t hum = 1234;
 	uint16_t temp = 5678;
 
-
+	payload.len = 4;
+	payload.port_no = LORA_USART;
 	payload.bytes[0] = hum >> 8;
 	payload.bytes[1] = hum & 0xFF;
 	payload.bytes[2] = temp >> 8;
 	payload.bytes[3] = hum & 0xFF;
+	size_t bytesToSend;
+	bytesToSend=xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
 }
 /*-----------------------------------------------------------*/
 int main(void)
