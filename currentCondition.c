@@ -59,7 +59,7 @@ void currentCondition_destroy(currentCondition_t self) {
 }
 lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 {
-	lora_payload_t payload=NULL;
+	lora_payload_t payload;
 	
 	payload.len=4;
 	
@@ -69,7 +69,7 @@ lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 	payload.bytes[1] self->temperatureData & 0xFF;
 	
 	payload.bytes[2] self->humidityData >> 8;
-	payload.bytes[3] self->humidityData & 0XFF;
+	payload.bytes[3] self->humidityData & 0xFF;
 	
 	return payload;
 	
