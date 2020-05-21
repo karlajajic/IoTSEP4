@@ -15,5 +15,5 @@ void humAndTempReader_destroy(humAndTempReader_t self);
 
 void humAndTempReader_executeTask(humAndTempReader_t self);
 void humAndTempReader_measure(humAndTempReader_t self);
-float humAndTempReader_getHumidity(humAndTempReader_t self);
-float humAndTempReader_getTemperature(humAndTempReader_t self);
+uint16_t humAndTempReader_getHumidity(humAndTempReader_t self);
+int16_t humAndTempReader_getTemperature(humAndTempReader_t self);
