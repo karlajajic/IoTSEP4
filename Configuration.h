@@ -6,9 +6,9 @@
  *  Author: Haralambi
  */ 
 #pragma once
-#include "ATMEGA_FreeRTOS.h"
+#include <ATMEGA_FreeRTOS.h>
 #include <stdbool.h>
-#include "semphr.h"
+#include <semphr.h>
 
 typedef struct Configuration* configuration_t;
 

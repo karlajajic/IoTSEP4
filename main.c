@@ -24,7 +24,6 @@
 #include "task.h"
 #include "event_groups.h"
 #include "semphr.h"
-#include "message_buffer.h"
 
 #include "device.h"
 #include "currentCondition.h"
@@ -95,8 +94,8 @@ void create_tasks_and_semaphores(void)
 	readyEventGroup = xEventGroupCreate();
 
 	xMessageBuffer = xMessageBufferCreate(100);
+	
 	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
-
 	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(TASK_HUMIDITY_SENSOR_PRIORITY, HUMIDITY_TASK_STACK, 
 	startMeasureEventGroup, BIT_MEASURE_HUMIDITY, readyEventGroup, BIT_DONE_MEASURE_HUMIDITY);
 	
@@ -104,9 +103,22 @@ void create_tasks_and_semaphores(void)
 	readyEventGroup, BIT_DONE_MEASURE_CO2);
 
 	device_t device = device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
-	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature,xMessageBuffer);
+	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature, xMessageBuffer);
 	
-	//doStuff();
+	
+	
+	//lora_payload_t payload;
+	//
+	//payload.len = 4;
+	//payload.port_no = LORA_USART;
+
+	//payload.bytes[0] = 10 >> 8;
+	//payload.bytes[1] = 10 & 0xFF;
+	//
+	//payload.bytes[2] = 20 >> 8;
+	//payload.bytes[3] = 20 & 0xFF;
+	//
+	//size_t bytesToSend = xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
 	
 	//xTaskCreate(
 	//task1
@@ -191,8 +203,8 @@ void initialiseSystem()
 
 void doStuff()
 {
-	size_t bytesToSend;
-	bytesToSend=xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
+	//size_t bytesToSend;
+	//bytesToSend=xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
 }
 /*-----------------------------------------------------------*/
 int main(void)

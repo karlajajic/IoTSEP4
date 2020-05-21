@@ -147,21 +147,40 @@ static void _lora_setup(void)
 		
 		xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) &_uplink_payload,
 		sizeof(rxData),0);
+		if(xBytesToSend > sizeof(uint8_t)*2)
+		{
+			//_uplink_payload = (_uplink_payload) &rxData;
+			
+			/**< Status led ST4 (BLUE)*/
+			//Makes the led light up in a short period.
+			
+			led_short_puls(led_ST4);
+			//_uplink_payload.port_no = 1;
+			//_uplink_payload.len = 4;
+			
+			printf("The temperature in upLink is: %d\n", _uplink_payload.bytes[0]);
+			printf("The temperature2 in upLink is: %d\n", _uplink_payload.bytes[1]);
+			printf("The humidity in upLink is: %u\n", _uplink_payload.bytes[2]);
+			printf("The humidity2 in upLink is: %u\n", _uplink_payload.bytes[3]);
+			
+			
+			printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));
+		}
+		else
+		{
+			vTaskDelay(2000);
+		}
 		
-		//_uplink_payload = (_uplink_payload) &rxData;
 		
-		/**< Status led ST4 (BLUE)*/
-		//Makes the led light up in a short period.
-		led_short_puls(led_ST4);
 		
-		printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));
+		
 	}
 	
 	void lora_UpLinkHandler_startTask(MessageBufferHandle_t xMessageBuffer){
 		for(;;)
 		{
 			lora_UpLinkHandler_task(xMessageBuffer);
-			vTaskDelay(300000);
+			vTaskDelay(3000);
 		}
 	}
 	

@@ -1,4 +1,18 @@
+#include <ATMEGA_FreeRTOS.h>
+
+#include <stdint.h>
 #include "device.h"
+#include <lora_driver.h>
+#include <hal_defs.h>
+#include <message_buffer.h>
+
+
+#include <stdio.h>
+#include <avr/io.h>
+#include <avr/sfr_defs.h>
+
+#include <hal_defs.h>
+#include <ihal.h>
 
 extern int deviceId;
 
@@ -9,6 +23,8 @@ static EventGroupHandle_t _readyEventGroup;
 static EventBits_t _readyBit;
 
 static MessageBufferHandle_t _uplinkmessageBuffer;
+
+static lora_payload_t _uplink_payload;
 
 typedef struct device device;
 
@@ -73,20 +89,30 @@ void device_startMeasuring(device_t self) {
 		portMAX_DELAY); //waits forever if needed
 
 	if ((uxBits & (_readyBit)) == (_readyBit)) {
-		printf("device got done bit\n");
-		printf("CO2 is: %u\n", co2Reader_getCO2(self->co2reader));
-		printf("Temperature is: %d\n", device_getTemperatureData(self));
-		printf("Humidity is: %d\n", device_getHumidityData(self));
-		
 		device_setCO2ToCurrent(self, device_getCO2Data(self));
 		device_setTemperatureToCurrent(self, device_getTemperatureData(self));
 		device_setHumidityToCurrent(self, device_getHumidityData(self));
 		
+		printf("device got done bit\n");
+		
+		printf("CO2 is: %u\n", co2Reader_getCO2(self->co2reader));
+		printf("Temperature is: %d\n", device_getTemperatureData(self));
+		printf("Humidity is: %d\n", device_getHumidityData(self));
+		
+		
+		
 		
 		/*Perhaps loraPayload is not a good idea to be here*/
-		lora_payload_t payload = getcurrentConditionPayload(self->currentCondition);
+		_uplink_payload = getcurrentConditionPayload(self->currentCondition);
 		
-		size_t bytesToSend = xMessageBufferSend(_uplinkmessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
+		//vTaskDelay(1000);
+		
+		printf("The temperature in device is: %d\n", _uplink_payload.bytes[0]);
+		printf("The temperature2 in device is: %d\n", _uplink_payload.bytes[1]);
+		printf("The humidity in device is: %d\n", _uplink_payload.bytes[2]);
+		printf("The humidity2 in device is: %d\n", _uplink_payload.bytes[3]);		
+		
+		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
 		
 		
 	}

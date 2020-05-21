@@ -1,7 +1,7 @@
 #include <stdlib.h>
-#include<stdint.h>
-#include "currentCondition.h"
+#include <stdint.h>
 #include <ATMEGA_FreeRTOS.h>
+#include "currentCondition.h"
 #include <lora_driver.h>
 #include <hal_defs.h>
 typedef struct currentCondition currentCondtion;
@@ -20,6 +20,9 @@ currentCondition_t currentCondition_create(int deviceId) {
 	return NULL;
 
 	_new_con->deviceId = deviceId;
+	_new_con->temperatureData = 0;
+	_new_con->humidityData = 0;
+	_new_con->co2Data = 0;
 
 	return _new_con;
 }
@@ -60,17 +63,14 @@ void currentCondition_destroy(currentCondition_t self) {
 lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 {
 	lora_payload_t payload;
+	payload.port_no = 1;
+	payload.len = 4;
 	
-	payload.len=4;
-	
-	payload.port_no=LORA_USART;
-	
-	payload.bytes[0]= self->temperatureData >> 8;
-	payload.bytes[1]=self->temperatureData & 0xFF;
-	
-	payload.bytes[2]=self->humidityData >> 8;
-	payload.bytes[3]=self->humidityData & 0xFF;
-	
+	payload.bytes[0] = self->temperatureData >> 8;
+	payload.bytes[1] = self->temperatureData & 0xFF;
+
+	payload.bytes[2] = self->humidityData >> 8;
+	payload.bytes[3] = self->humidityData & 0xFF;
 	return payload;
 	
 }

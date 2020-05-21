@@ -1,5 +1,4 @@
-device.d device.o: .././device.c .././device.h \
- ../FreeRTOS/src/ATMEGA_FreeRTOS.h \
+device.d device.o: .././device.c ../FreeRTOS/src/ATMEGA_FreeRTOS.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdint.h \
@@ -19,16 +18,18 @@ device.d device.o: .././device.c .././device.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\wdt.h \
  ../FreeRTOS/src/mpu_wrappers.h ../FreeRTOS/src/FreeRTOSVariant.h \
  ../FreeRTOS/src/ATMEGA_FreeRTOS.h ../FreeRTOS/src/task.h \
- ../FreeRTOS/src/list.h ../FreeRTOS/src/task.h \
+ ../FreeRTOS/src/list.h .././device.h ../FreeRTOS/src/task.h \
  ../FreeRTOS/src/event_groups.h ../FreeRTOS/src/timers.h \
- .././currentCondition.h ../drivers/lora_driver.h \
+ ../FreeRTOS/src/message_buffer.h ../FreeRTOS/src/stream_buffer.h \
+ ../drivers/hal_defs.h ../drivers/serial.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
- ../drivers/serial.h ../FreeRTOS/src/message_buffer.h \
- ../FreeRTOS/src/stream_buffer.h .././co2Reader.h \
+ .././currentCondition.h ../drivers/lora_driver.h .././co2Reader.h \
  .././humidityAndTemperature.h \
- c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h
-
-.././device.h:
+ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
+ ../drivers/hih8120.h \
+ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h \
+ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h \
+ ../drivers/ihal.h
 
 ../FreeRTOS/src/ATMEGA_FreeRTOS.h:
 
@@ -78,26 +79,38 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 ../FreeRTOS/src/list.h:
 
+.././device.h:
+
 ../FreeRTOS/src/task.h:
 
 ../FreeRTOS/src/event_groups.h:
 
 ../FreeRTOS/src/timers.h:
 
-.././currentCondition.h:
-
-../drivers/lora_driver.h:
-
-c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h:
-
-../drivers/serial.h:
-
 ../FreeRTOS/src/message_buffer.h:
 
 ../FreeRTOS/src/stream_buffer.h:
+
+../drivers/hal_defs.h:
+
+../drivers/serial.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h:
+
+.././currentCondition.h:
+
+../drivers/lora_driver.h:
 
 .././co2Reader.h:
 
 .././humidityAndTemperature.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h:
+
+../drivers/hih8120.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h:
+
+../drivers/ihal.h:

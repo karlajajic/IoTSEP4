@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include "hih8120.h"
 
 #include <ATMEGA_FreeRTOS.h>
 #include "task.h"

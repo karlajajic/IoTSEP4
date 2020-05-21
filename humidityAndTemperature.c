@@ -1,4 +1,23 @@
 ﻿#include"humidityAndTemperature.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include "hih8120.h"
+
+
+
+#include <stdio.h>
+#include <avr/io.h>
+#include <avr/sfr_defs.h>
+
+#include <hal_defs.h>
+#include <ihal.h>
+
+#include <ATMEGA_FreeRTOS.h>
+#include <semphr.h>
+
+#include <FreeRTOSTraceDriver.h>
+#include <stdio_driver.h>
+#include <serial.h>
 
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
@@ -67,13 +86,14 @@ void humAndTempReader_executeTask(humAndTempReader_t self) {
 
 void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, //eventGroup
-	_startMeasureBit, //bits it is interested in
+	_startMeasureBit, //bits it is interested i
 	pdTRUE, //clears the bits
 	pdTRUE, //waits for both bits to be set
 	portMAX_DELAY); //wait
 
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 		hih8120Meassure();
+		vTaskDelay(10);
 		if(hih8120IsReady())
 		{
 			self->humidity = hih8120GetHumidityPercent_x10();

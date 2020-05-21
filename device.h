@@ -1,7 +1,9 @@
 #pragma once
-#include "ATMEGA_FreeRTOS.h"
-#include "task.h"
-#include "event_groups.h"
+#include <ATMEGA_FreeRTOS.h>
+#include <task.h>
+#include <event_groups.h>
+#include <message_buffer.h>
+#include <hal_defs.h>
 
 #include "currentCondition.h"
 #include "co2Reader.h"
