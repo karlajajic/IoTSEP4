@@ -65,11 +65,11 @@ lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 	
 	payload.port_no=LORA_USART;
 	
-	payload.bytes[0] self->temperatureData >> 8;
-	payload.bytes[1] self->temperatureData & 0xFF;
+	payload.bytes[0]= self->temperatureData >> 8;
+	payload.bytes[1]=self->temperatureData & 0xFF;
 	
-	payload.bytes[2] self->humidityData >> 8;
-	payload.bytes[3] self->humidityData & 0xFF;
+	payload.bytes[2]=self->humidityData >> 8;
+	payload.bytes[3]=self->humidityData & 0xFF;
 	
 	return payload;
 	

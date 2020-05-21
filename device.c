@@ -1,6 +1,6 @@
 #include "device.h"
 
-extern int deviceId=1;
+extern int deviceId;
 
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
@@ -79,16 +79,16 @@ void device_startMeasuring(device_t self) {
 		printf("Humidity is: %f\n", humAndTempReader_getHumidity(self->humAndTempReader));
 		device_setCO2ToCurrent(self, device_getCO2Data(self));
 	
-		device_setTemperatureToCurrent(self, humAndTempReader_getTemperature());
-		device_setHumidityToCurrent(self, humAndTempReader_getHumidity());
+		device_setTemperatureToCurrent(self, humAndTempReader_getTemperature(self->humAndTempReader));
+		device_setHumidityToCurrent(self, humAndTempReader_getHumidity(self->humAndTempReader));
 		
 		
 		/*Perhaps loraPayload is not a good idea to be here*/
 		lora_payload_t payload=getcurrentConditionPayload(self->currentCondition);
-		if (payload!=NULL)
-		{
+		
+		
 			xMessageBufferSend(_uplinkmessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
-		}
+		
 		
 	}
 }
@@ -148,6 +148,6 @@ int16_t device_getTemperatureData(device_t self)
 		return humAndTempReader_getTemperature(self->humAndTempReader);
 	}
 	else
-	return -1.
+	return -1;
 	
 }
