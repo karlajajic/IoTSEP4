@@ -75,19 +75,18 @@ void device_startMeasuring(device_t self) {
 	if ((uxBits & (_readyBit)) == (_readyBit)) {
 		printf("device got done bit\n");
 		printf("CO2 is: %u\n", co2Reader_getCO2(self->co2reader));
-		printf("Temperature is: %f\n", humAndTempReader_getTemperature(self->humAndTempReader));
-		printf("Humidity is: %f\n", humAndTempReader_getHumidity(self->humAndTempReader));
+		printf("Temperature is: %d\n", device_getTemperatureData(self));
+		printf("Humidity is: %d\n", device_getHumidityData(self));
+		
 		device_setCO2ToCurrent(self, device_getCO2Data(self));
-	
-		device_setTemperatureToCurrent(self, humAndTempReader_getTemperature(self->humAndTempReader));
-		device_setHumidityToCurrent(self, humAndTempReader_getHumidity(self->humAndTempReader));
+		device_setTemperatureToCurrent(self, device_getTemperatureData(self));
+		device_setHumidityToCurrent(self, device_getHumidityData(self));
 		
 		
 		/*Perhaps loraPayload is not a good idea to be here*/
-		lora_payload_t payload=getcurrentConditionPayload(self->currentCondition);
+		lora_payload_t payload = getcurrentConditionPayload(self->currentCondition);
 		
-		
-			xMessageBufferSend(_uplinkmessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
+		size_t bytesToSend = xMessageBufferSend(_uplinkmessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
 		
 		
 	}
@@ -136,6 +135,7 @@ uint16_t device_getCO2Data(device_t self) {
 
 void device_setTemperatureToCurrent(device_t self, int16_t value)
 {
+	
 	currentCondition_setTemperature(self->currentCondition,value);
 	
 }

@@ -106,7 +106,7 @@ void create_tasks_and_semaphores(void)
 	device_t device = device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
 	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature,xMessageBuffer);
 	
-	doStuff();
+	//doStuff();
 	
 	//xTaskCreate(
 	//task1
@@ -191,7 +191,6 @@ void initialiseSystem()
 
 void doStuff()
 {
-	
 	size_t bytesToSend;
 	bytesToSend=xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
 }
