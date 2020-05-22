@@ -32,9 +32,13 @@ static MessageBufferHandle_t _buffer;
 
 /*Check for the parameters*/
 
+
+
 void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
 	_buffer = xMessageBuffer;
+	
+	
 	
 	xTaskCreate(
 	lora_UpLinkHandler_startTask
@@ -44,6 +48,7 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 	,  lora_handler_task_priority  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
 	,  NULL );
 }
+
 
 static void _lora_setup(void)
 {
@@ -124,6 +129,7 @@ static void _lora_setup(void)
 		}
 	}
 }
+
 	
 	/*Receives message from message buffer shared between it and the application responsible for gathering the data
 	--> Should be called every 5 minutes from application
@@ -170,10 +176,6 @@ static void _lora_setup(void)
 		{
 			vTaskDelay(2000);
 		}
-		
-		
-		
-		
 	}
 	
 	void lora_UpLinkHandler_startTask(MessageBufferHandle_t xMessageBuffer){

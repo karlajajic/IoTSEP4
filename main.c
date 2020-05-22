@@ -104,81 +104,6 @@ void create_tasks_and_semaphores(void)
 
 	device_t device = device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
 	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature, xMessageBuffer);
-	
-	
-	
-	//lora_payload_t payload;
-	//
-	//payload.len = 4;
-	//payload.port_no = LORA_USART;
-
-	//payload.bytes[0] = 10 >> 8;
-	//payload.bytes[1] = 10 & 0xFF;
-	//
-	//payload.bytes[2] = 20 >> 8;
-	//payload.bytes[3] = 20 & 0xFF;
-	//
-	//size_t bytesToSend = xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
-	
-	//xTaskCreate(
-	//task1
-	//,  (const portCHAR *)"Task1"  // A name just for humans
-	//,  configMINIMAL_STACK_SIZE  // This stack size can be checked & adjusted by reading the Stack Highwater
-	//,  NULL
-	//,  2  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-	//,  NULL );
-//
-	//xTaskCreate(
-	//task2
-	//,  (const portCHAR *)"Task2"  // A name just for humans
-	//,  configMINIMAL_STACK_SIZE  // This stack size can be checked & adjusted by reading the Stack Highwater
-	//,  NULL
-	//,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-	//,  NULL );
-}
-
-/*-----------------------------------------------------------*/
-void task1( void *pvParameters )
-{
-	#if (configUSE_APPLICATION_TASK_TAG == 1)
-	// Set task no to be used for tracing with R2R-Network
-	vTaskSetApplicationTaskTag( NULL, ( void * ) 1 );
-	#endif
-
-	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 500/portTICK_PERIOD_MS; // 500 ms
-
-	// Initialise the xLastWakeTime variable with the current time.
-	xLastWakeTime = xTaskGetTickCount();
-
-	for(;;)
-	{
-		vTaskDelayUntil( &xLastWakeTime, xFrequency );
-		puts("Task1"); // stdio functions are not reentrant - Should normally be protected by MUTEX
-		PORTA ^= _BV(PA0);
-	}
-}
-
-/*-----------------------------------------------------------*/
-void task2( void *pvParameters )
-{
-	#if (configUSE_APPLICATION_TASK_TAG == 1)
-	// Set task no to be used for tracing with R2R-Network
-	vTaskSetApplicationTaskTag( NULL, ( void * ) 2 );
-	#endif
-
-	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 1000/portTICK_PERIOD_MS; // 1000 ms
-
-	// Initialise the xLastWakeTime variable with the current time.
-	xLastWakeTime = xTaskGetTickCount();
-
-	for(;;)
-	{
-		vTaskDelayUntil( &xLastWakeTime, xFrequency );
-		puts("Task2"); // stdio functions are not reentrant - Should normally be protected by MUTEX
-		PORTA ^= _BV(PA7);
-	}
 }
 
 /*-----------------------------------------------------------*/
@@ -199,6 +124,9 @@ void initialiseSystem()
 	// Initialise the LoRaWAN driver without down-link buffer
 	lora_driver_create(LORA_USART, NULL);
 	// Create LoRaWAN task and start it up with priority 3 
+	
+	hih8120Create();
+	
 }
 
 void doStuff()
@@ -219,3 +147,4 @@ int main(void)
 	{
 	}
 }
+

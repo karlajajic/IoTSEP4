@@ -4,7 +4,6 @@
 #include "hih8120.h"
 
 
-
 #include <stdio.h>
 #include <avr/io.h>
 #include <avr/sfr_defs.h>
@@ -49,8 +48,6 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
-	hih8120Create();
-
 		xTaskCreate(
 		humAndTempReader_executeTask,
 		"HumAndTempReader",
@@ -92,16 +89,18 @@ void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 	portMAX_DELAY); //wait
 
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
+		hih8120Wakeup();
+		vTaskDelay(50);
 		hih8120Meassure();
-		vTaskDelay(10);
+		vTaskDelay(5);
 		if(hih8120IsReady())
 		{
 			self->humidity = hih8120GetHumidityPercent_x10();
 			self->temperature = hih8120GetTemperature_x10();
 			printf("humidity and temperature done bit set\n");
+			printf("Humidity: %u\n", self->humidity);
+			printf("TEMP: %d\n", self->temperature);
 		}
-		vTaskDelay(2500); //pretend it takes some time
-
 		//set done bit so that device knows meassurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
 	}
