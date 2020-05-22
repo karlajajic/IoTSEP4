@@ -5,6 +5,7 @@ UpLinkHandler.d UpLinkHandler.o: .././UpLinkHandler.c \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h \
+ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
  .././UpLinkHandler.h ../FreeRTOS/src/ATMEGA_FreeRTOS.h \
  ../FreeRTOS/src/FreeRTOSConfig.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
@@ -23,9 +24,8 @@ UpLinkHandler.d UpLinkHandler.o: .././UpLinkHandler.c \
  ../FreeRTOS/src/ATMEGA_FreeRTOS.h ../FreeRTOS/src/task.h \
  ../FreeRTOS/src/list.h ../FreeRTOS/src/portmacro.h \
  ../FreeRTOS/src/message_buffer.h ../FreeRTOS/src/stream_buffer.h \
- ../drivers/lora_driver.h \
- c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
- ../drivers/serial.h ../drivers/iled.h ../drivers/ihal.h
+ ../drivers/lora_driver.h ../drivers/serial.h ../drivers/iled.h \
+ ../drivers/ihal.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h:
 
@@ -38,6 +38,8 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdint.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h:
 
 .././UpLinkHandler.h:
 
@@ -88,8 +90,6 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 ../FreeRTOS/src/stream_buffer.h:
 
 ../drivers/lora_driver.h:
-
-c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h:
 
 ../drivers/serial.h:
 

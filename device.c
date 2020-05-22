@@ -97,7 +97,7 @@ void device_startMeasuring(device_t self) {
 		
 		printf("CO2 is: %u\n", co2Reader_getCO2(self->co2reader));
 		printf("Temperature is: %d\n", device_getTemperatureData(self));
-		printf("Humidity is: %d\n", device_getHumidityData(self));
+		printf("Humidity is: %u\n", device_getHumidityData(self));
 		
 		
 		
@@ -107,10 +107,10 @@ void device_startMeasuring(device_t self) {
 		
 		//vTaskDelay(1000);
 		
-		printf("The temperature in device is: %d\n", _uplink_payload.bytes[0]);
-		printf("The temperature2 in device is: %d\n", _uplink_payload.bytes[1]);
-		printf("The humidity in device is: %d\n", _uplink_payload.bytes[2]);
-		printf("The humidity2 in device is: %d\n", _uplink_payload.bytes[3]);		
+		//printf("The temperature in device is: %d\n", _uplink_payload.bytes[0]);
+		//printf("The temperature2 in device is: %d\n", _uplink_payload.bytes[1]);
+		//printf("The humidity in device is: %u\n", _uplink_payload.bytes[2]);
+		//printf("The humidity2 in device is: %u\n", _uplink_payload.bytes[3]);		
 		
 		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
 		
