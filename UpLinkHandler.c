@@ -11,6 +11,7 @@ should be present */
 
 #include <stddef.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "UpLinkHandler.h"
 
 #include <ATMEGA_FreeRTOS.h>
@@ -28,7 +29,7 @@ static char _out_buf[100];
 
 static lora_payload_t _uplink_payload;
 static MessageBufferHandle_t _buffer;
-
+static bool isSet=false;
 
 /*Check for the parameters*/
 
@@ -138,17 +139,21 @@ static void _lora_setup(void)
 	{	
 		size_t xBytesToSend;
 		char rxData[50];
+		if (!isSet)
+		{
+			// Hardware reset of LoRaWAN transceiver
+			lora_driver_reset_rn2483(1);
+			vTaskDelay(2);
+			lora_driver_reset_rn2483(0);
+			// Give it a chance to wakeup
+			vTaskDelay(150);
+
+			lora_driver_flush_buffers(); // get rid of first version string from module after reset!
+
+			_lora_setup();
+			isSet=true;
+		}
 		
-		// Hardware reset of LoRaWAN transceiver
-		lora_driver_reset_rn2483(1);
-		vTaskDelay(2);
-		lora_driver_reset_rn2483(0);
-		// Give it a chance to wakeup
-		vTaskDelay(150);
-
-		lora_driver_flush_buffers(); // get rid of first version string from module after reset!
-
-		_lora_setup();
 
 		
 		xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) &_uplink_payload,
