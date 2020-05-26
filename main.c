@@ -69,6 +69,7 @@ EventGroupHandle_t readyEventGroup;
 // define semaphore handle
 SemaphoreHandle_t xTestSemaphore;
 MessageBufferHandle_t xMessageBuffer;
+MessageBufferHandle_t _downlinkMessagebuffer;
 lora_payload_t payload;
 
 // Prototype for LoRaWAN handler
@@ -93,10 +94,14 @@ void create_tasks_and_semaphores(void)
 	readyEventGroup = xEventGroupCreate();
 
 	xMessageBuffer = xMessageBufferCreate(100);
-
+	_downlinkMessagebuffer = xMessageBufferCreate(sizeof(lora_payload_t));
+	
 	configuration_create();
 	
 	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
+	
+	lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,_downlinkMessagebuffer,true);
+	
 	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(TASK_HUMIDITY_SENSOR_PRIORITY, HUMIDITY_TASK_STACK, 
 	startMeasureEventGroup, BIT_MEASURE_HUMIDITY, readyEventGroup, BIT_DONE_MEASURE_HUMIDITY);
 	
@@ -123,7 +128,7 @@ void initialiseSystem()
 	// Initialise the HAL layer and use 5 for LED driver priority
 	hal_create(5);
 	// Initialise the LoRaWAN driver without down-link buffer
-	lora_driver_create(LORA_USART, NULL);
+	lora_driver_create(LORA_USART, _downlinkMessagebuffer);
 	// Create LoRaWAN task and start it up with priority 3 
 	
 	hih8120Create();

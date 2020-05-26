@@ -15,19 +15,23 @@
 #include <iled.h>
 #include <message_buffer.h>
 #include "DownLinkHandler.h"
+#include "Configuration.h"
+
 #define LORA_appEUI "  fbf6ad621cf57cd7"
 #define LORA_appKEY "bf9a206660a448b3892f0bd64935e4d5"
 
 static lora_payload_t _downlink_payload;
+static bool _isSet; 
 int16_t temperature_setting; // Temperature
 static char _out_buf[100];
 
-void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer);
 
-void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
+
+void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer,bool isSet)
 {
+	_isSet=isSet;
 	xTaskCreate(
-	lora_DownLinkHandler_task
+	lora_DownLinkHandler_startTask
 	,  (const portCHAR *)"LRUpHand"  // A name just for humans
 	,  configMINIMAL_STACK_SIZE+200  // This stack size can be checked & adjusted by reading the Stack Highwater
 	,  xMessageBuffer
@@ -123,28 +127,66 @@ static void _lora_setup(void)
 		size_t xBytesToSend;
 		char rxData[50];
 		
-		// Hardware reset of LoRaWAN transceiver
-		lora_driver_reset_rn2483(1);
-		vTaskDelay(2);
-		lora_driver_reset_rn2483(0);
-		// Give it a chance to wakeup
-		vTaskDelay(150);
+		
+			if (!isSet)
+			{
+				// Hardware reset of LoRaWAN transceiver
+				lora_driver_reset_rn2483(1);
+				vTaskDelay(2);
+				lora_driver_reset_rn2483(0);
+				// Give it a chance to wakeup
+				vTaskDelay(150);
 
-		lora_driver_flush_buffers(); // get rid of first version string from module after reset!
+				lora_driver_flush_buffers(); // get rid of first version string from module after reset!
 
-		_lora_setup();
+				_lora_setup();
+				isSet=true;
+			}
+		
 		size_t xBytesReceived;
 		xBytesReceived = xMessageBufferReceive(xMessageBuffer,(void*) &_downlink_payload,sizeof(lora_payload_t),portMAX_DELAY);
 		
 		//decode the received paylaod assuming we have only temperature_setting
 		//Check that the lenght we've received is two as expected
-		if (_downlink_payload.len==2)
+		
+		uint8_t command = _downlink_payload.bytes[0] + _downlink_payload.bytes[1];
+		
+		switch(command)
 		{
-			temperature_setting= (_downlink_payload.bytes[0]<<8) + _downlink_payload.bytes[1];	
+		//D0
+		case 44:
+			configuration_setWorking(false);
+			printf("The bool for device is set to %d",configuration_getWorking());
+			break;
+		//D1
+		case 45 :
+			configuration_setWorking(true);
+			printf("The bool for device is set to %d",configuration_getWorking());
+			break;
+		//V0
+		case 56:
+			configuration_setVentilation(false);
+			printf("The bool for ventilation is set to %d",configuration_getVentilation());
+			break;
+		//V1
+		case 57:
+			configuration_setVentilation(true);
+			printf("The bool for ventilation is set to %d",configuration_getVentilation());
+			break;
+		default:
+		printf("Invalid command");
+			break;
 		}
 		
+}
 
+void lora_DownLinkHandler_startTask(MessageBufferHandle_t xMessageBuffer){
+	for(;;)
+	{
+		lora_DownLinkHandler_task(xMessageBuffer)
+		vTaskDelay(3000);
 	}
+}
 
 
 
