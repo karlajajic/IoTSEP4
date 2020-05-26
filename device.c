@@ -76,7 +76,7 @@ void device_executeTask(device_t self) {
 
 void device_startMeasuring(device_t self) {
 	//we should first check if device is on, get that from lora and add new eventBit 
-	if(configuration_getWorking()==true){
+	//if(configuration_getWorking()==true){
 
 	//if ventilation needed -> ventilate 
 
@@ -116,9 +116,9 @@ void device_startMeasuring(device_t self) {
 			xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
 		//}
 		//else printf("Error when making loraPayload");
-		}
+		//}
 		//if the device is not on, wait a bit and check if anything is changed
-		else vTaskDelay(5000);
+		//else vTaskDelay(5000);
 		
 	}
 }

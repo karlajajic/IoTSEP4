@@ -24,7 +24,8 @@ DownLinkHandler.d DownLinkHandler.o: .././DownLinkHandler.c \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
  ../drivers/serial.h ../FreeRTOS/src/message_buffer.h \
  ../FreeRTOS/src/stream_buffer.h ../drivers/iled.h ../drivers/ihal.h \
- .././DownLinkHandler.h ../FreeRTOS/src/portmacro.h
+ .././DownLinkHandler.h ../FreeRTOS/src/portmacro.h .././Configuration.h \
+ ../FreeRTOS/src/semphr.h ../FreeRTOS/src/queue.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h:
 
@@ -95,3 +96,9 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 .././DownLinkHandler.h:
 
 ../FreeRTOS/src/portmacro.h:
+
+.././Configuration.h:
+
+../FreeRTOS/src/semphr.h:
+
+../FreeRTOS/src/queue.h:

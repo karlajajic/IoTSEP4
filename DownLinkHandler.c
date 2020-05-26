@@ -128,7 +128,7 @@ static void _lora_setup(void)
 		char rxData[50];
 		
 		
-			if (!isSet)
+			if (!_isSet)
 			{
 				// Hardware reset of LoRaWAN transceiver
 				lora_driver_reset_rn2483(1);
@@ -140,7 +140,7 @@ static void _lora_setup(void)
 				lora_driver_flush_buffers(); // get rid of first version string from module after reset!
 
 				_lora_setup();
-				isSet=true;
+				_isSet=true;
 			}
 		
 		size_t xBytesReceived;
@@ -183,7 +183,7 @@ static void _lora_setup(void)
 void lora_DownLinkHandler_startTask(MessageBufferHandle_t xMessageBuffer){
 	for(;;)
 	{
-		lora_DownLinkHandler_task(xMessageBuffer)
+		lora_DownLinkHandler_task(xMessageBuffer);
 		vTaskDelay(3000);
 	}
 }
