@@ -4,7 +4,7 @@
 
 typedef struct currentCondition* currentCondition_t;
 
-currentCondition_t currentCondition_create(int deviceId);
+currentCondition_t currentCondition_create();
 
 void currentCondition_setCO2(currentCondition_t self, uint16_t value);
 void currentCondition_setHumidity(currentCondition_t self, uint16_t value);

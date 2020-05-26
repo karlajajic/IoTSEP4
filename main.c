@@ -18,7 +18,6 @@
 #include <FreeRTOSTraceDriver.h>
 #include <stdio_driver.h>
 #include <serial.h>
-#include "UpLinkHandler.h"
 #include <message_buffer.h>
 
 #include "task.h"
@@ -29,6 +28,8 @@
 #include "currentCondition.h"
 #include "co2Reader.h"
 #include "humidityAndTemperature.h"
+#include "UpLinkHandler.h"
+#include "Configuration.h"
 
 // Needed for LoRaWAN
 #include <lora_driver.h>
@@ -70,30 +71,30 @@ SemaphoreHandle_t xTestSemaphore;
 MessageBufferHandle_t xMessageBuffer;
 lora_payload_t payload;
 
-int deviceId=100;
-
 // Prototype for LoRaWAN handler
 void lora_handler_create(UBaseType_t lora_handler_task_priority);
 
 /*-----------------------------------------------------------*/
 void create_tasks_and_semaphores(void)
 {
-	// Semaphores are useful to stop a Task proceeding, where it should be paused to wait,
-	// because it is sharing a resource, such as the Serial port.
-	// Semaphores should only be used whilst the scheduler is running, but we can set it up here.
-	if ( xTestSemaphore == NULL )  // Check to confirm that the Semaphore has not already been created.
-	{
-		xTestSemaphore = xSemaphoreCreateMutex();  // Create a mutex semaphore.
-		if ( ( xTestSemaphore ) != NULL )
-		{
-			xSemaphoreGive( ( xTestSemaphore ) );  // Make the mutex available for use, by initially "Giving" the Semaphore.
-		}
-	}
+	//// Semaphores are useful to stop a Task proceeding, where it should be paused to wait,
+	//// because it is sharing a resource, such as the Serial port.
+	//// Semaphores should only be used whilst the scheduler is running, but we can set it up here.
+	//if ( xTestSemaphore == NULL )  // Check to confirm that the Semaphore has not already been created.
+	//{
+		//xTestSemaphore = xSemaphoreCreateMutex();  // Create a mutex semaphore.
+		//if ( ( xTestSemaphore ) != NULL )
+		//{
+			//xSemaphoreGive( ( xTestSemaphore ) );  // Make the mutex available for use, by initially "Giving" the Semaphore.
+		//}
+	//}
 	
 	startMeasureEventGroup = xEventGroupCreate();
 	readyEventGroup = xEventGroupCreate();
 
 	xMessageBuffer = xMessageBufferCreate(100);
+
+	configuration_create();
 	
 	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
 	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(TASK_HUMIDITY_SENSOR_PRIORITY, HUMIDITY_TASK_STACK, 

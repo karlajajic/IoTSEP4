@@ -1,6 +1,7 @@
 #include"co2Reader.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <ATMEGA_FreeRTOS.h>
 #include "task.h"

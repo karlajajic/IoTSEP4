@@ -1,6 +1,7 @@
 #include <ATMEGA_FreeRTOS.h>
 
 #include <stdint.h>
+#include <stdlib.h>
 #include "device.h"
 #include <lora_driver.h>
 #include <hal_defs.h>
@@ -14,7 +15,6 @@
 #include <hal_defs.h>
 #include <ihal.h>
 
-extern int deviceId;
 
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
@@ -44,7 +44,7 @@ device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle
 
 	_new_device->co2reader = co2Reader;
 	_new_device->humAndTempReader = humAndTempReader;
-	_new_device->currentCondition = currentCondition_create(deviceId);
+	_new_device->currentCondition = currentCondition_create();
 
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
@@ -76,6 +76,9 @@ void device_executeTask(device_t self) {
 
 void device_startMeasuring(device_t self) {
 	//we should first check if device is on, get that from lora and add new eventBit 
+	if(configuration_getWorking()==true){
+
+	//if ventilation needed -> ventilate 
 
 	//tell sensors to start meassuring 
 	xEventGroupSetBits(_startMeasureEventGroup, _startMeasureBit);
@@ -99,35 +102,37 @@ void device_startMeasuring(device_t self) {
 		printf("Temperature is: %d\n", device_getTemperatureData(self));
 		printf("Humidity is: %u\n", device_getHumidityData(self));
 		
-		
-		
-		
 		/*Perhaps loraPayload is not a good idea to be here*/
 		_uplink_payload = getcurrentConditionPayload(self->currentCondition);
-		
-		//vTaskDelay(1000);
-		
-		//printf("The temperature in device is: %d\n", _uplink_payload.bytes[0]);
-		//printf("The temperature2 in device is: %d\n", _uplink_payload.bytes[1]);
-		//printf("The humidity in device is: %u\n", _uplink_payload.bytes[2]);
-		//printf("The humidity2 in device is: %u\n", _uplink_payload.bytes[3]);		
-		
-		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
-		
+		//if(_uplink_payload!=NULL)
+		//{
+			//vTaskDelay(1000);
+			
+			//printf("The temperature in device is: %d\n", _uplink_payload.bytes[0]);
+			//printf("The temperature2 in device is: %d\n", _uplink_payload.bytes[1]);
+			//printf("The humidity in device is: %u\n", _uplink_payload.bytes[2]);
+			//printf("The humidity2 in device is: %u\n", _uplink_payload.bytes[3]);
+			
+			xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
+		//}
+		//else printf("Error when making loraPayload");
+		}
+		//if the device is not on, wait a bit and check if anything is changed
+		else vTaskDelay(5000);
 		
 	}
 }
-
-//	 DO WE ACTUALLY EVER DO THIS?
-void device_destroy(device_t self) { //destroy all drivers 
-	/*if (self == NULL)
-		return;
-
-	vTaskDelete(self->handleTask);
-	free(self->handleTask);
-	free(self->co2reader);
-	free(self);*/
-}
+//
+////	 DO WE ACTUALLY EVER DO THIS?
+//void device_destroy(device_t self) { //destroy all drivers 
+	///*if (self == NULL)
+		//return;
+//
+	//vTaskDelete(self->handleTask);
+	//free(self->handleTask);
+	//free(self->co2reader);
+	//free(self);*/
+//}
 
 currentCondition_t device_getCurrentCondition(device_t self) {
 	return self->currentCondition;

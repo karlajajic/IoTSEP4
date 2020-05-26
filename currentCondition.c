@@ -7,19 +7,17 @@
 typedef struct currentCondition currentCondtion;
 
 typedef struct currentCondition {
-	int deviceId;
 	uint16_t co2Data;
 	int16_t temperatureData;
 	uint16_t humidityData;
 	uint16_t soundData;
 }currentCondition;
 
-currentCondition_t currentCondition_create(int deviceId) {
+currentCondition_t currentCondition_create() {
 	currentCondition_t _new_con = calloc(sizeof(currentCondition), 1);
 	if (_new_con == NULL)
 	return NULL;
 
-	_new_con->deviceId = deviceId;
 	_new_con->temperatureData = 0;
 	_new_con->humidityData = 0;
 	_new_con->co2Data = 0;

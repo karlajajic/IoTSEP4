@@ -158,7 +158,7 @@ static void _lora_setup(void)
 		
 		xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) &_uplink_payload,
 		sizeof(rxData),0);
-		if(xBytesToSend > sizeof(uint8_t)*2)
+		if(xBytesToSend >= sizeof(uint8_t)*2)
 		{
 			//_uplink_payload = (_uplink_payload) &rxData;
 			

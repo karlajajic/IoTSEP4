@@ -24,13 +24,13 @@ main.d main.o: .././main.c \
  ../FreeRTOS/src/ATMEGA_FreeRTOS.h ../FreeRTOS/src/task.h \
  ../FreeRTOS/src/list.h ../FreeRTOS/src/semphr.h ../FreeRTOS/src/queue.h \
  ../drivers/FreeRTOSTraceDriver.h ../drivers/stdio_driver.h \
- .././UpLinkHandler.h ../FreeRTOS/src/portmacro.h \
  ../FreeRTOS/src/message_buffer.h ../FreeRTOS/src/stream_buffer.h \
  ../FreeRTOS/src/task.h ../FreeRTOS/src/event_groups.h \
  ../FreeRTOS/src/timers.h .././device.h .././currentCondition.h \
  ../drivers/lora_driver.h .././co2Reader.h .././humidityAndTemperature.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
- ../drivers/hih8120.h
+ ../drivers/hih8120.h .././UpLinkHandler.h ../FreeRTOS/src/portmacro.h \
+ .././Configuration.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h:
 
@@ -100,10 +100,6 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 ../drivers/stdio_driver.h:
 
-.././UpLinkHandler.h:
-
-../FreeRTOS/src/portmacro.h:
-
 ../FreeRTOS/src/message_buffer.h:
 
 ../FreeRTOS/src/stream_buffer.h:
@@ -127,3 +123,9 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h:
 
 ../drivers/hih8120.h:
+
+.././UpLinkHandler.h:
+
+../FreeRTOS/src/portmacro.h:
+
+.././Configuration.h:
