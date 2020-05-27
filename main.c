@@ -94,13 +94,11 @@ void create_tasks_and_semaphores(void)
 	readyEventGroup = xEventGroupCreate();
 
 	xMessageBuffer = xMessageBufferCreate(100);
-	_downlinkMessagebuffer = xMessageBufferCreate(sizeof(lora_payload_t));
+	_downlinkMessagebuffer = xMessageBufferCreate(sizeof(lora_payload_t)*2);
 	
 	configuration_create();
 	
-	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
 	
-	lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,_downlinkMessagebuffer,true);
 	
 	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(TASK_HUMIDITY_SENSOR_PRIORITY, HUMIDITY_TASK_STACK, 
 	startMeasureEventGroup, BIT_MEASURE_HUMIDITY, readyEventGroup, BIT_DONE_MEASURE_HUMIDITY);
@@ -110,6 +108,10 @@ void create_tasks_and_semaphores(void)
 
 	device_t device = device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
 	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature, xMessageBuffer);
+	
+	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
+	
+	lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,_downlinkMessagebuffer);
 }
 
 /*-----------------------------------------------------------*/

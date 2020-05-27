@@ -45,7 +45,7 @@ void configuration_getWorking(bool* working) {
 		*working = _working;
 		xSemaphoreGive(_semaphore);
 	}
-	else return _working;
+	else *working = _working;
 }
 
 void configuration_setVentilation(bool value) {
@@ -63,7 +63,7 @@ void configuration_getVentilation(bool* ventilation) {
 		*ventilation = _ventilation;
 		xSemaphoreGive(_semaphore);
 	}
-	else return _ventilation;
+	else *ventilation = _ventilation;
 }
 
 //Haralambi's part...........

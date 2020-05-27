@@ -27,12 +27,12 @@ static char _out_buf[100];
 
 
 
-void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer,bool isSet)
+void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
-	_isSet=isSet;
+	//_isSet=isSet;
 	xTaskCreate(
 	lora_DownLinkHandler_startTask
-	,  (const portCHAR *)"LRUpHand"  // A name just for humans
+	,  (const portCHAR *)"LRDHHand"  // A name just for humans
 	,  configMINIMAL_STACK_SIZE+200  // This stack size can be checked & adjusted by reading the Stack Highwater
 	,  xMessageBuffer
 	,  lora_handler_task_priority  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
@@ -124,67 +124,64 @@ static void _lora_setup(void)
 
 	void lora_DownLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
 	{
-		size_t xBytesToSend;
+		//size_t xBytesToSend;
 		char rxData[50];
-		
-		
-			if (!_isSet)
-			{
-				// Hardware reset of LoRaWAN transceiver
-				lora_driver_reset_rn2483(1);
-				vTaskDelay(2);
-				lora_driver_reset_rn2483(0);
-				// Give it a chance to wakeup
-				vTaskDelay(150);
 
-				lora_driver_flush_buffers(); // get rid of first version string from module after reset!
-
-				_lora_setup();
-				_isSet=true;
-			}
-		
+				//// hardware reset of lorawan transceiver
+				//lora_driver_reset_rn2483(1);
+				//vTaskDelay(2);
+				//lora_driver_reset_rn2483(0);
+				//// give it a chance to wakeup
+				//vTaskDelay(150);
+//
+				//lora_driver_flush_buffers(); // get rid of first version string from module after reset!
+//
+				//_lora_setup();
+				
 		size_t xBytesReceived;
-		xBytesReceived = xMessageBufferReceive(xMessageBuffer,(void*) &_downlink_payload,sizeof(lora_payload_t),portMAX_DELAY);
+		xBytesReceived = xMessageBufferReceive(xMessageBuffer,(void*) &_downlink_payload,sizeof(lora_payload_t),0);
+		printf("PayLoad byte one: %d\n", _downlink_payload.bytes[0] + _downlink_payload.bytes[1]);
+		if(xBytesReceived != NULL)
+		{
+			uint8_t command = _downlink_payload.bytes[0] + _downlink_payload.bytes[1];
+			bool* value = pvPortMalloc(sizeof(bool));
+			
+		
+			switch(command)
+			{
+			//D0
+			case 74:
+				configuration_setWorking(false);
+				configuration_getWorking(value);
+				printf("The bool for device is set to %d",*value);
+				break;
+			//D1
+			case 75 :
+				configuration_setWorking(true);
+				configuration_getWorking(value);
+				printf("The bool for device is set to %d",*value);
+				break;
+			//V0
+			case 86:
+				configuration_setVentilation(false);
+				configuration_getVentilation(value);
+				printf("The bool for ventilation is set to %d",*value);
+			break;
+			//V1
+			case 87:
+				configuration_setVentilation(true);
+				configuration_getVentilation(value);
+				printf("The bool for ventilation is set to %d",*value);
+				break;
+			default:
+				printf("Invalid command");
+				break;
+		}
+	}
 		
 		//decode the received paylaod assuming we have only temperature_setting
 		//Check that the lenght we've received is two as expected
-								//44						//31
-		uint8_t command = _downlink_payload.bytes[0] + _downlink_payload.bytes[1];
-
-		bool* value = calloc(sizeof(bool), 1);
-		
-		
-		switch(command)
-		{
-		//D0
-		case 74:
-			configuration_setWorking(false);
-			configuration_getWorking(value);
-			printf("The bool for device is set to %d",*value);
-			break;
-		//D1
-		case 75 :
-			configuration_setWorking(true);
-			configuration_getWorking(value);
-			printf("The bool for device is set to %d",*value);
-			break;
-		//V0
-		case 86:
-			configuration_setVentilation(false);
-			configuration_getVentilation(value);
-			printf("The bool for ventilation is set to %d",*value);
-			break;
-		//V1
-		case 87:
-			configuration_setVentilation(true);
-			configuration_getVentilation(value);
-			printf("The bool for ventilation is set to %d",*value);
-			break;
-		default:
-		printf("Invalid command");
-			break;
-		}
-		
+								//44						//31		
 }
 
 void lora_DownLinkHandler_startTask(MessageBufferHandle_t xMessageBuffer){

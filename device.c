@@ -80,10 +80,10 @@ void device_startMeasuring(device_t self) {
 	//-------------------------------------------	TEST ME !	-----------------------------------------------------------------------
 	
 	
-	//bool* works = calloc(sizeof(bool), 1);
-	//configuration_getWorking(works);
-	//if (*works == true)
-	//{
+	bool* works = pvPortMalloc(sizeof(bool));
+	configuration_getWorking(works);
+	if (*works == true)
+	{
 
 
 	//-------------------------------------------	TEST ME !	-----------------------------------------------------------------------
@@ -113,11 +113,12 @@ void device_startMeasuring(device_t self) {
 		printf("Temperature is: %d\n", device_getTemperatureData(self));
 		printf("Humidity is: %u\n", device_getHumidityData(self));
 		
+		
 		/*Perhaps loraPayload is not a good idea to be here*/
 		_uplink_payload = getcurrentConditionPayload(self->currentCondition);
 		//if(_uplink_payload!=NULL)
 		//{
-			//vTaskDelay(1000);
+			vTaskDelay(1000);
 			
 			//printf("The temperature in device is: %d\n", _uplink_payload.bytes[0]);
 			//printf("The temperature2 in device is: %d\n", _uplink_payload.bytes[1]);
@@ -127,11 +128,10 @@ void device_startMeasuring(device_t self) {
 			xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
 		//}
 		//else printf("Error when making loraPayload");
-		//}
-		//if the device is not on, wait a bit and check if anything is changed
-		//else vTaskDelay(5000);
-		
 	}
+	//if the device is not on, wait a bit and check if anything is changed
+	}
+	else vTaskDelay(5000);
 }
 //
 ////	 DO WE ACTUALLY EVER DO THIS?
