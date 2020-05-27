@@ -150,28 +150,35 @@ static void _lora_setup(void)
 		//Check that the lenght we've received is two as expected
 		
 		uint8_t command = _downlink_payload.bytes[0] + _downlink_payload.bytes[1];
+
+		bool* value = calloc(sizeof(bool), 1);
+		
 		
 		switch(command)
 		{
 		//D0
 		case 44:
 			configuration_setWorking(false);
-			printf("The bool for device is set to %d",configuration_getWorking());
+			configuration_getWorking(value);
+			printf("The bool for device is set to %d",*value);
 			break;
 		//D1
 		case 45 :
 			configuration_setWorking(true);
-			printf("The bool for device is set to %d",configuration_getWorking());
+			configuration_getWorking(value);
+			printf("The bool for device is set to %d",*value);
 			break;
 		//V0
 		case 56:
 			configuration_setVentilation(false);
-			printf("The bool for ventilation is set to %d",configuration_getVentilation());
+			configuration_getVentilation(value);
+			printf("The bool for ventilation is set to %d",*value);
 			break;
 		//V1
 		case 57:
 			configuration_setVentilation(true);
-			printf("The bool for ventilation is set to %d",configuration_getVentilation());
+			configuration_getVentilation(value);
+			printf("The bool for ventilation is set to %d",*value);
 			break;
 		default:
 		printf("Invalid command");

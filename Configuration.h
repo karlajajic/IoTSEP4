@@ -6,10 +6,10 @@
 void configuration_create();
 
 void configuration_setWorking(bool value);
-bool configuration_getWorking(void);
+void configuration_getWorking(bool* working);
 
 void configuration_setVentilation(bool value);
-bool configuration_getVentilation(void);
+void configuration_getVentilation(bool* ventilation);
 
 // again, Haralambi's stuff.....
 

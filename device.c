@@ -76,7 +76,18 @@ void device_executeTask(device_t self) {
 
 void device_startMeasuring(device_t self) {
 	//we should first check if device is on, get that from lora and add new eventBit 
-	//if(configuration_getWorking()==true){
+	
+	//-------------------------------------------	TEST ME !	-----------------------------------------------------------------------
+	
+	
+	//bool* works = calloc(sizeof(bool), 1);
+	//configuration_getWorking(works);
+	//if (*works == true)
+	//{
+
+
+	//-------------------------------------------	TEST ME !	-----------------------------------------------------------------------
+
 
 	//if ventilation needed -> ventilate 
 

@@ -31,41 +31,40 @@ void configuration_create() {
 
 //if the semaphore is initialized, take it and give it back, if not, just do the work 
 void configuration_setWorking(bool value) {
-    if(_semaphore!=NULL){
-	xSemaphoreTake(_semaphore, portMAX_DELAY);
-		_working=value;
-	xSemaphoreGive(_semaphore);
+	if (_semaphore != NULL) {
+		xSemaphoreTake(_semaphore, portMAX_DELAY);
+		_working = value;
+		xSemaphoreGive(_semaphore);
 	}
-	else _working=value;
+	else _working = value;
 }
 
-bool configuration_getWorking(void) {
-	if(_semaphore!=NULL){
+void configuration_getWorking(bool* working) {
+	if (_semaphore != NULL) {
 		xSemaphoreTake(_semaphore, portMAX_DELAY);
-			return _working;
+		*working = _working;
 		xSemaphoreGive(_semaphore);
 	}
 	else return _working;
 }
 
 void configuration_setVentilation(bool value) {
-	if(_semaphore!=NULL){
+	if (_semaphore != NULL) {
 		xSemaphoreTake(_semaphore, portMAX_DELAY);
-		_ventilation=value;
+		_ventilation = value;
 		xSemaphoreGive(_semaphore);
 	}
-	else _ventilation=value;
+	else _ventilation = value;
 }
 
-bool configuration_getVentilation(void) {
-	if(_semaphore!=NULL){
+void configuration_getVentilation(bool* ventilation) {
+	if (_semaphore != NULL) {
 		xSemaphoreTake(_semaphore, portMAX_DELAY);
-		return _ventilation;
+		*ventilation = _ventilation;
 		xSemaphoreGive(_semaphore);
 	}
 	else return _ventilation;
 }
-
 
 //Haralambi's part...........
 
