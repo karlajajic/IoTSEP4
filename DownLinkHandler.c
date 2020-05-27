@@ -148,7 +148,7 @@ static void _lora_setup(void)
 		
 		//decode the received paylaod assuming we have only temperature_setting
 		//Check that the lenght we've received is two as expected
-		
+								//44						//31
 		uint8_t command = _downlink_payload.bytes[0] + _downlink_payload.bytes[1];
 
 		bool* value = calloc(sizeof(bool), 1);
@@ -157,25 +157,25 @@ static void _lora_setup(void)
 		switch(command)
 		{
 		//D0
-		case 44:
+		case 74:
 			configuration_setWorking(false);
 			configuration_getWorking(value);
 			printf("The bool for device is set to %d",*value);
 			break;
 		//D1
-		case 45 :
+		case 75 :
 			configuration_setWorking(true);
 			configuration_getWorking(value);
 			printf("The bool for device is set to %d",*value);
 			break;
 		//V0
-		case 56:
+		case 86:
 			configuration_setVentilation(false);
 			configuration_getVentilation(value);
 			printf("The bool for ventilation is set to %d",*value);
 			break;
 		//V1
-		case 57:
+		case 87:
 			configuration_setVentilation(true);
 			configuration_getVentilation(value);
 			printf("The bool for ventilation is set to %d",*value);
