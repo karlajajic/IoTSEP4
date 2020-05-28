@@ -12,4 +12,4 @@ void co2Reader_destroy(co2reader_t self);
 
 void co2Reader_executeTask(co2reader_t self);
 void co2Reader_measure(co2reader_t self);
-uint8_t co2Reader_getCO2(co2reader_t self);
+uint16_t co2Reader_getCO2(co2reader_t self);

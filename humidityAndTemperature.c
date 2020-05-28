@@ -56,7 +56,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 		priority,
 		&_new_reader->handleTask
 		);
-		printf("humidity and temperature ready");
+		printf("humidity and temperature ready\n");
 	
 	return _new_reader;
 }
@@ -98,8 +98,6 @@ void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 			self->humidity = hih8120GetHumidityPercent_x10();
 			self->temperature = hih8120GetTemperature_x10();
 			printf("humidity and temperature done bit set\n");
-			printf("Humidity: %u\n", self->humidity);
-			printf("TEMP: %d\n", self->temperature);
 		}
 		//set done bit so that device knows meassurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);

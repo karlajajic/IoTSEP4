@@ -7,15 +7,16 @@
  */ 
 #include <stddef.h>
 #include <stdio.h>
-
+#include "DownLinkHandler.h"
+#include "Configuration.h"
 #include <ATMEGA_FreeRTOS.h>
 
 #include <lora_driver.h>
 /*Leds*/
 #include <iled.h>
 #include <message_buffer.h>
-#include "DownLinkHandler.h"
-#include "Configuration.h"
+
+
 
 #define LORA_appEUI "  fbf6ad621cf57cd7"
 #define LORA_appKEY "bf9a206660a448b3892f0bd64935e4d5"
@@ -29,6 +30,7 @@ static char _out_buf[100];
 
 void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
+	
 	//_isSet=isSet;
 	xTaskCreate(
 	lora_DownLinkHandler_startTask
@@ -124,8 +126,9 @@ static void _lora_setup(void)
 
 	void lora_DownLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
 	{
+		
 		//size_t xBytesToSend;
-		char rxData[50];
+		
 
 				//// hardware reset of lorawan transceiver
 				//lora_driver_reset_rn2483(1);
@@ -139,9 +142,11 @@ static void _lora_setup(void)
 				//_lora_setup();
 				
 		size_t xBytesReceived;
-		xBytesReceived = xMessageBufferReceive(xMessageBuffer,(void*) &_downlink_payload,sizeof(lora_payload_t),0);
-		printf("PayLoad byte one: %d\n", _downlink_payload.bytes[0] + _downlink_payload.bytes[1]);
-		if(xBytesReceived != NULL)
+		xBytesReceived = xMessageBufferReceive(xMessageBuffer,(void*) &_downlink_payload,sizeof(lora_payload_t),portMAX_DELAY);
+		printf("PayLoad bytes are: %d, %d\n Payload lenght is %d\n", _downlink_payload.bytes[0] ,_downlink_payload.bytes[1],_downlink_payload.len);
+		
+		//Two bytes eg. 44/33
+		if(_downlink_payload.len==2)
 		{
 			uint8_t command = _downlink_payload.bytes[0] + _downlink_payload.bytes[1];
 			bool* value = pvPortMalloc(sizeof(bool));
@@ -178,10 +183,7 @@ static void _lora_setup(void)
 				break;
 		}
 	}
-		
-		//decode the received paylaod assuming we have only temperature_setting
-		//Check that the lenght we've received is two as expected
-								//44						//31		
+						
 }
 
 void lora_DownLinkHandler_startTask(MessageBufferHandle_t xMessageBuffer){
