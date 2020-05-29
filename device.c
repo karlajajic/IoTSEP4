@@ -6,7 +6,7 @@
 #include <lora_driver.h>
 #include <hal_defs.h>
 #include <message_buffer.h>
-
+#include "Configuration.h"
 
 #include <stdio.h>
 #include <avr/io.h>
@@ -34,6 +34,11 @@ typedef struct device { //add all drivers
 	currentCondition_t currentCondition;
 	TaskHandle_t handleTask;
 }device;
+
+void device_executeTask(void* self) {
+	for (;;)
+	device_startMeasuring((device_t)self);
+}
 
 device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 	EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader, MessageBufferHandle_t uplinkMessageBuffer){
@@ -69,25 +74,15 @@ device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle
 }
 
 //devided so we can test
-void device_executeTask(device_t self) {
-	for (;;)
-		device_startMeasuring(self);
-}
+
 
 void device_startMeasuring(device_t self) {
 	//we should first check if device is on, get that from lora and add new eventBit 
-	
-	//-------------------------------------------	TEST ME !	-----------------------------------------------------------------------
-	
 	
 	bool* works = pvPortMalloc(sizeof(bool));
 	configuration_getWorking(works);
 	if (*works == true)
 	{
-
-
-	//-------------------------------------------	TEST ME !	-----------------------------------------------------------------------
-
 
 	//if ventilation needed -> ventilate 
 

@@ -6,7 +6,7 @@
 #include <ATMEGA_FreeRTOS.h>
 #include "task.h"
 #include "event_groups.h"
-#include "mh_z19.h"
+#include <mh_z19.h>
 
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
@@ -29,6 +29,14 @@ void my_co2_call_back(uint16_t ppm)
 	printf("CO2 in callback: %d", ppm);
 }
 
+void co2Reader_executeTask(void* self) {
+	
+	//mh_z19_create(ser_USART3, my_co2_call_back);
+	for (;;) {
+		co2Reader_measure((co2reader_t)self);
+	}
+}
+
 co2reader_t co2Reader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 
@@ -44,7 +52,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
-	//mh_z19_create(ser_USART3, my_co2_call_back); 
+	mh_z19_create(ser_USART3, my_co2_call_back); 
 	
 	xTaskCreate(
 	co2Reader_executeTask,
@@ -77,12 +85,7 @@ void co2Reader_destroy(co2reader_t self) {
 }
 
 //actual task, methods devided so that it is possible to test
-void co2Reader_executeTask(co2reader_t self) {
-	mh_z19_create(ser_USART3, NULL); 
-	for (;;) {
-		co2Reader_measure(self);
-	}
-}
+
 
 void co2Reader_measure(co2reader_t self) {
 	
@@ -95,25 +98,29 @@ void co2Reader_measure(co2reader_t self) {
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 
 		mh_z19_take_meassuring();
+		//if(rc1 != MHZ19_OK)
+		//{
+			//printf("There was a problem with measure co2\n");
+		//}
 
-		uint16_t a = pvPortMalloc(sizeof(uint16_t));
-		//uint16_t a;
-		mh_z19_return_code_t rc = mh_z19_get_co2_ppm(a);
-		if(rc != MHZ19_OK)
-		{
-			printf("There was a problem with get co2\n");
-		}
-		if(rc == MHZ19_NO_MEASSURING_AVAILABLE)
-		{
-			printf("There was no co2 meassured\n");
-		}
+		//uint16_t a = pvPortMalloc(sizeof(uint16_t));
+		////uint16_t a;
+		//mh_z19_return_code_t rc2 = mh_z19_get_co2_ppm(a);
+		//if(rc2 != MHZ19_OK)
+		//{
+			//printf("There was a problem with get co2\n");
+		//}
+		//if(rc2 == MHZ19_NO_MEASSURING_AVAILABLE)
+		//{
+			//printf("There was no co2 measured\n");
+		//}
 		//my_co2_call_back(a);
 		
-		self->value = a;
+		self->value = ppmValue;
 		//vPortFree(a);
 
 		printf("co2 done bit set\n");
-		//set done bit so that device knows meassurement is done
+		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
 	}
 }

@@ -34,6 +34,14 @@ static bool isSet=false;
 /*Check for the parameters*/
 
 
+void lora_UpLinkHandler_startTask(void* xMessageBuffer){
+	for(;;)
+	{
+		lora_UpLinkHandler_task((MessageBufferHandle_t)xMessageBuffer);
+		vTaskDelay(3000);
+	}
+}
+
 
 void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
@@ -183,13 +191,7 @@ static void _lora_setup(void)
 		}
 	}
 	
-	void lora_UpLinkHandler_startTask(MessageBufferHandle_t xMessageBuffer){
-		for(;;)
-		{
-			lora_UpLinkHandler_task(xMessageBuffer);
-			vTaskDelay(3000);
-		}
-	}
+	
 	
 	
 	

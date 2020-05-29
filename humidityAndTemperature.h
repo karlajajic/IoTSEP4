@@ -14,7 +14,7 @@ humAndTempReader_t humAndTempReader_create(UBaseType_t priority, UBaseType_t sta
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit);
 void humAndTempReader_destroy(humAndTempReader_t self);
 
-void humAndTempReader_executeTask(humAndTempReader_t self);
+void humAndTempReader_executeTask(void* self);
 void humAndTempReader_measure(humAndTempReader_t self);
 uint16_t humAndTempReader_getHumidity(humAndTempReader_t self);
 int16_t humAndTempReader_getTemperature(humAndTempReader_t self);

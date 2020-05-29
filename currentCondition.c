@@ -56,7 +56,7 @@ void currentCondition_destroy(currentCondition_t self) {
 	//free(self->humidityData);
 	//free(self->soundData);
 	//free(self);
-	vPortFree(self->humidityData);//maybe use this
+	vPortFree(self);//maybe use this
 }
 lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 {

@@ -30,7 +30,7 @@ main.d main.o: .././main.c \
  ../drivers/lora_driver.h .././co2Reader.h .././humidityAndTemperature.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
  ../drivers/hih8120.h .././UpLinkHandler.h ../FreeRTOS/src/portmacro.h \
- .././Configuration.h
+ .././DownLinkHandler.h .././Configuration.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h:
 
@@ -127,5 +127,7 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 .././UpLinkHandler.h:
 
 ../FreeRTOS/src/portmacro.h:
+
+.././DownLinkHandler.h:
 
 .././Configuration.h:

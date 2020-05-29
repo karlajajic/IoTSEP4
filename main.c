@@ -29,6 +29,7 @@
 #include "co2Reader.h"
 #include "humidityAndTemperature.h"
 #include "UpLinkHandler.h"
+#include "DownLinkHandler.h"
 #include "Configuration.h"
 
 // Needed for LoRaWAN
@@ -39,7 +40,7 @@
 #define TASK_CO2_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 3)
 #define TASK_LORA_DRIVER_PRIORITY		( tskIDLE_PRIORITY + 3 )
-#define TASK_LORA_DRIVER_PRIORITYDOWN		( tskIDLE_PRIORITY + 2 )
+#define TASK_LORA_DRIVER_PRIORITYDOWN	( tskIDLE_PRIORITY + 2 )
 
 //define task stack for each task
 #define HUMIDITY_TASK_STACK				(configMINIMAL_STACK_SIZE)
@@ -105,14 +106,13 @@ void create_tasks_and_semaphores(void)
 	
 	co2reader_t co2reader = co2Reader_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
 	readyEventGroup, BIT_DONE_MEASURE_CO2);
-	//co2reader_t co2reader = NULL;
-
-	device_t device = device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
+	
+	device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
 	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature, xMessageBuffer);
 	
 	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
 	
-	//lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITYDOWN,_downlinkMessagebuffer);
+	lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITYDOWN,_downlinkMessagebuffer);
 }
 
 /*-----------------------------------------------------------*/

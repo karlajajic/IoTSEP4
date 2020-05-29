@@ -32,6 +32,12 @@ typedef struct humidityAndTemperature {
 	TaskHandle_t handleTask;
 }humidityAndTemperature;
 
+//actual task, methods devided so that it is possible to test
+void humAndTempReader_executeTask(void* self) {
+	for (;;) {
+		humAndTempReader_measure((humAndTempReader_t)self);
+	}
+}
 
 humAndTempReader_t humAndTempReader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
@@ -74,12 +80,7 @@ void humAndTempReader_destroy(humAndTempReader_t self) {
 	//free(self);
 }
 
-//actual task, methods devided so that it is possible to test
-void humAndTempReader_executeTask(humAndTempReader_t self) {
-	for (;;) {
-		humAndTempReader_measure(self);
-	}
-}
+
 
 void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, //eventGroup

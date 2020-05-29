@@ -10,6 +10,6 @@ co2reader_t co2Reader_create(UBaseType_t priority, UBaseType_t stack, EventGroup
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit);
 void co2Reader_destroy(co2reader_t self);
 
-void co2Reader_executeTask(co2reader_t self);
+void co2Reader_executeTask(void* self);
 void co2Reader_measure(co2reader_t self);
 uint16_t co2Reader_getCO2(co2reader_t self);
