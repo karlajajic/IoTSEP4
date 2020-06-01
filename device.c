@@ -40,7 +40,7 @@ void device_executeTask(void* self) {
 	device_startMeasuring((device_t)self);
 }
 
-device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
+device_t device_create(TaskHandle_t taskHadnle, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 	EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader, MessageBufferHandle_t uplinkMessageBuffer){
 
 	device_t _new_device = calloc(sizeof(device), 1);
@@ -50,6 +50,7 @@ device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle
 	_new_device->co2reader = co2Reader;
 	_new_device->humAndTempReader = humAndTempReader;
 	_new_device->currentCondition = currentCondition_create();
+	_new_device->handleTask=taskHadnle;
 
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
@@ -58,15 +59,6 @@ device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle
 	_readyBit = readyBit;
 	
 	_uplinkmessageBuffer=uplinkMessageBuffer;
-
-	xTaskCreate(
-		device_executeTask,
-		"Device",
-		stack,
-		_new_device,
-		priority,
-		&_new_device->handleTask
-	);
 
 	printf("device up\n");
 

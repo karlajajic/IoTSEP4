@@ -10,7 +10,7 @@
 
 typedef struct humidityAndTemperature* humAndTempReader_t;
 
-humAndTempReader_t humAndTempReader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
+humAndTempReader_t humAndTempReader_create(TaskHandle_t taskHandle, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit);
 void humAndTempReader_destroy(humAndTempReader_t self);
 

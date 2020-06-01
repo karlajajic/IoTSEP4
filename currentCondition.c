@@ -25,6 +25,7 @@ currentCondition_t currentCondition_create() {
 	return _new_con;
 }
 
+// you should check the values which are being set 
 
 void currentCondition_setCO2(currentCondition_t self, uint16_t value) {
 	if(self!=NULL)

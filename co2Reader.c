@@ -37,14 +37,16 @@ void co2Reader_executeTask(void* self) {
 	}
 }
 
-co2reader_t co2Reader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
+co2reader_t co2Reader_create(TaskHandle_t taskHadnle,EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 
+	//in order dor vPortFree to work, calloc -> pvPortMalloc
 	co2reader_t _new_reader = calloc(sizeof(co2reader), 1);
 	if (_new_reader == NULL)
 	return NULL;
 
 	_new_reader->value = 0;
+	_new_reader->handleTask=taskHadnle;
 
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
@@ -54,15 +56,6 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 
 	mh_z19_create(ser_USART3, my_co2_call_back); 
 	
-	xTaskCreate(
-	co2Reader_executeTask,
-	"CO2Reader",
-	stack,
-	_new_reader,
-	priority,
-	&_new_reader->handleTask
-	);
-
 	printf("co2 up\n");
 
 	return _new_reader;
@@ -82,6 +75,12 @@ void co2Reader_destroy(co2reader_t self) {
 	//free(self->handleTask);
 	//free(self->value);
 	//free(self);
+
+
+	//--------------------------------TRY TO UNCOMMENT ------------------------------------------------------
+	//vTaskDelete(self->handleTask);
+	//vPortFree(self);
+
 }
 
 //actual task, methods devided so that it is possible to test

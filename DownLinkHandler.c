@@ -33,17 +33,10 @@ void lora_DownLinkHandler_startTask(void* xMessageBuffer){
 	}
 }
 
-void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
+void lora_DownLinkHandler_create(MessageBufferHandle_t xMessageBuffer)
 {
 	
 	//_isSet=isSet;
-	xTaskCreate(
-	lora_DownLinkHandler_startTask
-	,  (const portCHAR *)"LRDHHand"  // A name just for humans
-	,  configMINIMAL_STACK_SIZE+200  // This stack size can be checked & adjusted by reading the Stack Highwater
-	,  xMessageBuffer
-	,  lora_handler_task_priority  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-	,  NULL );
 	
 }
 

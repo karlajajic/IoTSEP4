@@ -39,14 +39,16 @@ void humAndTempReader_executeTask(void* self) {
 	}
 }
 
-humAndTempReader_t humAndTempReader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
-EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
+humAndTempReader_t humAndTempReader_create(TaskHandle_t taskHandle, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
+EventGroupHandle_t readyEventGroup, EventBits_t readyBit) 
+{
 	humAndTempReader_t _new_reader = calloc(sizeof(humidityAndTemperature), 1);
 	if (_new_reader == NULL)
 	return NULL;
 
 	_new_reader->humidity = 0;
 	_new_reader->temperature = 0;
+	_new_reader->handleTask=taskHandle;
 
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
@@ -54,15 +56,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
-		xTaskCreate(
-		humAndTempReader_executeTask,
-		"HumAndTempReader",
-		stack,
-		_new_reader,
-		priority,
-		&_new_reader->handleTask
-		);
-		printf("humidity and temperature ready\n");
+	printf("humidity and temperature ready\n");
 	
 	return _new_reader;
 }
