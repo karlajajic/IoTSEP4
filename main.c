@@ -130,7 +130,7 @@ void initialiseSystem()
 	// vvvvvvvvvvvvvvvvv BELOW IS LoRaWAN initialisation vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	// Initialise the HAL layer and use 5 for LED driver priority
 	hal_create(5);
-	// Initialise the LoRaWAN driver without down-link buffer
+	// Initialise the LoRaWAN driver with a down-link buffer
 	lora_driver_create(LORA_USART, _downlinkMessagebuffer);
 	// Create LoRaWAN task and start it up with priority 3 
 	
