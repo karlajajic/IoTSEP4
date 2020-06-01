@@ -12,7 +12,7 @@
 
 typedef struct device* device_t;
 
-device_t device_create(TaskHandle_t taskHadnle, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
+device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader,MessageBufferHandle_t uplinkMessageBuffer);
 //void device_destroy(device_t self);
 void device_executeTask(void* self);

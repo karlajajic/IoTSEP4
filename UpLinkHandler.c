@@ -43,10 +43,19 @@ void lora_UpLinkHandler_startTask(void* xMessageBuffer){
 }
 
 
-void lora_UpLinkHandler_create(MessageBufferHandle_t xMessageBuffer)
+void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
 	_buffer = xMessageBuffer;
-
+	
+	
+	
+	xTaskCreate(
+	lora_UpLinkHandler_startTask
+	,  (const portCHAR *)"LRUpHand"  // A name just for humans
+	,  configMINIMAL_STACK_SIZE+200  // This stack size can be checked & adjusted by reading the Stack Highwater
+	,  xMessageBuffer
+	,  lora_handler_task_priority  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+	,  NULL );
 }
 
 

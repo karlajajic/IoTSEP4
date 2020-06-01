@@ -39,15 +39,14 @@
 #define TASK_HUMIDITY_SENSOR_PRIORITY	( tskIDLE_PRIORITY + 1 )
 #define TASK_CO2_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 3)
-#define TASK_LORA_UPLINK_PRIORITY		( tskIDLE_PRIORITY + 3 )
-#define TASK_LORA_DOWNLINK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define TASK_LORA_DRIVER_PRIORITY		( tskIDLE_PRIORITY + 3 )
+#define TASK_LORA_DRIVER_PRIORITYDOWN	( tskIDLE_PRIORITY + 2 )
 
 //define task stack for each task
 #define HUMIDITY_TASK_STACK				(configMINIMAL_STACK_SIZE)
 #define CO2_TASK_STACK					(configMINIMAL_STACK_SIZE)
 #define DEVICE_TASK_STACK				(configMINIMAL_STACK_SIZE)
-#define LORA_UPLINK_TASK_STACK			(configMINIMAL_STACK_SIZE + 200)
-#define LORA_DOWNLINK_TASK_STACK		(configMINIMAL_STACK_SIZE + 200)
+#define LORA_DRIVER_TASK_STACK			(configMINIMAL_STACK_SIZE)
 
 //defining bits that will be the 'flags' for event group
 #define BIT_MEASURE_HUMIDITY			(1 << 0)
@@ -58,19 +57,16 @@
 #define BIT_DONE_MEASURE_CO2			(1 << 5)
 #define ALL_BIT_DONE_MEASURE			(BIT_DONE_MEASURE_HUMIDITY | BIT_DONE_MEASURE_CO2)
 
-//define taskHandles
-#define CO2_TASK_HANDLE  NULL
-#define DEVICE_TASK_HANDLE  NULL
-#define HUMIDITY_TASK_HANDLE  NULL
 
+// define two Tasks
+void task1( void *pvParameters );
+void task2( void *pvParameters );
 
 //used for appController to prompt sensors to start with readings
 EventGroupHandle_t startMeasureEventGroup;
 //used for appController to check if sensors are done with readings
 EventGroupHandle_t readyEventGroup;
 
-
-//----------------------------------------- NAMES SHOULD BE CHANGED ----------------------------------------------------------------
 
 // define semaphore handle
 SemaphoreHandle_t xTestSemaphore;
@@ -83,7 +79,19 @@ void lora_handler_create(UBaseType_t lora_handler_task_priority);
 
 /*-----------------------------------------------------------*/
 void create_tasks_and_semaphores(void)
-{	
+{
+	//// Semaphores are useful to stop a Task proceeding, where it should be paused to wait,
+	//// because it is sharing a resource, such as the Serial port.
+	//// Semaphores should only be used whilst the scheduler is running, but we can set it up here.
+	//if ( xTestSemaphore == NULL )  // Check to confirm that the Semaphore has not already been created.
+	//{
+		//xTestSemaphore = xSemaphoreCreateMutex();  // Create a mutex semaphore.
+		//if ( ( xTestSemaphore ) != NULL )
+		//{
+			//xSemaphoreGive( ( xTestSemaphore ) );  // Make the mutex available for use, by initially "Giving" the Semaphore.
+		//}
+	//}
+	
 	startMeasureEventGroup = xEventGroupCreate();
 	readyEventGroup = xEventGroupCreate();
 
@@ -92,61 +100,22 @@ void create_tasks_and_semaphores(void)
 	
 	configuration_create();
 	
-	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(HUMIDITY_TASK_HANDLE, 
+	
+	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(TASK_HUMIDITY_SENSOR_PRIORITY, HUMIDITY_TASK_STACK, 
 	startMeasureEventGroup, BIT_MEASURE_HUMIDITY, readyEventGroup, BIT_DONE_MEASURE_HUMIDITY);
-
-	xTaskCreate(
-	humAndTempReader_executeTask,
-	"HumAndTempReader",
-	HUMIDITY_TASK_STACK,
-	(void*)humidityAndTemperature,
-	TASK_HUMIDITY_SENSOR_PRIORITY,
-	HUMIDITY_TASK_HANDLE);
 	
-	co2reader_t co2reader = co2Reader_create(CO2_TASK_HANDLE, startMeasureEventGroup, BIT_MEASURE_CO2,
+	co2reader_t co2reader = co2Reader_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
 	readyEventGroup, BIT_DONE_MEASURE_CO2);
-
-	xTaskCreate(
-	co2Reader_executeTask,
-	"CO2Reader",
-	CO2_TASK_STACK,
-	(void*)co2reader,
-	TASK_CO2_SENSOR_PRIORITY,
-	CO2_TASK_HANDLE);
-
 	
-	device_t device= device_create(DEVICE_TASK_HANDLE, startMeasureEventGroup, ALL_BIT_MEASURE,
+	device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
 	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature, xMessageBuffer);
-
-	xTaskCreate(
-	device_executeTask,
-	"Device",
-	DEVICE_TASK_STACK,
-	(void*)device,
-	TASK_DEVICE_PRIORITY,
-	DEVICE_TASK_HANDLE);
 	
-	lora_UpLinkHandler_create(xMessageBuffer);
-
-	xTaskCreate(
-	lora_UpLinkHandler_startTask,
-	(const portCHAR *)"LRUpHand",  // A name just for humans
-	LORA_UPLINK_TASK_STACK , // This stack size can be checked & adjusted by reading the Stack Highwater
-	(void*)xMessageBuffer,
-	TASK_LORA_UPLINK_PRIORITY,  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-	NULL );
+	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
 	
-	lora_DownLinkHandler_create(_downlinkMessagebuffer);
-	xTaskCreate(
-	lora_DownLinkHandler_startTask,
-	(const portCHAR *)"LRDHHand", // A name just for humans
-	LORA_DOWNLINK_TASK_STACK,  // This stack size can be checked & adjusted by reading the Stack Highwater
-	(void*)_downlinkMessagebuffer,
-	TASK_LORA_DOWNLINK_PRIORITY, // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-	NULL );
+	lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITYDOWN,_downlinkMessagebuffer);
 }
 
-/*-----------------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------*/
 void initialiseSystem()
 {
 	// Set output ports for leds used in the example
@@ -169,7 +138,12 @@ void initialiseSystem()
 	
 }
 
-/*----------------------------------------------------------------------------------------------------------------------------*/
+void doStuff()
+{
+	//size_t bytesToSend;
+	//bytesToSend=xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
+}
+/*-----------------------------------------------------------*/
 int main(void)
 {
 	initialiseSystem(); // Must be done as the very first thing!!
@@ -177,6 +151,7 @@ int main(void)
 	create_tasks_and_semaphores();
 	vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
 
+	/* Replace with your application code */
 	while (1)
 	{
 	}
