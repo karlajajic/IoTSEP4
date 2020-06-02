@@ -16,6 +16,8 @@ drivers\docs\example\loraWANHandler.c
 
 humidityAndTemperature.c
 
+ServoImpl.c
+
 UpLinkHandler.c
 
 FreeRTOS\FreeRTOSTraceDriver\FreeRTOSTraceDriver.c

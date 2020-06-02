@@ -35,15 +35,19 @@ typedef struct device { //add all drivers
 	TaskHandle_t handleTask;
 }device;
 
+//devided so we can test
 void device_executeTask(void* self) {
 	for (;;)
-	device_startMeasuring((device_t)self);
+	{
+		device_startMeasuring((device_t)self);
+		vTaskDelay(5000);
+	}
 }
 
 device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 	EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader, MessageBufferHandle_t uplinkMessageBuffer){
 
-	device_t _new_device = calloc(sizeof(device), 1);
+	device_t _new_device = pvPortMalloc(sizeof(device));
 	if (_new_device == NULL)
 		return NULL;
 
@@ -73,7 +77,7 @@ device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle
 	return _new_device;
 }
 
-//devided so we can test
+
 
 
 void device_startMeasuring(device_t self) {
@@ -84,7 +88,16 @@ void device_startMeasuring(device_t self) {
 	if (*works == true)
 	{
 
-	//if ventilation needed -> ventilate 
+		bool* ventilate = pvPortMalloc(sizeof(bool));
+		configuration_getVentilation(ventilate);
+		if(*ventilate == true)
+		{
+			servo_open();
+		} 
+		else
+		{
+			servo_close();
+		}
 
 	//tell sensors to start meassuring 
 	xEventGroupSetBits(_startMeasureEventGroup, _startMeasureBit);
@@ -111,6 +124,7 @@ void device_startMeasuring(device_t self) {
 		
 		/*Perhaps loraPayload is not a good idea to be here*/
 		_uplink_payload = getcurrentConditionPayload(self->currentCondition);
+		
 		//if(_uplink_payload!=NULL)
 		//{
 		vTaskDelay(1000);

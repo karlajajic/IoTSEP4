@@ -34,13 +34,15 @@ void co2Reader_executeTask(void* self) {
 	//mh_z19_create(ser_USART3, my_co2_call_back);
 	for (;;) {
 		co2Reader_measure((co2reader_t)self);
+		vTaskDelay(5000);
 	}
+	
 }
 
 co2reader_t co2Reader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 
-	co2reader_t _new_reader = calloc(sizeof(co2reader), 1);
+	co2reader_t _new_reader = pvPortMalloc(sizeof(co2reader));
 	if (_new_reader == NULL)
 	return NULL;
 
@@ -52,7 +54,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
-	mh_z19_create(ser_USART3, my_co2_call_back); 
+	mh_z19_create(ser_USART3, NULL); 
 	
 	xTaskCreate(
 	co2Reader_executeTask,
@@ -120,6 +122,8 @@ void co2Reader_measure(co2reader_t self) {
 		//vPortFree(a);
 
 		printf("co2 done bit set\n");
+		
+		vTaskDelay(5000);
 		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
 	}

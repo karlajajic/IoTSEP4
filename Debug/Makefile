@@ -68,6 +68,7 @@ C_SRCS +=  \
 ../DownLinkHandler.c \
 ../drivers/docs/example/loraWANHandler.c \
 ../humidityAndTemperature.c \
+../ServoImpl.c \
 ../UpLinkHandler.c \
 ../FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.c \
 ../FreeRTOS/src/croutine.c \
@@ -97,6 +98,7 @@ device.o \
 DownLinkHandler.o \
 drivers/docs/example/loraWANHandler.o \
 humidityAndTemperature.o \
+ServoImpl.o \
 UpLinkHandler.o \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o \
 FreeRTOS/src/croutine.o \
@@ -119,6 +121,7 @@ device.o \
 DownLinkHandler.o \
 drivers/docs/example/loraWANHandler.o \
 humidityAndTemperature.o \
+ServoImpl.o \
 UpLinkHandler.o \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o \
 FreeRTOS/src/croutine.o \
@@ -141,6 +144,7 @@ device.d \
 DownLinkHandler.d \
 drivers/docs/example/loraWANHandler.d \
 humidityAndTemperature.d \
+ServoImpl.d \
 UpLinkHandler.d \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.d \
 FreeRTOS/src/croutine.d \
@@ -163,6 +167,7 @@ device.d \
 DownLinkHandler.d \
 drivers/docs/example/loraWANHandler.d \
 humidityAndTemperature.d \
+ServoImpl.d \
 UpLinkHandler.d \
 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.d \
 FreeRTOS/src/croutine.d \
@@ -234,6 +239,13 @@ drivers/docs/example/loraWANHandler.o: ../drivers/docs/example/loraWANHandler.c
 	
 
 ./humidityAndTemperature.o: .././humidityAndTemperature.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000L  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../FreeRTOS/src" -I"../drivers"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega2560" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./ServoImpl.o: .././ServoImpl.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000L  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../FreeRTOS/src" -I"../drivers"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega2560" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

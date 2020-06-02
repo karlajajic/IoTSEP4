@@ -36,12 +36,13 @@ typedef struct humidityAndTemperature {
 void humAndTempReader_executeTask(void* self) {
 	for (;;) {
 		humAndTempReader_measure((humAndTempReader_t)self);
+		vTaskDelay(5000);
 	}
 }
 
 humAndTempReader_t humAndTempReader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
-	humAndTempReader_t _new_reader = calloc(sizeof(humidityAndTemperature), 1);
+	humAndTempReader_t _new_reader = pvPortMalloc(sizeof(humidityAndTemperature));
 	if (_new_reader == NULL)
 	return NULL;
 
@@ -99,7 +100,10 @@ void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 			self->humidity = hih8120GetHumidityPercent_x10();
 			self->temperature = hih8120GetTemperature_x10();
 			printf("humidity and temperature done bit set\n");
+			
 		}
+		
+		vTaskDelay(5000);
 		//set done bit so that device knows meassurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
 	}

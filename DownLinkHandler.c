@@ -18,8 +18,8 @@
 
 
 
-#define LORA_appEUI "  fbf6ad621cf57cd7"
-#define LORA_appKEY "bf9a206660a448b3892f0bd64935e4d5"
+//#define LORA_appEUI "  fbf6ad621cf57cd7"
+//#define LORA_appKEY "bf9a206660a448b3892f0bd64935e4d5"
 
 static lora_payload_t _downlink_payload;
 //static bool _isSet; 

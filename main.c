@@ -31,6 +31,7 @@
 #include "UpLinkHandler.h"
 #include "DownLinkHandler.h"
 #include "Configuration.h"
+#include "Servo.h"
 
 // Needed for LoRaWAN
 #include <lora_driver.h>
@@ -38,7 +39,7 @@
 //define priority individualy for each task
 #define TASK_HUMIDITY_SENSOR_PRIORITY	( tskIDLE_PRIORITY + 1 )
 #define TASK_CO2_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 3)
+#define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 3 )
 #define TASK_LORA_DRIVER_PRIORITY		( tskIDLE_PRIORITY + 3 )
 #define TASK_LORA_DRIVER_PRIORITYDOWN	( tskIDLE_PRIORITY + 2 )
 
@@ -57,10 +58,6 @@
 #define BIT_DONE_MEASURE_CO2			(1 << 5)
 #define ALL_BIT_DONE_MEASURE			(BIT_DONE_MEASURE_HUMIDITY | BIT_DONE_MEASURE_CO2)
 
-
-// define two Tasks
-void task1( void *pvParameters );
-void task2( void *pvParameters );
 
 //used for appController to prompt sensors to start with readings
 EventGroupHandle_t startMeasureEventGroup;
@@ -107,12 +104,14 @@ void create_tasks_and_semaphores(void)
 	co2reader_t co2reader = co2Reader_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
 	readyEventGroup, BIT_DONE_MEASURE_CO2);
 	
+	servo_initialise();
+	
 	device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
 	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature, xMessageBuffer);
 	
-	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
+	//lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
 	
-	lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITYDOWN,_downlinkMessagebuffer);
+	//lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITYDOWN,_downlinkMessagebuffer);
 }
 
 /*-----------------------------------------------------------*/
@@ -124,7 +123,6 @@ void initialiseSystem()
 	trace_init();
 	// Make it possible to use stdio on COM port 0 (USB) on Arduino board - Setting 57600,8,N,1
 	stdioCreate(ser_USART0);
-	// Let's create some tasks
 	
 
 	// vvvvvvvvvvvvvvvvv BELOW IS LoRaWAN initialisation vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -136,21 +134,16 @@ void initialiseSystem()
 	
 	hih8120Create();
 	
-}
-
-void doStuff()
-{
-	//size_t bytesToSend;
-	//bytesToSend=xMessageBufferSend(xMessageBuffer,(void*) &payload,sizeof(payload),portMAX_DELAY);
+	// Let's create some tasks
+	create_tasks_and_semaphores();
 }
 /*-----------------------------------------------------------*/
 int main(void)
 {
 	initialiseSystem(); // Must be done as the very first thing!!
 	printf("Program Started!!\n");
-	create_tasks_and_semaphores();
 	vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
-
+	
 	/* Replace with your application code */
 	while (1)
 	{
