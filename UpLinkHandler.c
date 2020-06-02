@@ -185,10 +185,6 @@ static void _lora_setup(void)
 			
 			printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));
 		}
-		else
-		{
-			vTaskDelay(2000);
-		}
 	}
 	
 	
