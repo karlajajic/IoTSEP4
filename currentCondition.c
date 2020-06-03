@@ -14,13 +14,14 @@ typedef struct currentCondition {
 }currentCondition;
 
 currentCondition_t currentCondition_create() {
-	currentCondition_t _new_con = calloc(sizeof(currentCondition), 1);
+	currentCondition_t _new_con = calloc(1, sizeof(currentCondition));
 	if (_new_con == NULL)
 	return NULL;
 
 	_new_con->temperatureData = 0;
 	_new_con->humidityData = 0;
 	_new_con->co2Data = 0;
+	_new_con->soundData=0;
 
 	return _new_con;
 }
@@ -62,13 +63,20 @@ lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 {
 	lora_payload_t payload;
 	payload.port_no = 1;
-	payload.len = 4;
+	payload.len = 8;
 	
 	payload.bytes[0] = self->temperatureData >> 8;
 	payload.bytes[1] = self->temperatureData & 0xFF;
 
 	payload.bytes[2] = self->humidityData >> 8;
 	payload.bytes[3] = self->humidityData & 0xFF;
+	
+	payload.bytes[4] = self->co2Data >> 8;
+	payload.bytes[5] = self->co2Data & 0xFF;
+	
+	payload.bytes[6] = self->soundData >> 8;
+	payload.bytes[7] = self->soundData & 0xFF;
+	
 	return payload;
 	
 }

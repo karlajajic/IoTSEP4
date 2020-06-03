@@ -66,25 +66,25 @@ void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, Message
 			switch(command)
 			{
 			//D0
-			case 74:
+			case 0x74:
 				configuration_setWorking(false);
 				configuration_getWorking(value);
 				printf("The bool for device is set to %d",*value);
 				break;
 			//D1
-			case 75 :
+			case 0x75 :
 				configuration_setWorking(true);
 				configuration_getWorking(value);
 				printf("The bool for device is set to %d",*value);
 				break;
 			//V0
-			case 86:
+			case 0x86:
 				configuration_setVentilation(false);
 				configuration_getVentilation(value);
 				printf("The bool for ventilation is set to %d",*value);
 			break;
 			//V1
-			case 87:
+			case 0x87:
 				configuration_setVentilation(true);
 				configuration_getVentilation(value);
 				printf("The bool for ventilation is set to %d",*value);

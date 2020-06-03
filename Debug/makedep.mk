@@ -18,6 +18,8 @@ humidityAndTemperature.c
 
 ServoImpl.c
 
+SoundReader.c
+
 UpLinkHandler.c
 
 FreeRTOS\FreeRTOSTraceDriver\FreeRTOSTraceDriver.c

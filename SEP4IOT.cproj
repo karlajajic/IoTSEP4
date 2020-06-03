@@ -222,6 +222,12 @@
     <Compile Include="ServoImpl.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="SoundReader.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="SoundReader.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="UpLinkHandler.c">
       <SubType>compile</SubType>
     </Compile>

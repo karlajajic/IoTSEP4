@@ -13,9 +13,8 @@
 void servo_initialise()
 {
 	rcServoCreate();		
-	servo_open();
-	//servo_close();
-	printf("Servo is up\n");
+	
+	//printf("Servo is up\n");
 }
 
 void servo_open()

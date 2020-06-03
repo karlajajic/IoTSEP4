@@ -1,4 +1,4 @@
-#include"co2Reader.h"
+﻿#include"co2Reader.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -6,7 +6,7 @@
 #include <ATMEGA_FreeRTOS.h>
 #include "task.h"
 #include "event_groups.h"
-#include <mh_z19.h>
+#include "SoundReader.h"
 
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
@@ -14,32 +14,28 @@ static EventBits_t _startMeasureBit;
 static EventGroupHandle_t _readyEventGroup;
 static EventBits_t _readyBit;
 
-typedef struct co2reader co2reader;
+typedef struct soundReader soundReader;
 
-static uint16_t ppmValue;
 
-typedef struct co2reader {
+
+typedef struct soundReader {
 	uint16_t value;
 	TaskHandle_t handleTask;
-}co2reader;
+}soundReader;
 
-void my_co2_call_back(uint16_t ppm)
-{	
-	ppmValue = ppm;
-	//printf("CO2 in callback: %d\n", ppm);
-}
 
-void co2Reader_executeTask(void* self) {
+
+void soundReader_executeTask(void* self) {
 	for (;;) {
-		co2Reader_measure((co2reader_t)self);
+		soundReader_measure((soundReader_t)self);
 		//vTaskDelay(5000);
 	}
 }
 
-co2reader_t co2Reader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
+soundReader_t soundReader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 
-	co2reader_t _new_reader = calloc(1, sizeof(co2reader));
+	soundReader_t _new_reader = calloc(1, sizeof(soundReader));
 	if (_new_reader == NULL)
 	return NULL;
 
@@ -51,18 +47,16 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
-	mh_z19_create(ser_USART3, my_co2_call_back); 
-	
 	xTaskCreate(
-	co2Reader_executeTask,
-	"CO2Reader",
+	soundReader_executeTask,
+	"soundReader",
 	stack,
 	_new_reader,
 	priority,
 	&_new_reader->handleTask
 	);
 
-	printf("co2 up\n");
+	printf("soundReader up\n");
 
 	return _new_reader;
 }
@@ -70,7 +64,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 
 
 //	RETURN TO DESTROY METHODS
-void co2Reader_destroy(co2reader_t self) {
+void soundReader_destroy(soundReader_t self) {
 	//if (self == NULL)
 	//	return;
 
@@ -86,7 +80,7 @@ void co2Reader_destroy(co2reader_t self) {
 //actual task, methods devided so that it is possible to test
 
 
-void co2Reader_measure(co2reader_t self) {
+void soundReader_measure(soundReader_t self) {
 	
 	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, //eventGroup
 	_startMeasureBit, //bits it is interested in
@@ -96,18 +90,17 @@ void co2Reader_measure(co2reader_t self) {
 
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 
-		printf("ccccccccccccccccccccccccccc%d",mh_z19_take_meassuring());
-		vTaskDelay(6);
 		
-		self->value = ppmValue;
+		srand(time(NULL));
+		self->value = rand()%105 + 15;
 		
 		
 		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
-		printf("co2 done bit set\n");
+		printf("SoundReader done bit set\n");
 	}
 }
 
-uint16_t co2Reader_getCO2(co2reader_t self) {
+uint16_t soundReader_getSound(soundReader_t self) {
 	return self->value;
 }

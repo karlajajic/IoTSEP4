@@ -7,6 +7,7 @@
 #include <hal_defs.h>
 #include <message_buffer.h>
 #include "Configuration.h"
+#include "Servo.h"
 
 #include <stdio.h>
 #include <avr/io.h>
@@ -31,6 +32,7 @@ typedef struct device device;
 typedef struct device { //add all drivers
 	co2reader_t co2reader;
 	humAndTempReader_t humAndTempReader;
+	soundReader_t soundReader;
 	currentCondition_t currentCondition;
 	TaskHandle_t handleTask;
 }device;
@@ -40,19 +42,20 @@ void device_executeTask(void* self) {
 	for (;;)
 	{
 		device_startMeasuring((device_t)self);
-		vTaskDelay(5000);
+		//vTaskDelay(5000);
 	}
 }
 
 device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
-	EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader, MessageBufferHandle_t uplinkMessageBuffer){
+EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader,soundReader_t soundReader, MessageBufferHandle_t uplinkMessageBuffer){
 
-	device_t _new_device = pvPortMalloc(sizeof(device));
+	device_t _new_device = calloc(1, sizeof(device));
 	if (_new_device == NULL)
 		return NULL;
 
 	_new_device->co2reader = co2Reader;
 	_new_device->humAndTempReader = humAndTempReader;
+	_new_device->soundReader=soundReader;
 	_new_device->currentCondition = currentCondition_create();
 
 	_startMeasureEventGroup = startMeasureEventGroup;
@@ -99,7 +102,7 @@ void device_startMeasuring(device_t self) {
 			servo_close();
 		}
 
-	//tell sensors to start meassuring 
+	////tell sensors to start meassuring 
 	xEventGroupSetBits(_startMeasureEventGroup, _startMeasureBit);
 	printf("device has set bits\n");
 
@@ -109,9 +112,11 @@ void device_startMeasuring(device_t self) {
 		pdTRUE, //clears the bits 
 		pdTRUE, //waits for both bits to be set
 		portMAX_DELAY); //waits forever if needed
-
+	
 	if ((uxBits & (_readyBit)) == (_readyBit)) {
 		device_setCO2ToCurrent(self, device_getCO2Data(self));
+		device_setSoundToCurrent(self,device_getSoundData(self));
+		
 		device_setTemperatureToCurrent(self, device_getTemperatureData(self));
 		device_setHumidityToCurrent(self, device_getHumidityData(self));
 		
@@ -120,34 +125,22 @@ void device_startMeasuring(device_t self) {
 		printf("CO2 is: %u\n", device_getCO2Data(self));
 		printf("Temperature is: %d\n", device_getTemperatureData(self));
 		printf("Humidity is: %u\n", device_getHumidityData(self));
-		
+		printf("Sound is: %u\n", device_getSoundData(self));
 		
 		/*Perhaps loraPayload is not a good idea to be here*/
 		_uplink_payload = getcurrentConditionPayload(self->currentCondition);
-		
-		//if(_uplink_payload!=NULL)
-		//{
 		vTaskDelay(1000);
-
+	
 		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
-		//}
-		//else printf("Error when making loraPayload");
+		
+		
 	}
 	//if the device is not on, wait a bit and check if anything is changed
 	}
 	else vTaskDelay(5000);
 }
 //
-////	 DO WE ACTUALLY EVER DO THIS?
-//void device_destroy(device_t self) { //destroy all drivers 
-	///*if (self == NULL)
-		//return;
-//
-	//vTaskDelete(self->handleTask);
-	//free(self->handleTask);
-	//free(self->co2reader);
-	//free(self);*/
-//}
+
 
 currentCondition_t device_getCurrentCondition(device_t self) {
 	return self->currentCondition;
@@ -176,6 +169,16 @@ void device_setCO2ToCurrent(device_t self, uint16_t value) {
 uint16_t device_getCO2Data(device_t self) {
 	if (self->co2reader != NULL)
 		return co2Reader_getCO2(self->co2reader);
+	else return -1;
+}
+
+void device_setSoundToCurrent(device_t self, uint16_t value) {
+	currentCondition_setSound(self->currentCondition, value);
+}
+
+uint16_t device_getSoundData(device_t self) {
+	if (self->soundReader != NULL)
+	return soundReader_getSound(self->soundReader);
 	else return -1;
 }
 

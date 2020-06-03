@@ -26,11 +26,12 @@ device.d device.o: .././device.c ../FreeRTOS/src/ATMEGA_FreeRTOS.h \
  ../drivers/serial.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
  .././currentCondition.h ../drivers/lora_driver.h .././co2Reader.h \
- .././humidityAndTemperature.h ../drivers/hih8120.h .././Configuration.h \
- ../FreeRTOS/src/semphr.h ../FreeRTOS/src/queue.h \
+ .././humidityAndTemperature.h ../drivers/hih8120.h .././SoundReader.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h \
- ../drivers/ihal.h
+ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\time.h \
+ .././Configuration.h ../FreeRTOS/src/semphr.h ../FreeRTOS/src/queue.h \
+ .././Servo.h ../drivers/rcServo.h ../drivers/ihal.h
 
 ../FreeRTOS/src/ATMEGA_FreeRTOS.h:
 
@@ -110,14 +111,22 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 
 ../drivers/hih8120.h:
 
+.././SoundReader.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\time.h:
+
 .././Configuration.h:
 
 ../FreeRTOS/src/semphr.h:
 
 ../FreeRTOS/src/queue.h:
 
-c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h:
+.././Servo.h:
 
-c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h:
+../drivers/rcServo.h:
 
 ../drivers/ihal.h:

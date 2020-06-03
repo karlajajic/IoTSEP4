@@ -36,13 +36,13 @@ typedef struct humidityAndTemperature {
 void humAndTempReader_executeTask(void* self) {
 	for (;;) {
 		humAndTempReader_measure((humAndTempReader_t)self);
-		vTaskDelay(5000);
+		//vTaskDelay(5000);
 	}
 }
 
 humAndTempReader_t humAndTempReader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
-	humAndTempReader_t _new_reader = pvPortMalloc(sizeof(humidityAndTemperature));
+	humAndTempReader_t _new_reader = calloc(1, sizeof(humidityAndTemperature));
 	if (_new_reader == NULL)
 	return NULL;
 
