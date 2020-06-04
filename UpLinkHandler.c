@@ -8,13 +8,15 @@
 present in the initializing class. In addition to that the _lora_setup method
 should be present */
 
+#include <ATMEGA_FreeRTOS.h>
 
 #include <stddef.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "UpLinkHandler.h"
 
-#include <ATMEGA_FreeRTOS.h>
+
 
 #include <lora_driver.h>
 #include <iled.h>
@@ -177,10 +179,10 @@ static void _lora_setup(void)
 			//_uplink_payload.port_no = 1;
 			//_uplink_payload.len = 4;
 			
-			printf("The temperature in upLink is: %d\n", _uplink_payload.bytes[0]);
-			printf("The temperature2 in upLink is: %d\n", _uplink_payload.bytes[1]);
-			printf("The humidity in upLink is: %u\n", _uplink_payload.bytes[2]);
-			printf("The humidity2 in upLink is: %u\n", _uplink_payload.bytes[3]);
+			//printf("The temperature in upLink is: %d\n", _uplink_payload.bytes[0]);
+			//printf("The temperature2 in upLink is: %d\n", _uplink_payload.bytes[1]);
+			//printf("The humidity in upLink is: %u\n", _uplink_payload.bytes[2]);
+			//printf("The humidity2 in upLink is: %u\n", _uplink_payload.bytes[3]);
 			
 			
 			printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));

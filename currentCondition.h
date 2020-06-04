@@ -13,3 +13,4 @@ void currentCondition_setSound(currentCondition_t self, uint16_t value);
 
 void currentCondition_destroy(currentCondition_t self);
 lora_payload_t getcurrentConditionPayload(currentCondition_t self);
+lora_payload_t getSimplePayload(currentCondition_t self);

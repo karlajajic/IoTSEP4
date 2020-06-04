@@ -5,11 +5,13 @@
  * Created: 12/05/2020 21:44:49
  *  Author: Haralambi
  */ 
+
+#include <ATMEGA_FreeRTOS.h>
 #include <stddef.h>
 #include <stdio.h>
 #include "DownLinkHandler.h"
 #include "Configuration.h"
-#include <ATMEGA_FreeRTOS.h>
+#include <stdlib.h>
 
 #include <lora_driver.h>
 /*Leds*/

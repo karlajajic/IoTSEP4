@@ -103,7 +103,7 @@ void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 			
 		}
 		
-		vTaskDelay(5000);
+		vTaskDelay(1000);
 		//set done bit so that device knows meassurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
 	}

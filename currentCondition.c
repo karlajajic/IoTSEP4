@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
-#include <ATMEGA_FreeRTOS.h>
+#include "ATMEGA_FreeRTOS.h"
 #include "currentCondition.h"
 #include <lora_driver.h>
 #include <hal_defs.h>
@@ -47,17 +47,8 @@ void currentCondition_setSound(currentCondition_t self, uint16_t value) {
 	self->soundData = value;
 }
 
-//	 DO WE ACTUALLY EVER DO THIS?
 void currentCondition_destroy(currentCondition_t self) {
-	//if (self == NULL)
-	//return;
-	//free(self->deviceId);
-	//free(self->co2Data);
-	//free(self->temperatureData);
-	//free(self->humidityData);
-	//free(self->soundData);
-	//free(self);
-	vPortFree(self);//maybe use this
+	vPortFree(self);
 }
 lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 {
@@ -65,8 +56,10 @@ lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 	payload.port_no = 1;
 	payload.len = 8;
 	
-	payload.bytes[0] = self->temperatureData >> 8;
-	payload.bytes[1] = self->temperatureData & 0xFF;
+	int16_t tempData = self->temperatureData;
+	
+	payload.bytes[0] = tempData >> 8;
+	payload.bytes[1] = tempData & 0xFF;
 
 	payload.bytes[2] = self->humidityData >> 8;
 	payload.bytes[3] = self->humidityData & 0xFF;
@@ -79,4 +72,17 @@ lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 	
 	return payload;
 	
+}
+
+lora_payload_t getSimplePayload(currentCondition_t self)
+{
+	lora_payload_t payload;
+	payload.port_no = 1;
+	payload.len = 2;
+	
+	uint16_t one = 0;
+	payload.bytes[0] = one >> 8;
+	payload.bytes[1] = one & 0xFF;
+	
+	return payload;
 }

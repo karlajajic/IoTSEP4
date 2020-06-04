@@ -114,89 +114,39 @@ void device_startMeasuring(device_t self) {
 		portMAX_DELAY); //waits forever if needed
 	
 	if ((uxBits & (_readyBit)) == (_readyBit)) {
-		device_setCO2ToCurrent(self, device_getCO2Data(self));
-		device_setSoundToCurrent(self,device_getSoundData(self));
+		currentCondition_setCO2(self->currentCondition,co2Reader_getCO2(self->co2reader));
 		
-		device_setTemperatureToCurrent(self, device_getTemperatureData(self));
-		device_setHumidityToCurrent(self, device_getHumidityData(self));
+		currentCondition_setSound(self->currentCondition,soundReader_getSound(self->soundReader));
+		
+		currentCondition_setTemperature(self->currentCondition,humAndTempReader_getTemperature(self->humAndTempReader));
+		
+		currentCondition_setHumidity(self->currentCondition,humAndTempReader_getHumidity(self->humAndTempReader));
 		
 		printf("device got done bit\n");
 		
-		printf("CO2 is: %u\n", device_getCO2Data(self));
-		printf("Temperature is: %d\n", device_getTemperatureData(self));
-		printf("Humidity is: %u\n", device_getHumidityData(self));
-		printf("Sound is: %u\n", device_getSoundData(self));
+		printf("CO2 is: %u\n", co2Reader_getCO2(self->co2reader));
+		printf("Temperature is: %d\n", humAndTempReader_getTemperature(self->humAndTempReader));
+		printf("Humidity is: %u\n", humAndTempReader_getHumidity(self->humAndTempReader));
+		printf("Sound is: %u\n", soundReader_getSound(self->soundReader));
 		
 		/*Perhaps loraPayload is not a good idea to be here*/
 		_uplink_payload = getcurrentConditionPayload(self->currentCondition);
-		vTaskDelay(1000);
-	
-		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
 		
+		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
+		vTaskDelay(2000);
 		
 	}
 	//if the device is not on, wait a bit and check if anything is changed
 	}
-	else vTaskDelay(5000);
+	else
+	{
+		//put 30 000 for 5 mins
+		vTaskDelay(5000);
+		_uplink_payload = getSimplePayload(self->currentCondition);
+		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
+	} 
 }
-//
-
 
 currentCondition_t device_getCurrentCondition(device_t self) {
 	return self->currentCondition;
-}
-
-void device_setHumidityToCurrent(device_t self, uint16_t value)
-{
-	currentCondition_setHumidity(self->currentCondition,value);
-}
-
-
-uint16_t device_getHumidityData(device_t self)
-{
-	if (self->humAndTempReader!=NULL)
-	{
-		return humAndTempReader_getHumidity(self->humAndTempReader);
-	}
-	else
-	return -1;
-}
-
-void device_setCO2ToCurrent(device_t self, uint16_t value) {
-	currentCondition_setCO2(self->currentCondition, value);
-}
-
-uint16_t device_getCO2Data(device_t self) {
-	if (self->co2reader != NULL)
-		return co2Reader_getCO2(self->co2reader);
-	else return -1;
-}
-
-void device_setSoundToCurrent(device_t self, uint16_t value) {
-	currentCondition_setSound(self->currentCondition, value);
-}
-
-uint16_t device_getSoundData(device_t self) {
-	if (self->soundReader != NULL)
-	return soundReader_getSound(self->soundReader);
-	else return -1;
-}
-
-void device_setTemperatureToCurrent(device_t self, int16_t value)
-{
-	
-	currentCondition_setTemperature(self->currentCondition,value);
-	
-}
-
-
-int16_t device_getTemperatureData(device_t self)
-{
-	if (self->humAndTempReader!=NULL)
-	{
-		return humAndTempReader_getTemperature(self->humAndTempReader);
-	}
-	else
-	return -1;
-	
 }

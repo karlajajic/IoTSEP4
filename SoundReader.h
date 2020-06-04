@@ -5,6 +5,8 @@
  * Created: 3.6.2020 г. 18:05:26 ч.
  *  Author: user
  */ 
+#pragma once
+
 #include <stdio.h>
 
 #include <ATMEGA_FreeRTOS.h>

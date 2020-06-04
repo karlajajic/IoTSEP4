@@ -1,4 +1,4 @@
-#include"co2Reader.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -6,7 +6,8 @@
 #include <ATMEGA_FreeRTOS.h>
 #include "task.h"
 #include "event_groups.h"
-#include <mh_z19.h>
+#include "mh_z19.h"
+#include "co2Reader.h"
 
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
@@ -16,18 +17,10 @@ static EventBits_t _readyBit;
 
 typedef struct co2reader co2reader;
 
-static uint16_t ppmValue;
-
 typedef struct co2reader {
 	uint16_t value;
 	TaskHandle_t handleTask;
 }co2reader;
-
-void my_co2_call_back(uint16_t ppm)
-{	
-	ppmValue = ppm;
-	//printf("CO2 in callback: %d\n", ppm);
-}
 
 void co2Reader_executeTask(void* self) {
 	for (;;) {
@@ -51,7 +44,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
-	mh_z19_create(ser_USART3, my_co2_call_back); 
+	mh_z19_create(ser_USART3, NULL); 
 	
 	xTaskCreate(
 	co2Reader_executeTask,
@@ -67,20 +60,13 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	return _new_reader;
 }
 
-
-
-//	RETURN TO DESTROY METHODS
 void co2Reader_destroy(co2reader_t self) {
-	//if (self == NULL)
-	//	return;
+	if (self == NULL)
+		return;
 
-	////delete will clear the allocated memory to the task + we need to remove everything else
-	//vTaskDelete(self->handleTask);
-
-	////free the values from struct (without pointer, later the pointer
-	//free(self->handleTask);
-	//free(self->value);
-	//free(self);
+	//delete will clear the allocated memory to the task + we need to remove everything else
+	vTaskDelete(self->handleTask);
+	vPortFree(self);
 }
 
 //actual task, methods devided so that it is possible to test
@@ -96,11 +82,10 @@ void co2Reader_measure(co2reader_t self) {
 
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 
-		printf("ccccccccccccccccccccccccccc%d",mh_z19_take_meassuring());
+		mh_z19_take_meassuring();
 		vTaskDelay(6);
-		
-		self->value = ppmValue;
-		
+		mh_z19_get_co2_ppm(&self->value);
+		//printf("new co2 done bit set %u", self->value);
 		
 		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);

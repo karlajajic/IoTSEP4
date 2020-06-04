@@ -34,6 +34,10 @@
 #include "Servo.h"
 #include "SoundReader.h"
 
+#include "CO2.h"
+
+
+
 // Needed for LoRaWAN
 #include <lora_driver.h>
 
@@ -41,9 +45,9 @@
 #define TASK_SOUND_SENSOR_PRIORITY		(tskIDLE_PRIORITY + 2)
 #define TASK_HUMIDITY_SENSOR_PRIORITY	( tskIDLE_PRIORITY + 2 )
 #define TASK_CO2_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 2)
-#define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 2 )
-#define TASK_LORA_DRIVER_PRIORITY		( tskIDLE_PRIORITY + 3 )
-#define TASK_LORA_DRIVER_PRIORITYDOWN	( tskIDLE_PRIORITY + 2 )
+#define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 4 )
+#define TASK_LORA_DRIVER_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define TASK_LORA_DRIVER_PRIORITYDOWN	( tskIDLE_PRIORITY + 1 )
 
 //define task stack for each task
 #define SOUND_TASK_STACK				(configMINIMAL_STACK_SIZE)
@@ -55,7 +59,7 @@
 //defining bits that will be the 'flags' for event group
 			
 #define BIT_MEASURE_HUMIDITY			(1 << 0)
-#define BIT_MEASURE_CO2					(1 << 1)
+#define BIT_MEASURE_CO2					(1 << 3)
 #define BIT_MEASURE_SOUND				(1 << 2)
 #define ALL_BIT_MEASURE					(BIT_MEASURE_CO2 | BIT_MEASURE_HUMIDITY | BIT_MEASURE_SOUND)
 
@@ -106,7 +110,7 @@ void create_tasks_and_semaphores(void)
 	
 	configuration_create(_semaphore);
 	
-	//lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
+	
 	
 	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(TASK_HUMIDITY_SENSOR_PRIORITY, HUMIDITY_TASK_STACK, 
 	startMeasureEventGroup, BIT_MEASURE_HUMIDITY, readyEventGroup, BIT_DONE_MEASURE_HUMIDITY);
@@ -114,17 +118,25 @@ void create_tasks_and_semaphores(void)
 	co2reader_t co2reader = co2Reader_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
 	readyEventGroup, BIT_DONE_MEASURE_CO2);
 	
+	//co2reader_t co2reader = NULL;
+	
+	//co2_t co2 = co2_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
+	//readyEventGroup, BIT_DONE_MEASURE_CO2);
+	
+	//co2_t newCO2 = co2_create(TASK_SOUND_SENSOR_PRIORITY, SOUND_TASK_STACK, startMeasureEventGroup,BIT_MEASURE_CO2,
+	//readyEventGroup, BIT_DONE_MEASURE_SOUND);
+	
 	soundReader_t soundReader = soundReader_create(TASK_SOUND_SENSOR_PRIORITY, SOUND_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_SOUND,
 	readyEventGroup, BIT_DONE_MEASURE_SOUND);	
+	//soundReader_t soundReader = NULL;
 	
 	servo_initialise();
 	
 	device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
 	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature,soundReader, xMessageBuffer);
 	
-	
-	
-	//lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITYDOWN,_downlinkMessagebuffer);
+	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
+	lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITYDOWN,_downlinkMessagebuffer);
 }
 
 /*-----------------------------------------------------------*/
@@ -151,10 +163,11 @@ void initialiseSystem()
 	// Initialise the LoRaWAN driver with a down-link buffer
 	
 	
-	lora_driver_create(LORA_USART, NULL);
+	lora_driver_create(LORA_USART, _downlinkMessagebuffer);
 	// Create LoRaWAN task and start it up with priority 3 
 	
 	hih8120Create();
+	
 	
 	// Let's create some tasks
 	

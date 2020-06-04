@@ -171,6 +171,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CO2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="CO2.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="co2Reader.c">
       <SubType>compile</SubType>
     </Compile>

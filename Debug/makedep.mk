@@ -2,6 +2,8 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+CO2.c
+
 co2Reader.c
 
 Configuration.c
