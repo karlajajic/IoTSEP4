@@ -32,7 +32,7 @@ main.d main.o: .././main.c \
  .././humidityAndTemperature.h ../drivers/hih8120.h .././SoundReader.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\time.h \
  .././UpLinkHandler.h ../FreeRTOS/src/portmacro.h .././DownLinkHandler.h \
- .././Configuration.h .././Servo.h ../drivers/rcServo.h .././CO2.h
+ .././Configuration.h .././Servo.h ../drivers/rcServo.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h:
 
@@ -141,5 +141,3 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 .././Servo.h:
 
 ../drivers/rcServo.h:
-
-.././CO2.h:

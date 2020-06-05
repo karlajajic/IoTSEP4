@@ -6,7 +6,7 @@
 #include <ATMEGA_FreeRTOS.h>
 #include "task.h"
 #include "event_groups.h"
-#include "mh_z19.h"
+#include <mh_z19.h>
 #include "co2Reader.h"
 
 static EventGroupHandle_t _startMeasureEventGroup;
@@ -29,6 +29,11 @@ void co2Reader_executeTask(void* self) {
 	}
 }
 
+void my_co2_call_back(uint16_t ppm)
+{
+	// Here you can use the CO2 ppm value
+}
+
 co2reader_t co2Reader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 
@@ -44,7 +49,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
-	mh_z19_create(ser_USART3, NULL); 
+	mh_z19_create(ser_USART3, my_co2_call_back); 
 	
 	xTaskCreate(
 	co2Reader_executeTask,
@@ -82,11 +87,11 @@ void co2Reader_measure(co2reader_t self) {
 
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 
-		mh_z19_take_meassuring();
-		vTaskDelay(6);
-		mh_z19_get_co2_ppm(&self->value);
-		//printf("new co2 done bit set %u", self->value);
 		
+		//mh_z19_take_meassuring();
+		vTaskDelay(500);
+		//mh_z19_get_co2_ppm(&self->value);
+			
 		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
 		printf("co2 done bit set\n");

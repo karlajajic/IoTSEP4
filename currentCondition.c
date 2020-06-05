@@ -3,8 +3,9 @@
 #include "ATMEGA_FreeRTOS.h"
 #include "currentCondition.h"
 #include <lora_driver.h>
-#include <hal_defs.h>
-typedef struct currentCondition currentCondtion;
+#include <stddef.h>
+//#include <hal_defs.h>
+//typedef struct currentCondition currentCondtion;
 
 typedef struct currentCondition {
 	uint16_t co2Data;
@@ -16,12 +17,14 @@ typedef struct currentCondition {
 currentCondition_t currentCondition_create() {
 	currentCondition_t _new_con = calloc(1, sizeof(currentCondition));
 	if (_new_con == NULL)
-	return NULL;
-
+	{
+		return NULL;	
+	}
+	
 	_new_con->temperatureData = 0;
 	_new_con->humidityData = 0;
 	_new_con->co2Data = 0;
-	_new_con->soundData=0;
+	_new_con->soundData = 0;
 
 	return _new_con;
 }
@@ -29,22 +32,45 @@ currentCondition_t currentCondition_create() {
 
 void currentCondition_setCO2(currentCondition_t self, uint16_t value) {
 	if(self!=NULL)
-	self->co2Data = value;
+	{
+		if(value >= 200 && value <=10000)
+		self->co2Data = value;
+	}
+	
 }
 
 void currentCondition_setHumidity(currentCondition_t self, uint16_t value) {
 	if (self != NULL)
-	self->humidityData= value;
+	{
+		//the values for humidity is x10
+		if (value >= 0 && value <= 1000)
+		{
+			self->humidityData = value;
+		}
+	}
+	
 }
 
 void currentCondition_setTemperature(currentCondition_t self, int16_t value) {
 	if (self != NULL)
-	self->temperatureData = value;
+	{
+		//the value for temperature is x10
+		if (value >= -400 && value <= 550)
+		{
+			self->temperatureData = value;
+		}
+	}
 }
 
 void currentCondition_setSound(currentCondition_t self, uint16_t value) {
 	if (self != NULL)
-	self->soundData = value;
+	{
+		if (value >= 0 && value <= 150)
+		{
+			self->soundData = value;
+		}
+	}
+	
 }
 
 void currentCondition_destroy(currentCondition_t self) {

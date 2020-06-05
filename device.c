@@ -56,7 +56,8 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader,
 	_new_device->co2reader = co2Reader;
 	_new_device->humAndTempReader = humAndTempReader;
 	_new_device->soundReader=soundReader;
-	_new_device->currentCondition = currentCondition_create();
+	currentCondition_t currentCond = currentCondition_create();
+	_new_device->currentCondition = currentCond;
 
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
@@ -120,7 +121,8 @@ void device_startMeasuring(device_t self) {
 		
 		currentCondition_setTemperature(self->currentCondition,humAndTempReader_getTemperature(self->humAndTempReader));
 		
-		currentCondition_setHumidity(self->currentCondition,humAndTempReader_getHumidity(self->humAndTempReader));
+		int16_t humidity = humAndTempReader_getHumidity(self->humAndTempReader);
+		currentCondition_setHumidity(self->currentCondition, humidity);
 		
 		printf("device got done bit\n");
 		

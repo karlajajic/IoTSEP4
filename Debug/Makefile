@@ -61,7 +61,6 @@ SUBDIRS :=  \
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
-../CO2.c \
 ../co2Reader.c \
 ../Configuration.c \
 ../currentCondition.c \
@@ -93,7 +92,6 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-CO2.o \
 co2Reader.o \
 Configuration.o \
 currentCondition.o \
@@ -118,7 +116,6 @@ FreeRTOS/src/variantHooks.o \
 main.o
 
 OBJS_AS_ARGS +=  \
-CO2.o \
 co2Reader.o \
 Configuration.o \
 currentCondition.o \
@@ -143,7 +140,6 @@ FreeRTOS/src/variantHooks.o \
 main.o
 
 C_DEPS +=  \
-CO2.d \
 co2Reader.d \
 Configuration.d \
 currentCondition.d \
@@ -168,7 +164,6 @@ FreeRTOS/src/variantHooks.d \
 main.d
 
 C_DEPS_AS_ARGS +=  \
-CO2.d \
 co2Reader.d \
 Configuration.d \
 currentCondition.d \
@@ -206,13 +201,6 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
-./CO2.o: .././CO2.c
-	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000L  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../FreeRTOS/src" -I"../drivers"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega2560" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
 ./co2Reader.o: .././co2Reader.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0

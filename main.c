@@ -34,15 +34,13 @@
 #include "Servo.h"
 #include "SoundReader.h"
 
-#include "CO2.h"
-
 
 
 // Needed for LoRaWAN
 #include <lora_driver.h>
 
 //define priority individualy for each task
-#define TASK_SOUND_SENSOR_PRIORITY		(tskIDLE_PRIORITY + 2)
+#define TASK_SOUND_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 2)
 #define TASK_HUMIDITY_SENSOR_PRIORITY	( tskIDLE_PRIORITY + 2 )
 #define TASK_CO2_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 2)
 #define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 4 )
@@ -50,10 +48,10 @@
 #define TASK_LORA_DRIVER_PRIORITYDOWN	( tskIDLE_PRIORITY + 1 )
 
 //define task stack for each task
-#define SOUND_TASK_STACK				(configMINIMAL_STACK_SIZE)
-#define HUMIDITY_TASK_STACK				(configMINIMAL_STACK_SIZE)
-#define CO2_TASK_STACK					(configMINIMAL_STACK_SIZE)
-#define DEVICE_TASK_STACK				(configMINIMAL_STACK_SIZE)
+#define SOUND_TASK_STACK				(configMINIMAL_STACK_SIZE )
+#define HUMIDITY_TASK_STACK				(configMINIMAL_STACK_SIZE )
+#define CO2_TASK_STACK					(configMINIMAL_STACK_SIZE + 200)
+#define DEVICE_TASK_STACK				(configMINIMAL_STACK_SIZE + 200)
 #define LORA_DRIVER_TASK_STACK			(configMINIMAL_STACK_SIZE)
 
 //defining bits that will be the 'flags' for event group
@@ -61,12 +59,12 @@
 #define BIT_MEASURE_HUMIDITY			(1 << 0)
 #define BIT_MEASURE_CO2					(1 << 3)
 #define BIT_MEASURE_SOUND				(1 << 2)
-#define ALL_BIT_MEASURE					(BIT_MEASURE_CO2 | BIT_MEASURE_HUMIDITY | BIT_MEASURE_SOUND)
+#define ALL_BIT_MEASURE					( BIT_MEASURE_HUMIDITY | BIT_MEASURE_SOUND)
 
 #define BIT_DONE_MEASURE_HUMIDITY		(1 << 4)
 #define BIT_DONE_MEASURE_CO2			(1 << 5)
 #define BIT_DONE_MEASURE_SOUND			(1 << 6)
-#define ALL_BIT_DONE_MEASURE			( BIT_DONE_MEASURE_CO2 | BIT_DONE_MEASURE_HUMIDITY | BIT_DONE_MEASURE_SOUND)
+#define ALL_BIT_DONE_MEASURE			(  BIT_DONE_MEASURE_HUMIDITY | BIT_DONE_MEASURE_SOUND)
 
 
 //used for appController to prompt sensors to start with readings
@@ -120,11 +118,7 @@ void create_tasks_and_semaphores(void)
 	
 	//co2reader_t co2reader = NULL;
 	
-	//co2_t co2 = co2_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
-	//readyEventGroup, BIT_DONE_MEASURE_CO2);
 	
-	//co2_t newCO2 = co2_create(TASK_SOUND_SENSOR_PRIORITY, SOUND_TASK_STACK, startMeasureEventGroup,BIT_MEASURE_CO2,
-	//readyEventGroup, BIT_DONE_MEASURE_SOUND);
 	
 	soundReader_t soundReader = soundReader_create(TASK_SOUND_SENSOR_PRIORITY, SOUND_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_SOUND,
 	readyEventGroup, BIT_DONE_MEASURE_SOUND);	

@@ -91,7 +91,7 @@ void soundReader_measure(soundReader_t self) {
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 
 		
-		//srand(time(NULL));
+		srand(time(NULL));
 		self->value = rand()%105 + 15;
 		
 		

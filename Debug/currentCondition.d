@@ -22,7 +22,7 @@ currentCondition.d currentCondition.o: .././currentCondition.c \
  ../FreeRTOS/src/list.h .././currentCondition.h ../drivers/lora_driver.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
  ../drivers/serial.h ../FreeRTOS/src/message_buffer.h \
- ../FreeRTOS/src/stream_buffer.h ../drivers/hal_defs.h
+ ../FreeRTOS/src/stream_buffer.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h:
 
@@ -85,5 +85,3 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 ../FreeRTOS/src/message_buffer.h:
 
 ../FreeRTOS/src/stream_buffer.h:
-
-../drivers/hal_defs.h:
