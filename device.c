@@ -25,6 +25,7 @@ static EventGroupHandle_t _readyEventGroup;
 static EventBits_t _readyBit;
 
 static MessageBufferHandle_t _uplinkmessageBuffer;
+static SemaphoreHandle_t _mutex;
 
 static lora_payload_t _uplink_payload;
 
@@ -48,7 +49,7 @@ void device_executeTask(void* self) {
 }
 
 device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
-EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader,soundReader_t soundReader, MessageBufferHandle_t uplinkMessageBuffer){
+EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader,soundReader_t soundReader, MessageBufferHandle_t uplinkMessageBuffer,SemaphoreHandle_t mutex){
 
 	device_t _new_device = calloc(1, sizeof(device));
 	if (_new_device == NULL)
@@ -67,6 +68,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader,
 	_readyBit = readyBit;
 	
 	_uplinkmessageBuffer=uplinkMessageBuffer;
+	_mutex=mutex;
 
 	xTaskCreate(
 		device_executeTask,
@@ -87,7 +89,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader,
 
 void device_startMeasuring(device_t self) {
 	//we should first check if device is on, get that from lora and add new eventBit 
-	
+	 xSemaphoreTake(_mutex,portMAX_DELAY);
 	bool* works = pvPortMalloc(sizeof(bool));
 	configuration_getWorking(works);
 	if (*works == true)
@@ -141,13 +143,14 @@ void device_startMeasuring(device_t self) {
 	}
 	//if the device is not on, wait a bit and check if anything is changed
 	}
-	else
-	{
+		else
+		{
 		//put 30 000 for 5 mins
 		vTaskDelay(5000);
 		_uplink_payload = getSimplePayload(self->currentCondition);
 		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
-	} 
+		} 
+	xSemaphoreGive(_mutex);
 }
 
 currentCondition_t device_getCurrentCondition(device_t self) {

@@ -9,10 +9,10 @@
 
 static bool _working;
 static bool _ventilation;
-
 static SemaphoreHandle_t _semaphore;
 
-void configuration_create(SemaphoreHandle_t semaphore) {
+
+void configuration_create() {
 //it is created only once, before starting the scheduler + will never be destroyed
 	_working = calloc(1, sizeof(bool));
 	_ventilation = calloc(1, sizeof(bool));
@@ -21,7 +21,7 @@ void configuration_create(SemaphoreHandle_t semaphore) {
 	_working = true;
 	_ventilation = false;
 
-	_semaphore = semaphore;
+	_semaphore = xSemaphoreCreateMutex();
 }
 
 //if the semaphore is initialized, take it and give it back, if not, just do the work 
