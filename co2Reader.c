@@ -17,7 +17,6 @@ static EventBits_t _readyBit;
 
 typedef struct co2reader co2reader;
 
-static uint16_t randdom;
 
 typedef struct co2reader {
 	uint16_t value;

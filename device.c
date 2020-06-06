@@ -9,6 +9,7 @@
 #include "Configuration.h"
 #include "Servo.h"
 #include "currentCondition.h"
+#include "event_groups.h"
 
 #include <stdio.h>
 #include <avr/io.h>
@@ -27,6 +28,9 @@ static EventBits_t _readyBit;
 static MessageBufferHandle_t _uplinkmessageBuffer;
 
 static lora_payload_t _uplink_payload;
+
+static EventGroupHandle_t _waitEventGroup;
+static EventBits_t _deviceBit;
 
 typedef struct device device;
 
@@ -48,7 +52,7 @@ void device_executeTask(void* self) {
 }
 
 device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
-EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader,soundReader_t soundReader, MessageBufferHandle_t uplinkMessageBuffer){
+EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader,soundReader_t soundReader, MessageBufferHandle_t uplinkMessageBuffer, EventGroupHandle_t waitEventGroup, EventBits_t deviceBit){
 
 	device_t _new_device = calloc(1, sizeof(device));
 	if (_new_device == NULL)
@@ -67,6 +71,9 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader,
 	_readyBit = readyBit;
 	
 	_uplinkmessageBuffer=uplinkMessageBuffer;
+	
+	_waitEventGroup = waitEventGroup;
+	_deviceBit = deviceBit;
 
 	xTaskCreate(
 		device_executeTask,
@@ -104,6 +111,15 @@ void device_startMeasuring(device_t self) {
 			servo_close();
 		}
 
+	if(xMessageBufferIsEmpty(_uplinkmessageBuffer) == pdFALSE)
+	{
+		EventBits_t uxBits = xEventGroupWaitBits(_waitEventGroup, //eventGroup it is interested in
+		_deviceBit, //bits it is interested in
+		pdTRUE, //clears the bits 
+		pdTRUE, //waits for both bits to be set
+		portMAX_DELAY); //waits forever if needed
+	}
+	
 	////tell sensors to start meassuring 
 	xEventGroupSetBits(_startMeasureEventGroup, _startMeasureBit);
 	//printf("device has set bits\n");
@@ -136,6 +152,7 @@ void device_startMeasuring(device_t self) {
 		_uplink_payload = getcurrentConditionPayload(self->currentCondition);
 		
 		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
+		
 		vTaskDelay(2000);
 		
 	}

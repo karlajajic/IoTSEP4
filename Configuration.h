@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <semphr.h>
 
-void configuration_create(SemaphoreHandle_t semaphore);
+void configuration_create();
 
 void configuration_setWorking(bool value);
 void configuration_getWorking(bool* working);
