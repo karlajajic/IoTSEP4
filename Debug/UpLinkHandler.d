@@ -26,7 +26,6 @@ UpLinkHandler.d UpLinkHandler.o: .././UpLinkHandler.c \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
  .././UpLinkHandler.h ../FreeRTOS/src/portmacro.h \
  ../FreeRTOS/src/message_buffer.h ../FreeRTOS/src/stream_buffer.h \
- ../FreeRTOS/src/event_groups.h ../FreeRTOS/src/timers.h \
  ../drivers/lora_driver.h ../drivers/serial.h ../drivers/iled.h \
  ../drivers/ihal.h
 
@@ -93,10 +92,6 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 ../FreeRTOS/src/message_buffer.h:
 
 ../FreeRTOS/src/stream_buffer.h:
-
-../FreeRTOS/src/event_groups.h:
-
-../FreeRTOS/src/timers.h:
 
 ../drivers/lora_driver.h:
 

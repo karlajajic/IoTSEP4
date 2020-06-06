@@ -15,7 +15,6 @@ should be present */
 #include <stdbool.h>
 #include <stdlib.h>
 #include "UpLinkHandler.h"
-#include "event_groups.h"
 
 
 
@@ -33,8 +32,6 @@ static char _out_buf[100];
 static lora_payload_t _uplink_payload;
 static MessageBufferHandle_t _buffer;
 static bool isSet=false;
-static EventGroupHandle_t _waitEventGroup;
-static EventBits_t _deviceBit;
 
 /*Check for the parameters*/
 
@@ -43,16 +40,16 @@ void lora_UpLinkHandler_startTask(void* xMessageBuffer){
 	for(;;)
 	{
 		lora_UpLinkHandler_task((MessageBufferHandle_t)xMessageBuffer);
-		
+		vTaskDelay(3000);
 	}
 }
 
 
-void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer, EventGroupHandle_t waitEventGroup, EventBits_t deviceBit)
+void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
 {
 	_buffer = xMessageBuffer;
-	_waitEventGroup = waitEventGroup;
-	_deviceBit = deviceBit;
+	
+	
 	
 	xTaskCreate(
 	lora_UpLinkHandler_startTask
@@ -189,8 +186,6 @@ static void _lora_setup(void)
 			
 			
 			printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));
-			vTaskDelay(30000);
-			xEventGroupSetBits(_waitEventGroup, _deviceBit);
 		}
 	}
 	
