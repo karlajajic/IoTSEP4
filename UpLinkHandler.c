@@ -42,7 +42,7 @@ void lora_UpLinkHandler_startTask(void* xMessageBuffer){
 	for(;;)
 	{
 		lora_UpLinkHandler_task((MessageBufferHandle_t)xMessageBuffer);
-		vTaskDelay(3000);
+		
 	}
 }
 
@@ -50,7 +50,7 @@ void lora_UpLinkHandler_startTask(void* xMessageBuffer){
 void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer,SemaphoreHandle_t mutex)
 {
 	_buffer = xMessageBuffer;
-	
+	_mutex=mutex;
 	
 	
 	xTaskCreate(
@@ -180,6 +180,7 @@ static void _lora_setup(void)
 			
 			printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));
 		}
+		vTaskDelay(3000);
 		xSemaphoreGive(_mutex);
 	}
 	
