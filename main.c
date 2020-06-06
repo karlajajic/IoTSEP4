@@ -78,7 +78,7 @@ EventGroupHandle_t readyEventGroup;
 MessageBufferHandle_t xMessageBuffer;
 MessageBufferHandle_t _downlinkMessagebuffer;
 lora_payload_t payload;
-SemaphoreHandle_t _controlMutex;
+SemaphoreHandle_t _semaphore;
 
 // Prototype for LoRaWAN handler
 void lora_handler_create(UBaseType_t lora_handler_task_priority);
@@ -106,7 +106,7 @@ void create_tasks_and_semaphores(void)
 	
 	//_downlinkMessagebuffer = xMessageBufferCreate(sizeof(lora_payload_t)*2);
 	
-	configuration_create();
+	configuration_create(_semaphore);
 	
 	
 	
@@ -127,9 +127,9 @@ void create_tasks_and_semaphores(void)
 	servo_initialise();
 	
 	device_create(TASK_DEVICE_PRIORITY, DEVICE_TASK_STACK, startMeasureEventGroup, ALL_BIT_MEASURE,
-	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature,soundReader, xMessageBuffer,_controlMutex);
+	readyEventGroup, ALL_BIT_DONE_MEASURE, co2reader, humidityAndTemperature,soundReader, xMessageBuffer);
 	
-	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer,_controlMutex);
+	lora_UpLinkHandler_create(TASK_LORA_DRIVER_PRIORITY,xMessageBuffer);
 	lora_DownLinkHandler_create(TASK_LORA_DRIVER_PRIORITYDOWN,_downlinkMessagebuffer);
 }
 
@@ -140,7 +140,7 @@ void initialiseSystem()
 	readyEventGroup = xEventGroupCreate();
 
 	xMessageBuffer = xMessageBufferCreate(100);
-	_controlMutex = xSemaphoreCreateMutex();
+	_semaphore = xSemaphoreCreateMutex();
 	_downlinkMessagebuffer = xMessageBufferCreate(sizeof(lora_payload_t)*2);
 	// Set output ports for leds used in the example
 	DDRA |= _BV(DDA0) | _BV(DDA7);
