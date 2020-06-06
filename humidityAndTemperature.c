@@ -58,27 +58,22 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 		xTaskCreate(
 		humAndTempReader_executeTask,
 		"HumAndTempReader",
-		stack,
+		stack + 200,
 		_new_reader,
 		priority,
 		&_new_reader->handleTask
 		);
-		printf("humidity and temperature ready\n");
+		//printf("humidity and temperature ready\n");
 	
 	return _new_reader;
 }
 void humAndTempReader_destroy(humAndTempReader_t self) {
 	if (self == NULL)
-	return;
+		return;
 
 	//delete will clear the allocated memory to the task + we need to remove everything else
 	vTaskDelete(self->handleTask);
-
-	//free the values from struct (without pointer, later the pointer
-	//free(self->handleTask);
-	//free(self->humidity);
-	//free(self->temperature);
-	//free(self);
+	free(self);
 }
 
 
@@ -99,8 +94,7 @@ void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 		{
 			self->humidity = hih8120GetHumidityPercent_x10();
 			self->temperature = hih8120GetTemperature_x10();
-			printf("humidity and temperature done bit set\n");
-			
+			//printf("humidity and temperature done bit set\n");
 		}
 		
 		vTaskDelay(1000);

@@ -17,21 +17,18 @@ static EventBits_t _readyBit;
 
 typedef struct co2reader co2reader;
 
+static uint16_t randdom;
+
 typedef struct co2reader {
 	uint16_t value;
 	TaskHandle_t handleTask;
 }co2reader;
 
+//actual task, methods devided so that it is possible to test
 void co2Reader_executeTask(void* self) {
 	for (;;) {
 		co2Reader_measure((co2reader_t)self);
-		//vTaskDelay(5000);
 	}
-}
-
-void my_co2_call_back(uint16_t ppm)
-{
-	// Here you can use the CO2 ppm value
 }
 
 co2reader_t co2Reader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
@@ -49,18 +46,16 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
-	mh_z19_create(ser_USART3, my_co2_call_back); 
+	mh_z19_create(ser_USART3, NULL); 
 	
 	xTaskCreate(
 	co2Reader_executeTask,
 	"CO2Reader",
-	stack,
+	stack + 200,
 	_new_reader,
 	priority,
 	&_new_reader->handleTask
 	);
-
-	printf("co2 up\n");
 
 	return _new_reader;
 }
@@ -68,13 +63,9 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 void co2Reader_destroy(co2reader_t self) {
 	if (self == NULL)
 		return;
-
-	//delete will clear the allocated memory to the task + we need to remove everything else
 	vTaskDelete(self->handleTask);
 	vPortFree(self);
 }
-
-//actual task, methods devided so that it is possible to test
 
 
 void co2Reader_measure(co2reader_t self) {
@@ -88,13 +79,14 @@ void co2Reader_measure(co2reader_t self) {
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 
 		
-		//mh_z19_take_meassuring();
-		vTaskDelay(500);
-		//mh_z19_get_co2_ppm(&self->value);
-			
+		mh_z19_return_code_t return_code_co2_measurement = mh_z19_take_meassuring();
+		vTaskDelay(300);
+		if(return_code_co2_measurement == MHZ19_OK) {
+			mh_z19_get_co2_ppm(&self->value);
+		}
+		
 		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
-		printf("co2 done bit set\n");
 	}
 }
 

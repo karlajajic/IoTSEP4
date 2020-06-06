@@ -50,21 +50,21 @@
 //define task stack for each task
 #define SOUND_TASK_STACK				(configMINIMAL_STACK_SIZE )
 #define HUMIDITY_TASK_STACK				(configMINIMAL_STACK_SIZE )
-#define CO2_TASK_STACK					(configMINIMAL_STACK_SIZE + 200)
-#define DEVICE_TASK_STACK				(configMINIMAL_STACK_SIZE + 200)
-#define LORA_DRIVER_TASK_STACK			(configMINIMAL_STACK_SIZE)
+#define CO2_TASK_STACK					(configMINIMAL_STACK_SIZE )
+#define DEVICE_TASK_STACK				(configMINIMAL_STACK_SIZE )
+#define LORA_DRIVER_TASK_STACK			(configMINIMAL_STACK_SIZE )
 
 //defining bits that will be the 'flags' for event group
 			
 #define BIT_MEASURE_HUMIDITY			(1 << 0)
 #define BIT_MEASURE_CO2					(1 << 3)
 #define BIT_MEASURE_SOUND				(1 << 2)
-#define ALL_BIT_MEASURE					( BIT_MEASURE_HUMIDITY | BIT_MEASURE_SOUND)
+#define ALL_BIT_MEASURE					(BIT_MEASURE_CO2 | BIT_MEASURE_HUMIDITY | BIT_MEASURE_SOUND)
 
 #define BIT_DONE_MEASURE_HUMIDITY		(1 << 4)
 #define BIT_DONE_MEASURE_CO2			(1 << 5)
 #define BIT_DONE_MEASURE_SOUND			(1 << 6)
-#define ALL_BIT_DONE_MEASURE			(  BIT_DONE_MEASURE_HUMIDITY | BIT_DONE_MEASURE_SOUND)
+#define ALL_BIT_DONE_MEASURE			(BIT_DONE_MEASURE_CO2 | BIT_DONE_MEASURE_HUMIDITY | BIT_DONE_MEASURE_SOUND)
 
 
 //used for appController to prompt sensors to start with readings

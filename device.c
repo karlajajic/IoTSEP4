@@ -8,6 +8,7 @@
 #include <message_buffer.h>
 #include "Configuration.h"
 #include "Servo.h"
+#include "currentCondition.h"
 
 #include <stdio.h>
 #include <avr/io.h>
@@ -70,13 +71,13 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader,
 	xTaskCreate(
 		device_executeTask,
 		"Device",
-		stack,
+		stack + 200,
 		_new_device,
 		priority,
 		&_new_device->handleTask
 	);
 
-	printf("device up\n");
+	//printf("device up\n");
 
 	return _new_device;
 }
@@ -105,7 +106,7 @@ void device_startMeasuring(device_t self) {
 
 	////tell sensors to start meassuring 
 	xEventGroupSetBits(_startMeasureEventGroup, _startMeasureBit);
-	printf("device has set bits\n");
+	//printf("device has set bits\n");
 
 	//wait for sensors to read data
 	EventBits_t uxBits = xEventGroupWaitBits(_readyEventGroup, //eventGroup it is interested in
@@ -124,7 +125,7 @@ void device_startMeasuring(device_t self) {
 		int16_t humidity = humAndTempReader_getHumidity(self->humAndTempReader);
 		currentCondition_setHumidity(self->currentCondition, humidity);
 		
-		printf("device got done bit\n");
+		//printf("device got done bit\n");
 		
 		printf("CO2 is: %u\n", co2Reader_getCO2(self->co2reader));
 		printf("Temperature is: %d\n", humAndTempReader_getTemperature(self->humAndTempReader));

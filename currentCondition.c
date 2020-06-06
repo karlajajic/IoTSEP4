@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <stdint.h>
-#include "ATMEGA_FreeRTOS.h"
+//#include "ATMEGA_FreeRTOS.h"
 #include "currentCondition.h"
 #include <lora_driver.h>
-#include <stddef.h>
 //#include <hal_defs.h>
-//typedef struct currentCondition currentCondtion;
+
+typedef struct currentCondition currentCondtion;
 
 typedef struct currentCondition {
 	uint16_t co2Data;
@@ -17,10 +17,8 @@ typedef struct currentCondition {
 currentCondition_t currentCondition_create() {
 	currentCondition_t _new_con = calloc(1, sizeof(currentCondition));
 	if (_new_con == NULL)
-	{
-		return NULL;	
-	}
-	
+	return NULL;
+
 	_new_con->temperatureData = 0;
 	_new_con->humidityData = 0;
 	_new_con->co2Data = 0;
@@ -45,7 +43,7 @@ void currentCondition_setHumidity(currentCondition_t self, uint16_t value) {
 		//the values for humidity is x10
 		if (value >= 0 && value <= 1000)
 		{
-			self->humidityData = value;
+			self->humidityData= value;
 		}
 	}
 	
@@ -76,6 +74,7 @@ void currentCondition_setSound(currentCondition_t self, uint16_t value) {
 void currentCondition_destroy(currentCondition_t self) {
 	vPortFree(self);
 }
+
 lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 {
 	lora_payload_t payload;

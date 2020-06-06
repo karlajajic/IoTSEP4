@@ -50,7 +50,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	xTaskCreate(
 	soundReader_executeTask,
 	"soundReader",
-	stack,
+	stack + 200,
 	_new_reader,
 	priority,
 	&_new_reader->handleTask
@@ -97,7 +97,7 @@ void soundReader_measure(soundReader_t self) {
 		
 		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
-		printf("SoundReader done bit set\n");
+		//printf("SoundReader done bit set\n");
 	}
 }
 
