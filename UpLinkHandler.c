@@ -1,12 +1,3 @@
-/*
-* UpLinkHandler.c
-*
-* Created: 08/05/2020 14:38:49
-*  Author: Haralambi
-*/
-/*In order to use the functionality of this class the following define statements must be
-present in the initializing class. In addition to that the _lora_setup method
-should be present */
 
 #include <ATMEGA_FreeRTOS.h>
 
@@ -15,8 +6,6 @@ should be present */
 #include <stdbool.h>
 #include <stdlib.h>
 #include "UpLinkHandler.h"
-
-
 
 #include <lora_driver.h>
 #include <iled.h>
@@ -39,7 +28,7 @@ void lora_UpLinkHandler_startTask(void* xMessageBuffer){
 	for(;;)
 	{
 		lora_UpLinkHandler_task((MessageBufferHandle_t)xMessageBuffer);
-		vTaskDelay(3000);
+		vTaskDelay(30000);
 	}
 }
 
