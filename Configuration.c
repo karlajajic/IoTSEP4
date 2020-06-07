@@ -13,18 +13,15 @@ static bool _ventilation;
 static SemaphoreHandle_t _semaphore;
 
 void configuration_create(SemaphoreHandle_t semaphore) {
-//it is created only once, before starting the scheduler + will never be destroyed
 	_working = calloc(1, sizeof(bool));
 	_ventilation = calloc(1, sizeof(bool));
 
-	//by default, device should work, not to ventilate
 	_working = true;
 	_ventilation = false;
 
 	_semaphore = semaphore;
 }
 
-//if the semaphore is initialized, take it and give it back, if not, just do the work 
 void configuration_setWorking(bool value) {
 	if (_semaphore != NULL) {
 		xSemaphoreTake(_semaphore, portMAX_DELAY);

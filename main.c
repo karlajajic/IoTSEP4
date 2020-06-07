@@ -40,9 +40,9 @@
 #include <lora_driver.h>
 
 //define priority individualy for each task
-#define TASK_SOUND_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 2)
+#define TASK_SOUND_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define TASK_HUMIDITY_SENSOR_PRIORITY	( tskIDLE_PRIORITY + 2 )
-#define TASK_CO2_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 2)
+#define TASK_CO2_SENSOR_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define TASK_DEVICE_PRIORITY			( tskIDLE_PRIORITY + 4 )
 #define TASK_LORA_DRIVER_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define TASK_LORA_DRIVER_PRIORITYDOWN	( tskIDLE_PRIORITY + 1 )
@@ -86,29 +86,7 @@ void lora_handler_create(UBaseType_t lora_handler_task_priority);
 /*-----------------------------------------------------------*/
 void create_tasks_and_semaphores(void)
 {
-	//// Semaphores are useful to stop a Task proceeding, where it should be paused to wait,
-	//// because it is sharing a resource, such as the Serial port.
-	//// Semaphores should only be used whilst the scheduler is running, but we can set it up here.
-	//if ( xTestSemaphore == NULL )  // Check to confirm that the Semaphore has not already been created.
-	//{
-		//xTestSemaphore = xSemaphoreCreateMutex();  // Create a mutex semaphore.
-		//if ( ( xTestSemaphore ) != NULL )
-		//{
-			//xSemaphoreGive( ( xTestSemaphore ) );  // Make the mutex available for use, by initially "Giving" the Semaphore.
-		//}
-	//}
-	
-	//startMeasureEventGroup = xEventGroupCreate();
-	//readyEventGroup = xEventGroupCreate();
-//
-	//xMessageBuffer = xMessageBufferCreate(100);
-	//_semaphore = xSemaphoreCreateMutex();
-	
-	//_downlinkMessagebuffer = xMessageBufferCreate(sizeof(lora_payload_t)*2);
-	
 	configuration_create(_semaphore);
-	
-	
 	
 	humAndTempReader_t humidityAndTemperature = humAndTempReader_create(TASK_HUMIDITY_SENSOR_PRIORITY, HUMIDITY_TASK_STACK, 
 	startMeasureEventGroup, BIT_MEASURE_HUMIDITY, readyEventGroup, BIT_DONE_MEASURE_HUMIDITY);
@@ -116,13 +94,8 @@ void create_tasks_and_semaphores(void)
 	co2reader_t co2reader = co2Reader_create(TASK_CO2_SENSOR_PRIORITY, CO2_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_CO2,
 	readyEventGroup, BIT_DONE_MEASURE_CO2);
 	
-	//co2reader_t co2reader = NULL;
-	
-	
-	
 	soundReader_t soundReader = soundReader_create(TASK_SOUND_SENSOR_PRIORITY, SOUND_TASK_STACK, startMeasureEventGroup, BIT_MEASURE_SOUND,
 	readyEventGroup, BIT_DONE_MEASURE_SOUND);	
-	//soundReader_t soundReader = NULL;
 	
 	servo_initialise();
 	
@@ -160,7 +133,7 @@ void initialiseSystem()
 	lora_driver_create(LORA_USART, _downlinkMessagebuffer);
 	// Create LoRaWAN task and start it up with priority 3 
 	
-	hih8120Create();
+	
 	
 	
 	// Let's create some tasks

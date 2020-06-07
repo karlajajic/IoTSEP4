@@ -32,15 +32,14 @@ typedef struct humidityAndTemperature {
 	TaskHandle_t handleTask;
 }humidityAndTemperature;
 
-//actual task, methods devided so that it is possible to test
 void humAndTempReader_executeTask(void* self) {
 	for (;;) {
 		humAndTempReader_measure((humAndTempReader_t)self);
-		//vTaskDelay(5000);
 	}
 }
 
-humAndTempReader_t humAndTempReader_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
+humAndTempReader_t humAndTempReader_create(UBaseType_t priority, UBaseType_t stack, 
+EventGroupHandle_t startMeasureEventGroup, EventBits_t startMeasureBit,
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	humAndTempReader_t _new_reader = calloc(1, sizeof(humidityAndTemperature));
 	if (_new_reader == NULL)
@@ -55,6 +54,8 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_readyEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
+	hih8120Create();
+	
 		xTaskCreate(
 		humAndTempReader_executeTask,
 		"HumAndTempReader",
@@ -63,27 +64,22 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 		priority,
 		&_new_reader->handleTask
 		);
-		//printf("humidity and temperature ready\n");
-	
 	return _new_reader;
 }
+
 void humAndTempReader_destroy(humAndTempReader_t self) {
 	if (self == NULL)
 		return;
-
-	//delete will clear the allocated memory to the task + we need to remove everything else
 	vTaskDelete(self->handleTask);
-	free(self);
+	vPortFree(self);
 }
 
-
-
-void humAndTempReader_measure(humAndTempReader_t self) {//dummy
-	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, //eventGroup
-	_startMeasureBit, //bits it is interested i
-	pdTRUE, //clears the bits
-	pdTRUE, //waits for both bits to be set
-	portMAX_DELAY); //wait
+void humAndTempReader_measure(humAndTempReader_t self) {
+	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, 
+	_startMeasureBit, 
+	pdTRUE, 
+	pdTRUE, 
+	portMAX_DELAY);
 
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
 		hih8120Wakeup();
@@ -94,11 +90,8 @@ void humAndTempReader_measure(humAndTempReader_t self) {//dummy
 		{
 			self->humidity = hih8120GetHumidityPercent_x10();
 			self->temperature = hih8120GetTemperature_x10();
-			//printf("humidity and temperature done bit set\n");
 		}
-		
 		vTaskDelay(1000);
-		//set done bit so that device knows meassurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
 	}
 }

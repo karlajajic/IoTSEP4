@@ -1,9 +1,8 @@
 #include <stdlib.h>
 #include <stdint.h>
-//#include "ATMEGA_FreeRTOS.h"
 #include "currentCondition.h"
 #include <lora_driver.h>
-//#include <hal_defs.h>
+
 
 typedef struct currentCondition currentCondtion;
 
@@ -31,10 +30,9 @@ currentCondition_t currentCondition_create() {
 void currentCondition_setCO2(currentCondition_t self, uint16_t value) {
 	if(self!=NULL)
 	{
-		if(value >= 200 && value <=10000)
+		if(value >= 200 && value <= 10000)
 		self->co2Data = value;
 	}
-	
 }
 
 void currentCondition_setHumidity(currentCondition_t self, uint16_t value) {
@@ -72,6 +70,8 @@ void currentCondition_setSound(currentCondition_t self, uint16_t value) {
 }
 
 void currentCondition_destroy(currentCondition_t self) {
+	if(self == NULL)
+		return;
 	vPortFree(self);
 }
 

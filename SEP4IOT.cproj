@@ -213,9 +213,6 @@
     <Compile Include="humidityAndTemperature.h">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="main-Karla.c">
-      <SubType>compile</SubType>
-    </None>
     <Compile Include="Servo.h">
       <SubType>compile</SubType>
     </Compile>

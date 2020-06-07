@@ -24,11 +24,10 @@ typedef struct soundReader {
 }soundReader;
 
 
-
+//actual task, methods devided so that it is possible to test
 void soundReader_executeTask(void* self) {
 	for (;;) {
 		soundReader_measure((soundReader_t)self);
-		//vTaskDelay(5000);
 	}
 }
 
@@ -56,48 +55,32 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	&_new_reader->handleTask
 	);
 
-	printf("soundReader up\n");
-
 	return _new_reader;
 }
 
-
-
-//	RETURN TO DESTROY METHODS
 void soundReader_destroy(soundReader_t self) {
-	//if (self == NULL)
-	//	return;
+	if (self == NULL)
+		return;
 
-	////delete will clear the allocated memory to the task + we need to remove everything else
-	//vTaskDelete(self->handleTask);
-
-	////free the values from struct (without pointer, later the pointer
-	//free(self->handleTask);
-	//free(self->value);
-	//free(self);
+	vTaskDelete(self->handleTask);
+	vPortFree(self);
 }
-
-//actual task, methods devided so that it is possible to test
 
 
 void soundReader_measure(soundReader_t self) {
 	
-	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, //eventGroup
-	_startMeasureBit, //bits it is interested in
-	pdTRUE, //clears the bits
-	pdTRUE, //waits for both bits to be set
-	portMAX_DELAY); //wait
+	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, 
+	_startMeasureBit, 
+	pdTRUE, 
+	pdTRUE, 
+	portMAX_DELAY); 
 
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
-
-		
 		srand(time(NULL));
 		self->value = rand()%105 + 15;
 		
-		
 		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
-		//printf("SoundReader done bit set\n");
 	}
 }
 

@@ -43,7 +43,6 @@ void device_executeTask(void* self) {
 	for (;;)
 	{
 		device_startMeasuring((device_t)self);
-		//vTaskDelay(5000);
 	}
 }
 
@@ -77,13 +76,8 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader,
 		&_new_device->handleTask
 	);
 
-	//printf("device up\n");
-
 	return _new_device;
 }
-
-
-
 
 void device_startMeasuring(device_t self) {
 	//we should first check if device is on, get that from lora and add new eventBit 
@@ -106,14 +100,13 @@ void device_startMeasuring(device_t self) {
 
 	////tell sensors to start meassuring 
 	xEventGroupSetBits(_startMeasureEventGroup, _startMeasureBit);
-	//printf("device has set bits\n");
 
 	//wait for sensors to read data
-	EventBits_t uxBits = xEventGroupWaitBits(_readyEventGroup, //eventGroup it is interested in
-		_readyBit, //bits it is interested in
-		pdTRUE, //clears the bits 
-		pdTRUE, //waits for both bits to be set
-		portMAX_DELAY); //waits forever if needed
+	EventBits_t uxBits = xEventGroupWaitBits(_readyEventGroup, 
+		_readyBit, 
+		pdTRUE, 
+		pdTRUE,
+		portMAX_DELAY);
 	
 	if ((uxBits & (_readyBit)) == (_readyBit)) {
 		currentCondition_setCO2(self->currentCondition,co2Reader_getCO2(self->co2reader));
@@ -125,7 +118,6 @@ void device_startMeasuring(device_t self) {
 		int16_t humidity = humAndTempReader_getHumidity(self->humAndTempReader);
 		currentCondition_setHumidity(self->currentCondition, humidity);
 		
-		//printf("device got done bit\n");
 		
 		printf("CO2 is: %u\n", co2Reader_getCO2(self->co2reader));
 		printf("Temperature is: %d\n", humAndTempReader_getTemperature(self->humAndTempReader));
@@ -136,15 +128,14 @@ void device_startMeasuring(device_t self) {
 		_uplink_payload = getcurrentConditionPayload(self->currentCondition);
 		
 		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
-		vTaskDelay(2000);
+		vTaskDelay(30000);
 		
 	}
 	//if the device is not on, wait a bit and check if anything is changed
 	}
 	else
 	{
-		//put 30 000 for 5 mins
-		vTaskDelay(5000);
+		vTaskDelay(30000);
 		_uplink_payload = getSimplePayload(self->currentCondition);
 		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
 	} 

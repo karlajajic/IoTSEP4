@@ -17,14 +17,11 @@ static EventBits_t _readyBit;
 
 typedef struct co2reader co2reader;
 
-static uint16_t randdom;
-
 typedef struct co2reader {
 	uint16_t value;
 	TaskHandle_t handleTask;
 }co2reader;
 
-//actual task, methods devided so that it is possible to test
 void co2Reader_executeTask(void* self) {
 	for (;;) {
 		co2Reader_measure((co2reader_t)self);
@@ -70,22 +67,19 @@ void co2Reader_destroy(co2reader_t self) {
 
 void co2Reader_measure(co2reader_t self) {
 	
-	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup, //eventGroup
-	_startMeasureBit, //bits it is interested in
-	pdTRUE, //clears the bits
-	pdTRUE, //waits for both bits to be set
-	portMAX_DELAY); //wait
-
+	EventBits_t uxBits = xEventGroupWaitBits(_startMeasureEventGroup,
+	_startMeasureBit,
+	pdTRUE,
+	pdTRUE, 
+	portMAX_DELAY);
+	
 	if ((uxBits & (_startMeasureBit)) == (_startMeasureBit)) {
-
-		
+				
 		mh_z19_return_code_t return_code_co2_measurement = mh_z19_take_meassuring();
 		vTaskDelay(300);
 		if(return_code_co2_measurement == MHZ19_OK) {
 			mh_z19_get_co2_ppm(&self->value);
 		}
-		
-		//set done bit so that device knows measurement is done
 		xEventGroupSetBits(_readyEventGroup, _readyBit);
 	}
 }
