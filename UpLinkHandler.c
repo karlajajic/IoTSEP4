@@ -1,10 +1,10 @@
 /*
- * UpLinkHandler.c
- *
- * Created: 08/05/2020 14:38:49
- *  Author: Haralambi
- */ 
-/*In order to use the functionality of this class the following define statements must be 
+* UpLinkHandler.c
+*
+* Created: 08/05/2020 14:38:49
+*  Author: Haralambi
+*/
+/*In order to use the functionality of this class the following define statements must be
 present in the initializing class. In addition to that the _lora_setup method
 should be present */
 
@@ -33,7 +33,6 @@ static lora_payload_t _uplink_payload;
 static MessageBufferHandle_t _buffer;
 static bool isSet=false;
 
-/*Check for the parameters*/
 
 
 void lora_UpLinkHandler_startTask(void* xMessageBuffer){
@@ -53,10 +52,10 @@ void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBu
 	
 	xTaskCreate(
 	lora_UpLinkHandler_startTask
-	,  (const portCHAR *)"LRUpHand"  // A name just for humans
-	,  configMINIMAL_STACK_SIZE+200  // This stack size can be checked & adjusted by reading the Stack Highwater
+	,  (const portCHAR *)"LRUpHand"
+	,  configMINIMAL_STACK_SIZE+200
 	,  xMessageBuffer
-	,  lora_handler_task_priority  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+	,  lora_handler_task_priority
 	,  NULL );
 }
 
@@ -68,8 +67,10 @@ static void _lora_setup(void)
 
 
 	//The below code is required to be executed only once due to the fact that these MAC settings
-	// can be stored inside of the tranciever
-	//START ON ONE TIME USE CODE
+	//can be stored inside of the transceiver.
+	//That being said it runs every time when a device is being started.
+	
+	//START OF ONE TIME USE CODE
 
 	// Factory reset the transceiver
 	printf("FactoryReset >%s<\n", lora_driver_map_return_code_to_text(lora_driver_rn2483_factory_reset()));
@@ -129,11 +130,10 @@ static void _lora_setup(void)
 	{
 		// Something went wrong
 		// Turn off the green led
-		led_led_off(led_ST2); // OPTIONAL
+		led_led_off(led_ST2);
 		// Make the red led blink fast to tell something went wrong
-		led_fast_blink(led_ST1); // OPTIONAL
+		led_fast_blink(led_ST1);
 
-		// Lets stay here
 		while (1)
 		{
 			taskYIELD();
@@ -141,58 +141,39 @@ static void _lora_setup(void)
 	}
 }
 
-	
-	/*Receives message from message buffer shared between it and the application responsible for gathering the data
-	--> Should be called every 5 minutes from application
-	*/
-	void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
-	{	
-		size_t xBytesToSend;
-		char rxData[50];
-		if (!isSet)
-		{
-			// Hardware reset of LoRaWAN transceiver
-			lora_driver_reset_rn2483(1);
-			vTaskDelay(2);
-			lora_driver_reset_rn2483(0);
-			// Give it a chance to wakeup
-			vTaskDelay(150);
+void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
+{
+	size_t xBytesToSend;
+	char rxData[50];
+	if (!isSet)
+	{
+		// Hardware reset of LoRaWAN transceiver
+		lora_driver_reset_rn2483(1);
+		vTaskDelay(2);
+		lora_driver_reset_rn2483(0);
+		vTaskDelay(150);
 
-			lora_driver_flush_buffers(); // get rid of first version string from module after reset!
+		lora_driver_flush_buffers(); // get rid of first version string from module after reset!
 
-			_lora_setup();
-			isSet=true;
-		}
-		
-
-		
-		xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) &_uplink_payload,
-		sizeof(rxData),0);
-		if(xBytesToSend >= sizeof(uint8_t)*2)
-		{
-			//_uplink_payload = (_uplink_payload) &rxData;
-			
-			/**< Status led ST4 (BLUE)*/
-			//Makes the led light up in a short period.
-			
-			led_short_puls(led_ST4);
-			//_uplink_payload.port_no = 1;
-			//_uplink_payload.len = 4;
-			
-			//printf("The temperature in upLink is: %d\n", _uplink_payload.bytes[0]);
-			//printf("The temperature2 in upLink is: %d\n", _uplink_payload.bytes[1]);
-			//printf("The humidity in upLink is: %u\n", _uplink_payload.bytes[2]);
-			//printf("The humidity2 in upLink is: %u\n", _uplink_payload.bytes[3]);
-			
-			
-			printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));
-		}
+		_lora_setup();
+		isSet=true;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
+	xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) &_uplink_payload,
+	sizeof(rxData),0);
+	if(xBytesToSend >= sizeof(uint8_t)*2)
+	{
+		/**< Status led ST4 (BLUE)*/
+		//Makes the led light up in a short period.
+		led_short_puls(led_ST4);
+		
+		printf("Upload Message >%s<\n", lora_driver_map_return_code_to_text(lora_driver_sent_upload_message(false, &_uplink_payload)));
+	}
+}
+
+
+
+
+
+
+
