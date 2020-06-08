@@ -1,8 +1,7 @@
-﻿#include"humidityAndTemperature.h"
+﻿#include "humidityAndTemperature.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include "hih8120.h"
-
 
 #include <stdio.h>
 #include <avr/io.h>
@@ -21,7 +20,7 @@
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
 
-static EventGroupHandle_t _readyEventGroup;
+static EventGroupHandle_t _readyMeasuringEventGroup;
 static EventBits_t _readyBit;
 
 typedef struct humidityAndTemperature humidityAndTemperature;
@@ -51,7 +50,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
 
-	_readyEventGroup = readyEventGroup;
+	_readyMeasuringEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
 	hih8120Create();
@@ -92,7 +91,7 @@ void humAndTempReader_measure(humAndTempReader_t self) {
 			self->temperature = hih8120GetTemperature_x10();
 		}
 		vTaskDelay(1000);
-		xEventGroupSetBits(_readyEventGroup, _readyBit);
+		xEventGroupSetBits(_readyMeasuringEventGroup, _readyBit);
 	}
 }
 

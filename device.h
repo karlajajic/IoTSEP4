@@ -17,5 +17,3 @@ device_t device_create(UBaseType_t priority, UBaseType_t stack, EventGroupHandle
 EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader, humAndTempReader_t humAndTempReader,soundReader_t soundReader, MessageBufferHandle_t uplinkMessageBuffer);
 void device_executeTask(void* self);
 void device_startMeasuring(device_t self);
-
-currentCondition_t device_getCurrentCondition(device_t self);

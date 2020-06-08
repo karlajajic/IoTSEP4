@@ -21,7 +21,7 @@
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
 
-static EventGroupHandle_t _readyEventGroup;
+static EventGroupHandle_t _readyMeasuringEventGroup;
 static EventBits_t _readyBit;
 
 static MessageBufferHandle_t _uplinkmessageBuffer;
@@ -62,7 +62,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit, co2reader_t co2Reader,
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
 
-	_readyEventGroup = readyEventGroup;
+	_readyMeasuringEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 	
 	_uplinkmessageBuffer=uplinkMessageBuffer;
@@ -102,7 +102,7 @@ void device_startMeasuring(device_t self) {
 	xEventGroupSetBits(_startMeasureEventGroup, _startMeasureBit);
 
 	//wait for sensors to read data
-	EventBits_t uxBits = xEventGroupWaitBits(_readyEventGroup, 
+	EventBits_t uxBits = xEventGroupWaitBits(_readyMeasuringEventGroup, 
 		_readyBit, 
 		pdTRUE, 
 		pdTRUE,
@@ -139,8 +139,4 @@ void device_startMeasuring(device_t self) {
 		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
 		vTaskDelay(30000);
 	} 
-}
-
-currentCondition_t device_getCurrentCondition(device_t self) {
-	return self->currentCondition;
 }

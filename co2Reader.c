@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,7 +11,7 @@
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
 
-static EventGroupHandle_t _readyEventGroup;
+static EventGroupHandle_t _readyMeasuringEventGroup;
 static EventBits_t _readyBit;
 
 typedef struct co2reader co2reader;
@@ -40,7 +39,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
 
-	_readyEventGroup = readyEventGroup;
+	_readyMeasuringEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
 	mh_z19_create(ser_USART3, NULL); 
@@ -80,7 +79,7 @@ void co2Reader_measure(co2reader_t self) {
 		if(return_code_co2_measurement == MHZ19_OK) {
 			mh_z19_get_co2_ppm(&self->value);
 		}
-		xEventGroupSetBits(_readyEventGroup, _readyBit);
+		xEventGroupSetBits(_readyMeasuringEventGroup, _readyBit);
 	}
 }
 

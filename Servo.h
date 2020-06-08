@@ -1,11 +1,4 @@
-﻿/*
- * Servo.h
- *
- * Created: 2.6.2020 г. 18:25:27 ч.
- *  Author: user
- */ 
-
-#pragma once
+﻿#pragma once
 #include <ATMEGA_FreeRTOS.h>
 #include <rcServo.h>
 

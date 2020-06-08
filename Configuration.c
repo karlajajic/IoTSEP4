@@ -1,4 +1,3 @@
-
 #include <ATMEGA_FreeRTOS.h>
 #include <stdio.h>
 #include <stddef.h>
@@ -12,14 +11,14 @@ static bool _ventilation;
 
 static SemaphoreHandle_t _semaphore;
 
-void configuration_create(SemaphoreHandle_t semaphore) {
+void configuration_create() {
 	_working = calloc(1, sizeof(bool));
 	_ventilation = calloc(1, sizeof(bool));
 
 	_working = true;
 	_ventilation = false;
 
-	_semaphore = semaphore;
+	_semaphore = xSemaphoreCreateMutex();
 }
 
 void configuration_setWorking(bool value) {

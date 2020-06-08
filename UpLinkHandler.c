@@ -1,4 +1,3 @@
-
 #include <ATMEGA_FreeRTOS.h>
 
 #include <stddef.h>
@@ -22,29 +21,24 @@ static lora_payload_t _uplink_payload;
 static MessageBufferHandle_t _buffer;
 static bool isSet=false;
 
-
-
-void lora_UpLinkHandler_startTask(void* xMessageBuffer){
+void lora_UpLinkHandler_startTask(void* messageBuffer){
 	for(;;)
 	{
-		lora_UpLinkHandler_task((MessageBufferHandle_t)xMessageBuffer);
-		
+		lora_UpLinkHandler_task((MessageBufferHandle_t)messageBuffer);
 	}
 }
 
 
-void lora_UpLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
+void lora_UpLinkHandler_create(UBaseType_t priority, UBaseType_t stack, MessageBufferHandle_t messageBuffer)
 {
-	_buffer = xMessageBuffer;
-	
-	
+	_buffer = messageBuffer;
 	
 	xTaskCreate(
 	lora_UpLinkHandler_startTask
 	,  (const portCHAR *)"LRUpHand"
-	,  configMINIMAL_STACK_SIZE+200
-	,  xMessageBuffer
-	,  lora_handler_task_priority
+	,  stack+200
+	,  (void*)messageBuffer
+	,  priority
 	,  NULL );
 }
 
@@ -130,7 +124,7 @@ static void _lora_setup(void)
 	}
 }
 
-void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
+void lora_UpLinkHandler_task(MessageBufferHandle_t messageBuffer)
 {
 	size_t xBytesToSend;
 	char rxData[50];
@@ -148,7 +142,7 @@ void lora_UpLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
 		isSet=true;
 	}
 	
-	xBytesToSend = xMessageBufferReceive(xMessageBuffer, (void*) &_uplink_payload,
+	xBytesToSend = xMessageBufferReceive(messageBuffer, (void*) &_uplink_payload,
 	sizeof(rxData),0);
 	if(xBytesToSend >= sizeof(uint8_t)*2)
 	{

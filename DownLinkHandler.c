@@ -1,4 +1,3 @@
-
 #include <ATMEGA_FreeRTOS.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -11,36 +10,31 @@
 #include <iled.h>
 #include <message_buffer.h>
 
-
 static lora_payload_t _downlink_payload;
 
-void lora_DownLinkHandler_startTask(void* xMessageBuffer){
+void lora_DownLinkHandler_startTask(void* messageBuffer){
 	for(;;)
 	{
-		lora_DownLinkHandler_task((MessageBufferHandle_t)xMessageBuffer);
-		
+		lora_DownLinkHandler_task((MessageBufferHandle_t)messageBuffer);
 	}
 }
 
-void lora_DownLinkHandler_create(UBaseType_t lora_handler_task_priority, MessageBufferHandle_t xMessageBuffer)
+void lora_DownLinkHandler_create(UBaseType_t priority, UBaseType_t stack, MessageBufferHandle_t messageBuffer)
 {
-	
-	
 	xTaskCreate(
 	lora_DownLinkHandler_startTask
 	,  (const portCHAR *)"LRDHHand"  
-	,  configMINIMAL_STACK_SIZE+200  
-	,  xMessageBuffer
-	,  lora_handler_task_priority  
+	,  stack+200  
+	,  (void*)messageBuffer
+	,  priority  
 	,  NULL );
-	
 }
 
 
-	void lora_DownLinkHandler_task(MessageBufferHandle_t xMessageBuffer)
+	void lora_DownLinkHandler_task(MessageBufferHandle_t messageBuffer)
 	{
 				
-		xMessageBufferReceive(xMessageBuffer,(void*) &_downlink_payload,sizeof(lora_payload_t),portMAX_DELAY);
+		xMessageBufferReceive(messageBuffer,(void*) &_downlink_payload,sizeof(lora_payload_t),portMAX_DELAY);
 		printf("PayLoad bytes are: %d, %d\n Payload lenght is %d\n", _downlink_payload.bytes[0] ,_downlink_payload.bytes[1],_downlink_payload.len);
 		
 

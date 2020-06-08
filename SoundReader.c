@@ -1,5 +1,4 @@
-﻿
-#include <stdint.h>
+﻿#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -11,11 +10,10 @@
 static EventGroupHandle_t _startMeasureEventGroup;
 static EventBits_t _startMeasureBit;
 
-static EventGroupHandle_t _readyEventGroup;
+static EventGroupHandle_t _readyMeasuringEventGroup;
 static EventBits_t _readyBit;
 
 typedef struct soundReader soundReader;
-
 
 
 typedef struct soundReader {
@@ -43,7 +41,7 @@ EventGroupHandle_t readyEventGroup, EventBits_t readyBit) {
 	_startMeasureEventGroup = startMeasureEventGroup;
 	_startMeasureBit = startMeasureBit;
 
-	_readyEventGroup = readyEventGroup;
+	_readyMeasuringEventGroup = readyEventGroup;
 	_readyBit = readyBit;
 
 	xTaskCreate(
@@ -80,7 +78,7 @@ void soundReader_measure(soundReader_t self) {
 		self->value = rand()%105 + 15;
 		
 		//set done bit so that device knows measurement is done
-		xEventGroupSetBits(_readyEventGroup, _readyBit);
+		xEventGroupSetBits(_readyMeasuringEventGroup, _readyBit);
 	}
 }
 
