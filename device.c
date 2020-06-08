@@ -135,9 +135,9 @@ void device_startMeasuring(device_t self) {
 	}
 	else
 	{
-		vTaskDelay(30000);
 		_uplink_payload = getSimplePayload(self->currentCondition);
 		xMessageBufferSend(_uplinkmessageBuffer,(void*) &_uplink_payload,sizeof(_uplink_payload),portMAX_DELAY);
+		vTaskDelay(30000);
 	} 
 }
 

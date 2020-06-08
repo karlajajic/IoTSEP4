@@ -28,7 +28,7 @@ void lora_UpLinkHandler_startTask(void* xMessageBuffer){
 	for(;;)
 	{
 		lora_UpLinkHandler_task((MessageBufferHandle_t)xMessageBuffer);
-		vTaskDelay(30000);
+		
 	}
 }
 
