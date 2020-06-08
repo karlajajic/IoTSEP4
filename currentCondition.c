@@ -1,9 +1,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "currentCondition.h"
-//#include "FreeRTOS/src/ATMEGA_FreeRTOS.h"
-#include <lora_driver.h>
-
+#include <lora_driver.h> // the lora_driver.h include should be commented in order the tests to work
+						// see the header file as well
 
 typedef struct currentCondition currentCondtion;
 
@@ -72,9 +71,10 @@ void currentCondition_setSound(currentCondition_t self, uint16_t value) {
 void currentCondition_destroy(currentCondition_t self) {
 	if(self == NULL)
 		return;
-	vPortFree(self);
+	vPortFree(self); // this vPortFree should be commented out in order the tests to work
 }
 
+// The following for methods were implemented so the code can be tested 
 uint16_t currentCondition_getCO2Data(currentCondition_t self)
 {
 	return self->co2Data;
@@ -95,6 +95,7 @@ uint16_t currentCondition_getSound(currentCondition_t self)
 	return self->soundData;
 }
 
+// in order for test to work, the two methods below should be commented out
 lora_payload_t getcurrentConditionPayload(currentCondition_t self)
 {
 	lora_payload_t payload;
