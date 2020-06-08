@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "currentCondition.h"
+//#include "FreeRTOS/src/ATMEGA_FreeRTOS.h"
 #include <lora_driver.h>
 
 
@@ -66,13 +67,32 @@ void currentCondition_setSound(currentCondition_t self, uint16_t value) {
 			self->soundData = value;
 		}
 	}
-	
 }
 
 void currentCondition_destroy(currentCondition_t self) {
 	if(self == NULL)
 		return;
 	vPortFree(self);
+}
+
+uint16_t currentCondition_getCO2Data(currentCondition_t self)
+{
+	return self->co2Data;
+}
+
+int16_t currentCondition_getTemperature(currentCondition_t self)
+{
+	return self->temperatureData;
+}
+
+uint16_t currentCondition_getHumidity(currentCondition_t self)
+{
+	return self->humidityData;
+}
+
+uint16_t currentCondition_getSound(currentCondition_t self)
+{
+	return self->soundData;
 }
 
 lora_payload_t getcurrentConditionPayload(currentCondition_t self)

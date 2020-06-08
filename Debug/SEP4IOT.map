@@ -161,6 +161,14 @@ Discarded input sections
  .bss           0x00000000        0x0 currentCondition.o
  .text.currentCondition_destroy
                 0x00000000        0xa currentCondition.o
+ .text.currentCondition_getCO2Data
+                0x00000000        0x8 currentCondition.o
+ .text.currentCondition_getTemperature
+                0x00000000        0x8 currentCondition.o
+ .text.currentCondition_getHumidity
+                0x00000000        0x8 currentCondition.o
+ .text.currentCondition_getSound
+                0x00000000        0x8 currentCondition.o
  .text          0x00000000        0x0 device.o
  .data          0x00000000        0x0 device.o
  .bss           0x00000000        0x0 device.o
@@ -2143,111 +2151,111 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0xca0
+.debug_aranges  0x00000000      0xcc0
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x40 co2Reader.o
  .debug_aranges
                 0x00000040       0x40 Configuration.o
  .debug_aranges
-                0x00000080       0x58 currentCondition.o
+                0x00000080       0x78 currentCondition.o
  .debug_aranges
-                0x000000d8       0x38 device.o
+                0x000000f8       0x38 device.o
  .debug_aranges
-                0x00000110       0x30 DownLinkHandler.o
+                0x00000130       0x30 DownLinkHandler.o
  .debug_aranges
-                0x00000140       0x48 humidityAndTemperature.o
+                0x00000160       0x48 humidityAndTemperature.o
  .debug_aranges
-                0x00000188       0x30 ServoImpl.o
+                0x000001a8       0x30 ServoImpl.o
  .debug_aranges
-                0x000001b8       0x40 SoundReader.o
+                0x000001d8       0x40 SoundReader.o
  .debug_aranges
-                0x000001f8       0x30 UpLinkHandler.o
+                0x00000218       0x30 UpLinkHandler.o
  .debug_aranges
-                0x00000228       0x30 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
+                0x00000248       0x30 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
  .debug_aranges
-                0x00000258       0x70 FreeRTOS/src/event_groups.o
+                0x00000278       0x70 FreeRTOS/src/event_groups.o
  .debug_aranges
-                0x000002c8       0x48 FreeRTOS/src/heap_4.o
+                0x000002e8       0x48 FreeRTOS/src/heap_4.o
  .debug_aranges
-                0x00000310       0x40 FreeRTOS/src/list.o
+                0x00000330       0x40 FreeRTOS/src/list.o
  .debug_aranges
-                0x00000350       0x48 FreeRTOS/src/port.o
+                0x00000370       0x48 FreeRTOS/src/port.o
  .debug_aranges
-                0x00000398       0xf8 FreeRTOS/src/queue.o
+                0x000003b8       0xf8 FreeRTOS/src/queue.o
  .debug_aranges
-                0x00000490       0xc8 FreeRTOS/src/stream_buffer.o
+                0x000004b0       0xc8 FreeRTOS/src/stream_buffer.o
  .debug_aranges
-                0x00000558      0x1d8 FreeRTOS/src/tasks.o
+                0x00000578      0x1d8 FreeRTOS/src/tasks.o
  .debug_aranges
-                0x00000730       0xa0 FreeRTOS/src/timers.o
+                0x00000750       0xa0 FreeRTOS/src/timers.o
  .debug_aranges
-                0x000007d0       0x30 FreeRTOS/src/variantHooks.o
+                0x000007f0       0x30 FreeRTOS/src/variantHooks.o
  .debug_aranges
-                0x00000800       0x30 main.o
+                0x00000820       0x30 main.o
  .debug_aranges
-                0x00000830       0x20 ../drivers\libIotLibrary.a(hal.o)
+                0x00000850       0x20 ../drivers\libIotLibrary.a(hal.o)
  .debug_aranges
-                0x00000850       0x68 ../drivers\libIotLibrary.a(hih8120.o)
+                0x00000870       0x68 ../drivers\libIotLibrary.a(hih8120.o)
  .debug_aranges
-                0x000008b8       0x68 ../drivers\libIotLibrary.a(led.o)
+                0x000008d8       0x68 ../drivers\libIotLibrary.a(led.o)
  .debug_aranges
-                0x00000920      0x138 ../drivers\libIotLibrary.a(lora_driver.o)
+                0x00000940      0x138 ../drivers\libIotLibrary.a(lora_driver.o)
  .debug_aranges
-                0x00000a58       0x28 ../drivers\libIotLibrary.a(lora_driver_utils.o)
+                0x00000a78       0x28 ../drivers\libIotLibrary.a(lora_driver_utils.o)
  .debug_aranges
-                0x00000a80       0x70 ../drivers\libIotLibrary.a(mega_register_access.o)
+                0x00000aa0       0x70 ../drivers\libIotLibrary.a(mega_register_access.o)
  .debug_aranges
-                0x00000af0       0x50 ../drivers\libIotLibrary.a(mh_z19.o)
+                0x00000b10       0x50 ../drivers\libIotLibrary.a(mh_z19.o)
  .debug_aranges
-                0x00000b40       0x28 ../drivers\libIotLibrary.a(rcServo.o)
+                0x00000b60       0x28 ../drivers\libIotLibrary.a(rcServo.o)
  .debug_aranges
-                0x00000b68       0x90 ../drivers\libIotLibrary.a(serial.o)
+                0x00000b88       0x90 ../drivers\libIotLibrary.a(serial.o)
  .debug_aranges
-                0x00000bf8       0x38 ../drivers\libIotLibrary.a(stdio_driver.o)
+                0x00000c18       0x38 ../drivers\libIotLibrary.a(stdio_driver.o)
  .debug_aranges
-                0x00000c30       0x50 ../drivers\libIotLibrary.a(twi.o)
+                0x00000c50       0x50 ../drivers\libIotLibrary.a(twi.o)
  .debug_aranges
-                0x00000c80       0x20 ../drivers\libIotLibrary.a(fifo.o)
+                0x00000ca0       0x20 ../drivers\libIotLibrary.a(fifo.o)
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0xfafa
+.debug_info     0x00000000     0xfbb2
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_info    0x00000bbc      0x4c5 co2Reader.o
  .debug_info    0x00001081      0x308 Configuration.o
- .debug_info    0x00001389      0x37a currentCondition.o
- .debug_info    0x00001703      0x802 device.o
- .debug_info    0x00001f05      0x41b DownLinkHandler.o
- .debug_info    0x00002320      0x4f9 humidityAndTemperature.o
- .debug_info    0x00002819      0x10b ServoImpl.o
- .debug_info    0x00002924      0x416 SoundReader.o
- .debug_info    0x00002d3a      0x3ed UpLinkHandler.o
- .debug_info    0x00003127       0xd3 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
- .debug_info    0x000031fa      0x9ee FreeRTOS/src/event_groups.o
- .debug_info    0x00003be8      0x3d4 FreeRTOS/src/heap_4.o
- .debug_info    0x00003fbc      0x2dc FreeRTOS/src/list.o
- .debug_info    0x00004298      0x284 FreeRTOS/src/port.o
- .debug_info    0x0000451c     0x1910 FreeRTOS/src/queue.o
- .debug_info    0x00005e2c     0x14b4 FreeRTOS/src/stream_buffer.o
- .debug_info    0x000072e0     0x27a2 FreeRTOS/src/tasks.o
- .debug_info    0x00009a82     0x1115 FreeRTOS/src/timers.o
- .debug_info    0x0000ab97      0x1ba FreeRTOS/src/variantHooks.o
- .debug_info    0x0000ad51      0x59b main.o
- .debug_info    0x0000b2ec      0x20d ../drivers\libIotLibrary.a(hal.o)
- .debug_info    0x0000b4f9      0x3a9 ../drivers\libIotLibrary.a(hih8120.o)
- .debug_info    0x0000b8a2      0x6d5 ../drivers\libIotLibrary.a(led.o)
- .debug_info    0x0000bf77     0x18a9 ../drivers\libIotLibrary.a(lora_driver.o)
- .debug_info    0x0000d820      0x143 ../drivers\libIotLibrary.a(lora_driver_utils.o)
- .debug_info    0x0000d963      0x2e1 ../drivers\libIotLibrary.a(mega_register_access.o)
- .debug_info    0x0000dc44      0x538 ../drivers\libIotLibrary.a(mh_z19.o)
- .debug_info    0x0000e17c      0x10f ../drivers\libIotLibrary.a(rcServo.o)
- .debug_info    0x0000e28b      0xdb3 ../drivers\libIotLibrary.a(serial.o)
- .debug_info    0x0000f03e      0x39c ../drivers\libIotLibrary.a(stdio_driver.o)
- .debug_info    0x0000f3da      0x55d ../drivers\libIotLibrary.a(twi.o)
- .debug_info    0x0000f937      0x1c3 ../drivers\libIotLibrary.a(fifo.o)
+ .debug_info    0x00001389      0x432 currentCondition.o
+ .debug_info    0x000017bb      0x802 device.o
+ .debug_info    0x00001fbd      0x41b DownLinkHandler.o
+ .debug_info    0x000023d8      0x4f9 humidityAndTemperature.o
+ .debug_info    0x000028d1      0x10b ServoImpl.o
+ .debug_info    0x000029dc      0x416 SoundReader.o
+ .debug_info    0x00002df2      0x3ed UpLinkHandler.o
+ .debug_info    0x000031df       0xd3 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
+ .debug_info    0x000032b2      0x9ee FreeRTOS/src/event_groups.o
+ .debug_info    0x00003ca0      0x3d4 FreeRTOS/src/heap_4.o
+ .debug_info    0x00004074      0x2dc FreeRTOS/src/list.o
+ .debug_info    0x00004350      0x284 FreeRTOS/src/port.o
+ .debug_info    0x000045d4     0x1910 FreeRTOS/src/queue.o
+ .debug_info    0x00005ee4     0x14b4 FreeRTOS/src/stream_buffer.o
+ .debug_info    0x00007398     0x27a2 FreeRTOS/src/tasks.o
+ .debug_info    0x00009b3a     0x1115 FreeRTOS/src/timers.o
+ .debug_info    0x0000ac4f      0x1ba FreeRTOS/src/variantHooks.o
+ .debug_info    0x0000ae09      0x59b main.o
+ .debug_info    0x0000b3a4      0x20d ../drivers\libIotLibrary.a(hal.o)
+ .debug_info    0x0000b5b1      0x3a9 ../drivers\libIotLibrary.a(hih8120.o)
+ .debug_info    0x0000b95a      0x6d5 ../drivers\libIotLibrary.a(led.o)
+ .debug_info    0x0000c02f     0x18a9 ../drivers\libIotLibrary.a(lora_driver.o)
+ .debug_info    0x0000d8d8      0x143 ../drivers\libIotLibrary.a(lora_driver_utils.o)
+ .debug_info    0x0000da1b      0x2e1 ../drivers\libIotLibrary.a(mega_register_access.o)
+ .debug_info    0x0000dcfc      0x538 ../drivers\libIotLibrary.a(mh_z19.o)
+ .debug_info    0x0000e234      0x10f ../drivers\libIotLibrary.a(rcServo.o)
+ .debug_info    0x0000e343      0xdb3 ../drivers\libIotLibrary.a(serial.o)
+ .debug_info    0x0000f0f6      0x39c ../drivers\libIotLibrary.a(stdio_driver.o)
+ .debug_info    0x0000f492      0x55d ../drivers\libIotLibrary.a(twi.o)
+ .debug_info    0x0000f9ef      0x1c3 ../drivers\libIotLibrary.a(fifo.o)
 
 .debug_abbrev   0x00000000     0x40e9
  *(.debug_abbrev)
@@ -2285,178 +2293,178 @@ END GROUP
  .debug_abbrev  0x00003dea      0x217 ../drivers\libIotLibrary.a(twi.o)
  .debug_abbrev  0x00004001       0xe8 ../drivers\libIotLibrary.a(fifo.o)
 
-.debug_line     0x00000000     0x77b4
+.debug_line     0x00000000     0x7810
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x1f9 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_line    0x000001f9      0x1fd co2Reader.o
  .debug_line    0x000003f6      0x1bc Configuration.o
- .debug_line    0x000005b2      0x224 currentCondition.o
- .debug_line    0x000007d6      0x2f4 device.o
- .debug_line    0x00000aca      0x212 DownLinkHandler.o
- .debug_line    0x00000cdc      0x242 humidityAndTemperature.o
- .debug_line    0x00000f1e       0x88 ServoImpl.o
- .debug_line    0x00000fa6      0x1d6 SoundReader.o
- .debug_line    0x0000117c      0x298 UpLinkHandler.o
- .debug_line    0x00001414       0xfd FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
- .debug_line    0x00001511      0x3ed FreeRTOS/src/event_groups.o
- .debug_line    0x000018fe      0x318 FreeRTOS/src/heap_4.o
- .debug_line    0x00001c16      0x1da FreeRTOS/src/list.o
- .debug_line    0x00001df0      0x312 FreeRTOS/src/port.o
- .debug_line    0x00002102      0xbfa FreeRTOS/src/queue.o
- .debug_line    0x00002cfc      0x7a4 FreeRTOS/src/stream_buffer.o
- .debug_line    0x000034a0     0x166e FreeRTOS/src/tasks.o
- .debug_line    0x00004b0e      0x563 FreeRTOS/src/timers.o
- .debug_line    0x00005071      0x18a FreeRTOS/src/variantHooks.o
- .debug_line    0x000051fb      0x30b main.o
- .debug_line    0x00005506       0xff ../drivers\libIotLibrary.a(hal.o)
- .debug_line    0x00005605      0x246 ../drivers\libIotLibrary.a(hih8120.o)
- .debug_line    0x0000584b      0x31b ../drivers\libIotLibrary.a(led.o)
- .debug_line    0x00005b66      0x9ab ../drivers\libIotLibrary.a(lora_driver.o)
- .debug_line    0x00006511      0x194 ../drivers\libIotLibrary.a(lora_driver_utils.o)
- .debug_line    0x000066a5      0x1af ../drivers\libIotLibrary.a(mega_register_access.o)
- .debug_line    0x00006854      0x2d6 ../drivers\libIotLibrary.a(mh_z19.o)
- .debug_line    0x00006b2a       0xfb ../drivers\libIotLibrary.a(rcServo.o)
- .debug_line    0x00006c25      0x636 ../drivers\libIotLibrary.a(serial.o)
- .debug_line    0x0000725b      0x13a ../drivers\libIotLibrary.a(stdio_driver.o)
- .debug_line    0x00007395      0x306 ../drivers\libIotLibrary.a(twi.o)
- .debug_line    0x0000769b      0x119 ../drivers\libIotLibrary.a(fifo.o)
+ .debug_line    0x000005b2      0x280 currentCondition.o
+ .debug_line    0x00000832      0x2f4 device.o
+ .debug_line    0x00000b26      0x212 DownLinkHandler.o
+ .debug_line    0x00000d38      0x242 humidityAndTemperature.o
+ .debug_line    0x00000f7a       0x88 ServoImpl.o
+ .debug_line    0x00001002      0x1d6 SoundReader.o
+ .debug_line    0x000011d8      0x298 UpLinkHandler.o
+ .debug_line    0x00001470       0xfd FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
+ .debug_line    0x0000156d      0x3ed FreeRTOS/src/event_groups.o
+ .debug_line    0x0000195a      0x318 FreeRTOS/src/heap_4.o
+ .debug_line    0x00001c72      0x1da FreeRTOS/src/list.o
+ .debug_line    0x00001e4c      0x312 FreeRTOS/src/port.o
+ .debug_line    0x0000215e      0xbfa FreeRTOS/src/queue.o
+ .debug_line    0x00002d58      0x7a4 FreeRTOS/src/stream_buffer.o
+ .debug_line    0x000034fc     0x166e FreeRTOS/src/tasks.o
+ .debug_line    0x00004b6a      0x563 FreeRTOS/src/timers.o
+ .debug_line    0x000050cd      0x18a FreeRTOS/src/variantHooks.o
+ .debug_line    0x00005257      0x30b main.o
+ .debug_line    0x00005562       0xff ../drivers\libIotLibrary.a(hal.o)
+ .debug_line    0x00005661      0x246 ../drivers\libIotLibrary.a(hih8120.o)
+ .debug_line    0x000058a7      0x31b ../drivers\libIotLibrary.a(led.o)
+ .debug_line    0x00005bc2      0x9ab ../drivers\libIotLibrary.a(lora_driver.o)
+ .debug_line    0x0000656d      0x194 ../drivers\libIotLibrary.a(lora_driver_utils.o)
+ .debug_line    0x00006701      0x1af ../drivers\libIotLibrary.a(mega_register_access.o)
+ .debug_line    0x000068b0      0x2d6 ../drivers\libIotLibrary.a(mh_z19.o)
+ .debug_line    0x00006b86       0xfb ../drivers\libIotLibrary.a(rcServo.o)
+ .debug_line    0x00006c81      0x636 ../drivers\libIotLibrary.a(serial.o)
+ .debug_line    0x000072b7      0x13a ../drivers\libIotLibrary.a(stdio_driver.o)
+ .debug_line    0x000073f1      0x306 ../drivers\libIotLibrary.a(twi.o)
+ .debug_line    0x000076f7      0x119 ../drivers\libIotLibrary.a(fifo.o)
 
-.debug_frame    0x00000000     0x2b44
+.debug_frame    0x00000000     0x2b84
  *(.debug_frame)
  .debug_frame   0x00000000       0xf4 co2Reader.o
  .debug_frame   0x000000f4       0x9c Configuration.o
- .debug_frame   0x00000190       0x94 currentCondition.o
- .debug_frame   0x00000224       0xec device.o
- .debug_frame   0x00000310       0xc0 DownLinkHandler.o
- .debug_frame   0x000003d0      0x104 humidityAndTemperature.o
- .debug_frame   0x000004d4       0x44 ServoImpl.o
- .debug_frame   0x00000518       0xf4 SoundReader.o
- .debug_frame   0x0000060c      0x128 UpLinkHandler.o
- .debug_frame   0x00000734       0x44 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
- .debug_frame   0x00000778      0x1ec FreeRTOS/src/event_groups.o
- .debug_frame   0x00000964       0xb4 FreeRTOS/src/heap_4.o
- .debug_frame   0x00000a18       0x90 FreeRTOS/src/list.o
- .debug_frame   0x00000aa8       0x74 FreeRTOS/src/port.o
- .debug_frame   0x00000b1c      0x3d8 FreeRTOS/src/queue.o
- .debug_frame   0x00000ef4      0x3dc FreeRTOS/src/stream_buffer.o
- .debug_frame   0x000012d0      0x760 FreeRTOS/src/tasks.o
- .debug_frame   0x00001a30      0x248 FreeRTOS/src/timers.o
- .debug_frame   0x00001c78       0x44 FreeRTOS/src/variantHooks.o
- .debug_frame   0x00001cbc       0x98 main.o
- .debug_frame   0x00001d54       0x24 ../drivers\libIotLibrary.a(hal.o)
- .debug_frame   0x00001d78       0xc0 ../drivers\libIotLibrary.a(hih8120.o)
- .debug_frame   0x00001e38      0x11c ../drivers\libIotLibrary.a(led.o)
- .debug_frame   0x00001f54      0x460 ../drivers\libIotLibrary.a(lora_driver.o)
- .debug_frame   0x000023b4       0x48 ../drivers\libIotLibrary.a(lora_driver_utils.o)
- .debug_frame   0x000023fc       0xc4 ../drivers\libIotLibrary.a(mega_register_access.o)
- .debug_frame   0x000024c0       0xf8 ../drivers\libIotLibrary.a(mh_z19.o)
- .debug_frame   0x000025b8       0x34 ../drivers\libIotLibrary.a(rcServo.o)
- .debug_frame   0x000025ec      0x384 ../drivers\libIotLibrary.a(serial.o)
- .debug_frame   0x00002970       0x84 ../drivers\libIotLibrary.a(stdio_driver.o)
- .debug_frame   0x000029f4      0x12c ../drivers\libIotLibrary.a(twi.o)
- .debug_frame   0x00002b20       0x24 ../drivers\libIotLibrary.a(fifo.o)
+ .debug_frame   0x00000190       0xd4 currentCondition.o
+ .debug_frame   0x00000264       0xec device.o
+ .debug_frame   0x00000350       0xc0 DownLinkHandler.o
+ .debug_frame   0x00000410      0x104 humidityAndTemperature.o
+ .debug_frame   0x00000514       0x44 ServoImpl.o
+ .debug_frame   0x00000558       0xf4 SoundReader.o
+ .debug_frame   0x0000064c      0x128 UpLinkHandler.o
+ .debug_frame   0x00000774       0x44 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
+ .debug_frame   0x000007b8      0x1ec FreeRTOS/src/event_groups.o
+ .debug_frame   0x000009a4       0xb4 FreeRTOS/src/heap_4.o
+ .debug_frame   0x00000a58       0x90 FreeRTOS/src/list.o
+ .debug_frame   0x00000ae8       0x74 FreeRTOS/src/port.o
+ .debug_frame   0x00000b5c      0x3d8 FreeRTOS/src/queue.o
+ .debug_frame   0x00000f34      0x3dc FreeRTOS/src/stream_buffer.o
+ .debug_frame   0x00001310      0x760 FreeRTOS/src/tasks.o
+ .debug_frame   0x00001a70      0x248 FreeRTOS/src/timers.o
+ .debug_frame   0x00001cb8       0x44 FreeRTOS/src/variantHooks.o
+ .debug_frame   0x00001cfc       0x98 main.o
+ .debug_frame   0x00001d94       0x24 ../drivers\libIotLibrary.a(hal.o)
+ .debug_frame   0x00001db8       0xc0 ../drivers\libIotLibrary.a(hih8120.o)
+ .debug_frame   0x00001e78      0x11c ../drivers\libIotLibrary.a(led.o)
+ .debug_frame   0x00001f94      0x460 ../drivers\libIotLibrary.a(lora_driver.o)
+ .debug_frame   0x000023f4       0x48 ../drivers\libIotLibrary.a(lora_driver_utils.o)
+ .debug_frame   0x0000243c       0xc4 ../drivers\libIotLibrary.a(mega_register_access.o)
+ .debug_frame   0x00002500       0xf8 ../drivers\libIotLibrary.a(mh_z19.o)
+ .debug_frame   0x000025f8       0x34 ../drivers\libIotLibrary.a(rcServo.o)
+ .debug_frame   0x0000262c      0x384 ../drivers\libIotLibrary.a(serial.o)
+ .debug_frame   0x000029b0       0x84 ../drivers\libIotLibrary.a(stdio_driver.o)
+ .debug_frame   0x00002a34      0x12c ../drivers\libIotLibrary.a(twi.o)
+ .debug_frame   0x00002b60       0x24 ../drivers\libIotLibrary.a(fifo.o)
 
-.debug_str      0x00000000     0x4869
+.debug_str      0x00000000     0x48dc
  *(.debug_str)
  .debug_str     0x00000000      0x3e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_str     0x000003e6      0x3c5 co2Reader.o
                                 0x458 (size before relaxing)
  .debug_str     0x000007ab      0x10e Configuration.o
                                 0x2a7 (size before relaxing)
- .debug_str     0x000008b9      0x16d currentCondition.o
-                                0x306 (size before relaxing)
- .debug_str     0x00000a26      0x1f7 device.o
+ .debug_str     0x000008b9      0x1e0 currentCondition.o
+                                0x379 (size before relaxing)
+ .debug_str     0x00000a99      0x1f7 device.o
                                 0x638 (size before relaxing)
- .debug_str     0x00000c1d       0xd4 DownLinkHandler.o
+ .debug_str     0x00000c90       0xd4 DownLinkHandler.o
                                 0x356 (size before relaxing)
- .debug_str     0x00000cf1      0x104 humidityAndTemperature.o
+ .debug_str     0x00000d64      0x104 humidityAndTemperature.o
                                 0x466 (size before relaxing)
- .debug_str     0x00000df5       0x3b ServoImpl.o
+ .debug_str     0x00000e68       0x3b ServoImpl.o
                                 0x1a8 (size before relaxing)
- .debug_str     0x00000e30       0x71 SoundReader.o
+ .debug_str     0x00000ea3       0x71 SoundReader.o
                                 0x38a (size before relaxing)
- .debug_str     0x00000ea1      0x256 UpLinkHandler.o
+ .debug_str     0x00000f14      0x256 UpLinkHandler.o
                                 0x49a (size before relaxing)
- .debug_str     0x000010f7       0x68 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
+ .debug_str     0x0000116a       0x68 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
                                 0x1b8 (size before relaxing)
- .debug_str     0x0000115f      0x396 FreeRTOS/src/event_groups.o
+ .debug_str     0x000011d2      0x396 FreeRTOS/src/event_groups.o
                                 0x5c2 (size before relaxing)
- .debug_str     0x000014f5      0x1dd FreeRTOS/src/heap_4.o
+ .debug_str     0x00001568      0x1dd FreeRTOS/src/heap_4.o
                                 0x378 (size before relaxing)
- .debug_str     0x000016d2       0x89 FreeRTOS/src/list.o
+ .debug_str     0x00001745       0x89 FreeRTOS/src/list.o
                                 0x2b5 (size before relaxing)
- .debug_str     0x0000175b      0x11f FreeRTOS/src/port.o
+ .debug_str     0x000017ce      0x11f FreeRTOS/src/port.o
                                 0x2a2 (size before relaxing)
- .debug_str     0x0000187a      0x665 FreeRTOS/src/queue.o
+ .debug_str     0x000018ed      0x665 FreeRTOS/src/queue.o
                                 0x9ab (size before relaxing)
- .debug_str     0x00001edf      0x4f3 FreeRTOS/src/stream_buffer.o
+ .debug_str     0x00001f52      0x4f3 FreeRTOS/src/stream_buffer.o
                                 0x811 (size before relaxing)
- .debug_str     0x000023d2      0xa8e FreeRTOS/src/tasks.o
+ .debug_str     0x00002445      0xa8e FreeRTOS/src/tasks.o
                                0x1156 (size before relaxing)
- .debug_str     0x00002e60      0x43f FreeRTOS/src/timers.o
+ .debug_str     0x00002ed3      0x43f FreeRTOS/src/timers.o
                                 0x843 (size before relaxing)
- .debug_str     0x0000329f       0x61 FreeRTOS/src/variantHooks.o
+ .debug_str     0x00003312       0x61 FreeRTOS/src/variantHooks.o
                                 0x249 (size before relaxing)
- .debug_str     0x00003300       0x7f main.o
+ .debug_str     0x00003373       0x7f main.o
                                 0x465 (size before relaxing)
- .debug_str     0x0000337f       0xc3 ../drivers\libIotLibrary.a(hal.o)
+ .debug_str     0x000033f2       0xc3 ../drivers\libIotLibrary.a(hal.o)
                                 0x278 (size before relaxing)
- .debug_str     0x00003442      0x240 ../drivers\libIotLibrary.a(hih8120.o)
+ .debug_str     0x000034b5      0x240 ../drivers\libIotLibrary.a(hih8120.o)
                                 0x44a (size before relaxing)
- .debug_str     0x00003682      0x123 ../drivers\libIotLibrary.a(led.o)
+ .debug_str     0x000036f5      0x123 ../drivers\libIotLibrary.a(led.o)
                                 0x3cd (size before relaxing)
- .debug_str     0x000037a5      0x7eb ../drivers\libIotLibrary.a(lora_driver.o)
+ .debug_str     0x00003818      0x7eb ../drivers\libIotLibrary.a(lora_driver.o)
                                 0xd8f (size before relaxing)
- .debug_str     0x00003f90       0x46 ../drivers\libIotLibrary.a(lora_driver_utils.o)
+ .debug_str     0x00004003       0x46 ../drivers\libIotLibrary.a(lora_driver_utils.o)
                                 0x205 (size before relaxing)
- .debug_str     0x00003fd6       0xdf ../drivers\libIotLibrary.a(mega_register_access.o)
+ .debug_str     0x00004049       0xdf ../drivers\libIotLibrary.a(mega_register_access.o)
                                 0x252 (size before relaxing)
- .debug_str     0x000040b5       0xfa ../drivers\libIotLibrary.a(mh_z19.o)
+ .debug_str     0x00004128       0xfa ../drivers\libIotLibrary.a(mh_z19.o)
                                 0x47a (size before relaxing)
- .debug_str     0x000041af       0x3a ../drivers\libIotLibrary.a(rcServo.o)
+ .debug_str     0x00004222       0x3a ../drivers\libIotLibrary.a(rcServo.o)
                                 0x1d0 (size before relaxing)
- .debug_str     0x000041e9      0x2de ../drivers\libIotLibrary.a(serial.o)
+ .debug_str     0x0000425c      0x2de ../drivers\libIotLibrary.a(serial.o)
                                 0x639 (size before relaxing)
- .debug_str     0x000044c7       0xa4 ../drivers\libIotLibrary.a(stdio_driver.o)
+ .debug_str     0x0000453a       0xa4 ../drivers\libIotLibrary.a(stdio_driver.o)
                                 0x378 (size before relaxing)
- .debug_str     0x0000456b      0x2de ../drivers\libIotLibrary.a(twi.o)
+ .debug_str     0x000045de      0x2de ../drivers\libIotLibrary.a(twi.o)
                                 0x5a8 (size before relaxing)
- .debug_str     0x00004849       0x20 ../drivers\libIotLibrary.a(fifo.o)
+ .debug_str     0x000048bc       0x20 ../drivers\libIotLibrary.a(fifo.o)
                                 0x237 (size before relaxing)
 
-.debug_loc      0x00000000     0xe0dc
+.debug_loc      0x00000000     0xe17c
  *(.debug_loc)
  .debug_loc     0x00000000      0x3f2 co2Reader.o
  .debug_loc     0x000003f2      0x1d0 Configuration.o
- .debug_loc     0x000005c2      0x128 currentCondition.o
- .debug_loc     0x000006ea      0x470 device.o
- .debug_loc     0x00000b5a      0x2d9 DownLinkHandler.o
- .debug_loc     0x00000e33      0x407 humidityAndTemperature.o
- .debug_loc     0x0000123a      0x3fe SoundReader.o
- .debug_loc     0x00001638      0x428 UpLinkHandler.o
- .debug_loc     0x00001a60       0x42 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
- .debug_loc     0x00001aa2      0xead FreeRTOS/src/event_groups.o
- .debug_loc     0x0000294f      0x331 FreeRTOS/src/heap_4.o
- .debug_loc     0x00002c80      0x17d FreeRTOS/src/list.o
- .debug_loc     0x00002dfd      0x2af FreeRTOS/src/port.o
- .debug_loc     0x000030ac     0x1c21 FreeRTOS/src/queue.o
- .debug_loc     0x00004ccd     0x1db1 FreeRTOS/src/stream_buffer.o
- .debug_loc     0x00006a7e     0x316d FreeRTOS/src/tasks.o
- .debug_loc     0x00009beb      0xcf7 FreeRTOS/src/timers.o
- .debug_loc     0x0000a8e2       0xb6 FreeRTOS/src/variantHooks.o
- .debug_loc     0x0000a998      0x185 main.o
- .debug_loc     0x0000ab1d       0x2c ../drivers\libIotLibrary.a(hal.o)
- .debug_loc     0x0000ab49       0x9f ../drivers\libIotLibrary.a(hih8120.o)
- .debug_loc     0x0000abe8      0x390 ../drivers\libIotLibrary.a(led.o)
- .debug_loc     0x0000af78     0x1216 ../drivers\libIotLibrary.a(lora_driver.o)
- .debug_loc     0x0000c18e      0x1d2 ../drivers\libIotLibrary.a(lora_driver_utils.o)
- .debug_loc     0x0000c360       0xe9 ../drivers\libIotLibrary.a(mega_register_access.o)
- .debug_loc     0x0000c449      0x3cd ../drivers\libIotLibrary.a(mh_z19.o)
- .debug_loc     0x0000c816       0x2f ../drivers\libIotLibrary.a(rcServo.o)
- .debug_loc     0x0000c845     0x1080 ../drivers\libIotLibrary.a(serial.o)
- .debug_loc     0x0000d8c5      0x144 ../drivers\libIotLibrary.a(stdio_driver.o)
- .debug_loc     0x0000da09      0x575 ../drivers\libIotLibrary.a(twi.o)
- .debug_loc     0x0000df7e      0x15e ../drivers\libIotLibrary.a(fifo.o)
+ .debug_loc     0x000005c2      0x1c8 currentCondition.o
+ .debug_loc     0x0000078a      0x470 device.o
+ .debug_loc     0x00000bfa      0x2d9 DownLinkHandler.o
+ .debug_loc     0x00000ed3      0x407 humidityAndTemperature.o
+ .debug_loc     0x000012da      0x3fe SoundReader.o
+ .debug_loc     0x000016d8      0x428 UpLinkHandler.o
+ .debug_loc     0x00001b00       0x42 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
+ .debug_loc     0x00001b42      0xead FreeRTOS/src/event_groups.o
+ .debug_loc     0x000029ef      0x331 FreeRTOS/src/heap_4.o
+ .debug_loc     0x00002d20      0x17d FreeRTOS/src/list.o
+ .debug_loc     0x00002e9d      0x2af FreeRTOS/src/port.o
+ .debug_loc     0x0000314c     0x1c21 FreeRTOS/src/queue.o
+ .debug_loc     0x00004d6d     0x1db1 FreeRTOS/src/stream_buffer.o
+ .debug_loc     0x00006b1e     0x316d FreeRTOS/src/tasks.o
+ .debug_loc     0x00009c8b      0xcf7 FreeRTOS/src/timers.o
+ .debug_loc     0x0000a982       0xb6 FreeRTOS/src/variantHooks.o
+ .debug_loc     0x0000aa38      0x185 main.o
+ .debug_loc     0x0000abbd       0x2c ../drivers\libIotLibrary.a(hal.o)
+ .debug_loc     0x0000abe9       0x9f ../drivers\libIotLibrary.a(hih8120.o)
+ .debug_loc     0x0000ac88      0x390 ../drivers\libIotLibrary.a(led.o)
+ .debug_loc     0x0000b018     0x1216 ../drivers\libIotLibrary.a(lora_driver.o)
+ .debug_loc     0x0000c22e      0x1d2 ../drivers\libIotLibrary.a(lora_driver_utils.o)
+ .debug_loc     0x0000c400       0xe9 ../drivers\libIotLibrary.a(mega_register_access.o)
+ .debug_loc     0x0000c4e9      0x3cd ../drivers\libIotLibrary.a(mh_z19.o)
+ .debug_loc     0x0000c8b6       0x2f ../drivers\libIotLibrary.a(rcServo.o)
+ .debug_loc     0x0000c8e5     0x1080 ../drivers\libIotLibrary.a(serial.o)
+ .debug_loc     0x0000d965      0x144 ../drivers\libIotLibrary.a(stdio_driver.o)
+ .debug_loc     0x0000daa9      0x575 ../drivers\libIotLibrary.a(twi.o)
+ .debug_loc     0x0000e01e      0x15e ../drivers\libIotLibrary.a(fifo.o)
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -2476,40 +2484,40 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0xc68
+.debug_ranges   0x00000000      0xc88
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x30 co2Reader.o
  .debug_ranges  0x00000030       0x30 Configuration.o
- .debug_ranges  0x00000060       0x48 currentCondition.o
- .debug_ranges  0x000000a8       0x28 device.o
- .debug_ranges  0x000000d0       0x20 DownLinkHandler.o
- .debug_ranges  0x000000f0       0x38 humidityAndTemperature.o
- .debug_ranges  0x00000128       0x20 ServoImpl.o
- .debug_ranges  0x00000148       0x30 SoundReader.o
- .debug_ranges  0x00000178       0x40 UpLinkHandler.o
- .debug_ranges  0x000001b8       0x20 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
- .debug_ranges  0x000001d8       0x78 FreeRTOS/src/event_groups.o
- .debug_ranges  0x00000250       0x38 FreeRTOS/src/heap_4.o
- .debug_ranges  0x00000288       0x30 FreeRTOS/src/list.o
- .debug_ranges  0x000002b8       0x38 FreeRTOS/src/port.o
- .debug_ranges  0x000002f0      0x178 FreeRTOS/src/queue.o
- .debug_ranges  0x00000468       0xb8 FreeRTOS/src/stream_buffer.o
- .debug_ranges  0x00000520      0x240 FreeRTOS/src/tasks.o
- .debug_ranges  0x00000760       0xe8 FreeRTOS/src/timers.o
- .debug_ranges  0x00000848       0x20 FreeRTOS/src/variantHooks.o
- .debug_ranges  0x00000868       0x20 main.o
- .debug_ranges  0x00000888       0x10 ../drivers\libIotLibrary.a(hal.o)
- .debug_ranges  0x00000898       0x58 ../drivers\libIotLibrary.a(hih8120.o)
- .debug_ranges  0x000008f0       0x58 ../drivers\libIotLibrary.a(led.o)
- .debug_ranges  0x00000948      0x128 ../drivers\libIotLibrary.a(lora_driver.o)
- .debug_ranges  0x00000a70       0x30 ../drivers\libIotLibrary.a(lora_driver_utils.o)
- .debug_ranges  0x00000aa0       0x60 ../drivers\libIotLibrary.a(mega_register_access.o)
- .debug_ranges  0x00000b00       0x40 ../drivers\libIotLibrary.a(mh_z19.o)
- .debug_ranges  0x00000b40       0x18 ../drivers\libIotLibrary.a(rcServo.o)
- .debug_ranges  0x00000b58       0x98 ../drivers\libIotLibrary.a(serial.o)
- .debug_ranges  0x00000bf0       0x28 ../drivers\libIotLibrary.a(stdio_driver.o)
- .debug_ranges  0x00000c18       0x40 ../drivers\libIotLibrary.a(twi.o)
- .debug_ranges  0x00000c58       0x10 ../drivers\libIotLibrary.a(fifo.o)
+ .debug_ranges  0x00000060       0x68 currentCondition.o
+ .debug_ranges  0x000000c8       0x28 device.o
+ .debug_ranges  0x000000f0       0x20 DownLinkHandler.o
+ .debug_ranges  0x00000110       0x38 humidityAndTemperature.o
+ .debug_ranges  0x00000148       0x20 ServoImpl.o
+ .debug_ranges  0x00000168       0x30 SoundReader.o
+ .debug_ranges  0x00000198       0x40 UpLinkHandler.o
+ .debug_ranges  0x000001d8       0x20 FreeRTOS/FreeRTOSTraceDriver/FreeRTOSTraceDriver.o
+ .debug_ranges  0x000001f8       0x78 FreeRTOS/src/event_groups.o
+ .debug_ranges  0x00000270       0x38 FreeRTOS/src/heap_4.o
+ .debug_ranges  0x000002a8       0x30 FreeRTOS/src/list.o
+ .debug_ranges  0x000002d8       0x38 FreeRTOS/src/port.o
+ .debug_ranges  0x00000310      0x178 FreeRTOS/src/queue.o
+ .debug_ranges  0x00000488       0xb8 FreeRTOS/src/stream_buffer.o
+ .debug_ranges  0x00000540      0x240 FreeRTOS/src/tasks.o
+ .debug_ranges  0x00000780       0xe8 FreeRTOS/src/timers.o
+ .debug_ranges  0x00000868       0x20 FreeRTOS/src/variantHooks.o
+ .debug_ranges  0x00000888       0x20 main.o
+ .debug_ranges  0x000008a8       0x10 ../drivers\libIotLibrary.a(hal.o)
+ .debug_ranges  0x000008b8       0x58 ../drivers\libIotLibrary.a(hih8120.o)
+ .debug_ranges  0x00000910       0x58 ../drivers\libIotLibrary.a(led.o)
+ .debug_ranges  0x00000968      0x128 ../drivers\libIotLibrary.a(lora_driver.o)
+ .debug_ranges  0x00000a90       0x30 ../drivers\libIotLibrary.a(lora_driver_utils.o)
+ .debug_ranges  0x00000ac0       0x60 ../drivers\libIotLibrary.a(mega_register_access.o)
+ .debug_ranges  0x00000b20       0x40 ../drivers\libIotLibrary.a(mh_z19.o)
+ .debug_ranges  0x00000b60       0x18 ../drivers\libIotLibrary.a(rcServo.o)
+ .debug_ranges  0x00000b78       0x98 ../drivers\libIotLibrary.a(serial.o)
+ .debug_ranges  0x00000c10       0x28 ../drivers\libIotLibrary.a(stdio_driver.o)
+ .debug_ranges  0x00000c38       0x40 ../drivers\libIotLibrary.a(twi.o)
+ .debug_ranges  0x00000c78       0x10 ../drivers\libIotLibrary.a(fifo.o)
 
 .debug_macro
  *(.debug_macro)
