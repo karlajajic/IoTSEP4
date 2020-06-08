@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GtaTestDurations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Executable>G:\SEP4-embedded\ZleepTest\Zzleep-Test\Debug\Zzleep-Test.exe</Executable>
+  <TestDurations>
+    <TestDuration Test="CurrentConditionTest.Test_Humidity_On_Create" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Humidity_Valid" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Humidity_Invalid" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Humidity_Lower_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Humidity_Above_Lower_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Humidity_Upper_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Humidity_Below_Upper_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Temperature_On_Create" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Temperature_Invalid" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Temperature_Lower_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Temperature_Above_Lower_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Temperature_Upper_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_Temperature_Below_Upper_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_CO2_On_Create" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_CO2_Invalid" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_CO2_Lower_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_CO2_Above_Lower_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_CO2_Upper_Bound" Duration="1" />
+    <TestDuration Test="CurrentConditionTest.Test_CO2_Below_Upper_Bound" Duration="1" />
+  </TestDurations>
+</GtaTestDurations>
